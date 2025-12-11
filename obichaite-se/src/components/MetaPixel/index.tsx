@@ -25,7 +25,6 @@ export function MetaPixel() {
         `}
       </Script>
 
-      {/* optional noscript за хора без JS – можеш и да го пропуснеш */}
       <noscript>
         <img
           height="1"
