@@ -19,7 +19,8 @@ import GenericNotification from '@/components/Generic/GenericNotification'
 import { ShoppingCartManager } from '@/components/StateManagers'
 import SetCurrentUser from '@/components/StateManagers/SetCurrentUser'
 import CustomConsent from '@/components/Custom/CustomConsent'
-import { GoogleAdsTag } from '@/components/GoogleAdsTag'
+import { GoogleTag } from '@/components/GoogleTag'
+import { MetaPixel } from '@/components/MetaPixel'
 
 const SITE_NAME = 'Обичайте се'
 
@@ -162,7 +163,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         </head>
         <body>
           <main id="content" className="min-h-[100svh] overflow-x-clip">
-            <GoogleAdsTag />
+            <GoogleTag />
+            <MetaPixel />
             <Search products={productsForSearch.docs as Product[]} />
 
             <Header />
