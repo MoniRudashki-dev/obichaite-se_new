@@ -19,8 +19,11 @@ import GenericNotification from '@/components/Generic/GenericNotification'
 import { ShoppingCartManager } from '@/components/StateManagers'
 import SetCurrentUser from '@/components/StateManagers/SetCurrentUser'
 import CustomConsent from '@/components/Custom/CustomConsent'
-import { GoogleTag } from '@/components/GoogleTag'
-import { MetaPixel } from '@/components/MetaPixel'
+import { cookies } from 'next/headers'
+
+// cookie consent
+const CONSENT_COOKIE_NAME = 'cookie-consent'
+const CONSENT_COOKIE_VALUE = 'granted'
 
 const SITE_NAME = 'Обичайте се'
 
@@ -115,6 +118,9 @@ export const metadata: Metadata = {
 const isDev = process.env.NODE_ENV === 'development'
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
+  const cookieStore = await cookies()
+  const cookieConsent = cookieStore.get(CONSENT_COOKIE_NAME)?.value === CONSENT_COOKIE_VALUE
+
   const { children } = props
   const payload = await getPayload({ config: configPromise })
   const productsForSearch = isDev
@@ -163,8 +169,6 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         </head>
         <body>
           <main id="content" className="min-h-[100svh] overflow-x-clip">
-            <GoogleTag />
-            <MetaPixel />
             <Search products={productsForSearch.docs as Product[]} />
 
             <Header />
@@ -185,7 +189,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
             <SetCurrentUser />
 
-            <CustomConsent />
+            <CustomConsent initialConsent={cookieConsent} />
           </main>
         </body>
       </html>

@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import fs from 'fs'
 import path from 'path'
-import { Category, Media, SubCategory } from '@/payload-types'
+import { Media } from '@/payload-types'
 
 const payload = await getPayload({ config })
 
