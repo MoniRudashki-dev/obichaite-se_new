@@ -14,7 +14,7 @@ const CustomConsent = ({ initialConsent }: { initialConsent: boolean }) => {
   const isActive = useAppSelector((state) => state.root.consentActive)
 
   const handleAccept = () => {
-    document.cookie = 'cookie-consent=granted; path=/; max-age=15552000' // 6 месеца
+    document.cookie = 'cookie-consent=granted; path=/; max-age=15552000'
     setHasConsent(true)
     dispatch(setConsentActive(false))
   }
