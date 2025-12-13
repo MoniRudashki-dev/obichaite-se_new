@@ -30,7 +30,7 @@ export default async function Categories() {
   })
 
   return (
-    <article className="w-full pt-[72px] md:pt-[140px]">
+    <article className="w-full pt-[96px] md:pt-[164px]">
       <GenericHeading
         extraClass="pt-4 md:pt-8 bg-pink/30 border-b-[1px] border-bordo/80"
         align="text-center"

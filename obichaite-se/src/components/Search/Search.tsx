@@ -37,7 +37,7 @@ const Search = ({ products }: { products: Product[] }) => {
 
   return (
     <section
-      className={`absolute z-[12]  top-0 left-0 right-0 flex flex-col border-b-[2px] border-brown white_background_bubble
+      className={`fixed z-[12]  top-0 left-0 right-0 flex flex-col border-b-[2px] border-brown white_background_bubble
     ${searchOpen ? 'translate-y-0' : 'translate-y-[-100%]'} transition-[transform] duration-500 ease-in-out`}
     >
       <div className="absolute top-4 right-4 flex justify-center items-center">

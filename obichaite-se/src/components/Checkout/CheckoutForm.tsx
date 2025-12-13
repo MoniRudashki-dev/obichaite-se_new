@@ -252,7 +252,7 @@ const CheckoutForm = () => {
                   />
                   <TextInput
                     name="phone"
-                    label="Tелефон/Viber"
+                    label="Tелефон"
                     formValues={formValues}
                     setFormValues={setFormValues}
                     extraClass="w-full"

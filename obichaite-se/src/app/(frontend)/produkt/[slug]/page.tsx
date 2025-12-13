@@ -104,8 +104,8 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
     where: {
       and: [
         {
-          subCategory: {
-            equals: (product?.subCategory as SubCategory)?.id || 7,
+          category: {
+            equals: (product?.category as Category)?.id || 7,
           },
         },
         {
@@ -147,7 +147,7 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
 
         {draft && <LivePreviewListener />}
 
-        <div className="w-full pt-[52px] md:pt-[140px] bg-pink/30">
+        <div className="w-full pt-[76px] md:pt-[164px] bg-pink/30">
           <SingleProduct product={product} />
         </div>
 

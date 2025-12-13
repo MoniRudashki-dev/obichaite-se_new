@@ -11,7 +11,7 @@ const HeroCommon: React.FC<CommonHero> = (props) => {
 
   return (
     <section
-      className={`w-full min-h-[100svh] flex relative ${greatVibes.variable} flex pt-[80px] md:pt-[120px]`}
+      className={`w-full min-h-[100svh] flex relative ${greatVibes.variable} flex pt-[104px] md:pt-[144px]`}
       id="hero"
     >
       <div className="absolute top-0 left-0 right-0 bottom-0">

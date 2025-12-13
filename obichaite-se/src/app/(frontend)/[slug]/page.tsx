@@ -215,7 +215,7 @@ export default async function Page({ params: paramsPromise }: Args) {
         )}
 
         {!!layout?.length && (
-          <div className="pt-[52px] md:pt-[140px]">
+          <div className="pt-[76px] md:pt-[164px]">
             <RenderBlocks blocks={layout} />
           </div>
         )}

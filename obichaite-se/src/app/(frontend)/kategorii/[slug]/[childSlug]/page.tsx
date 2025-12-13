@@ -133,7 +133,7 @@ export default async function SubCategory({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <div className="w-full pt-[52px] md:pt-[140px]">
+      <div className="w-full pt-[76px] md:pt-[164px]">
         <ProductsCardGridWithFilters
           products={[...products.docs]}
           heading={subCategory.title}

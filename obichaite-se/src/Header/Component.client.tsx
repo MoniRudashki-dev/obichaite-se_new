@@ -116,7 +116,7 @@ const HeaderClient = ({ headerData }: { headerData: DataFromGlobalSlug<'header'>
         <Menu openMenu={openMenu} setOpenMenu={setOpenMenu} categoryItems={categoryItems} />
       </div>
       <header
-        className="w-full absolute z-[11] top-0 left-0 right-0 flex flex-col bg-white"
+        className="w-full fixed z-[11] top-[24px] left-0 right-0 flex flex-col bg-white"
         onMouseLeave={() => setOpenCategoryIndex(-1)}
       >
         <nav

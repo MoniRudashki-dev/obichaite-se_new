@@ -19,6 +19,7 @@ import { Product } from './collections/Product/Product'
 import { Footer } from './Footer/config'
 import { SubCategory } from './collections/SubCategory/SubCategory'
 import { Order } from './collections/Order/Order'
+import { Banner } from './Banner/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -54,7 +55,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Category, Product, SubCategory, Order],
-  globals: [Header, Footer],
+  globals: [Header, Footer, Banner],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   cors: [getServerSideURL()].filter(Boolean),

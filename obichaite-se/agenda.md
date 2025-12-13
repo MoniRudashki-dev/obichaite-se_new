@@ -1,6 +1,21 @@
+## **ADDONS DECEMBER**
+[const] ДОПЪЛНИТЕЛНИ НАСТРОЙКИ ДОКУМЕНТ = ДНД
+MIDDLE BITS
+- [done] products to META -> AV - [estimate] [2hours]
+- meta tags -> AV - in progress - [estimate] [4hours]
+- ДНД точки 1&&2 -> SR - [estimate] [3hours]
+- [done-in-dev] ДНД точка 3 -> SR - [estimate] [1hour]
+- ДНД точка 4 -> AV - [estimate] [8hours]
+- [done-in-dev] ДНД точка 5 -> SR - [estimate] [0hours]
+- [done-in-dev] ДНД точка 6 -> SR - [estimate] [1hours]
+- ДНД точка 7 -> SR - [estimate] [2:30hours]
+- ДНД точка 8 -> AV - [estimate] [2hours] - waiting for designs examples
+- ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
+- ДНД точка 10 -> SR - [estimate] [2hours]
+
 === PROJECT AGENDA ===
 
-- PROJECT MIGRATION START IN 17.10.25 -> 30-45 дни срок около, завършек около 25.11.25
+[done] PROJECT MIGRATION START IN 17.10.25 -> 30-45 дни срок около, завършек около 25.11.25
 
 **CURRENT**
 [done] install packages (only required)
@@ -37,16 +52,16 @@
 
 [done] order collection in database - config (ref- MIRO), add orders in the user doc to the owner and the user
 
-- checkout page - form (reference to original site),
-  [done] info about payment,
-  [done] order logic,
-  [done] logic to fill user and order docs in database
-  [done] and finally email- emails for auth
-  [done] Stripe, интегрираме
-  Account - office@obichaite-se.com
-  pass - 8411023033Aa@
+[done] checkout page - form (reference to original site),
+[done] info about payment,
+[done] order logic,
+[done] logic to fill user and order docs in database
+[done] and finally email- emails for auth
+[done] Stripe, интегрираме
+Account - office@obichaite-se.com
+pass - 8411023033Aa@
 
-!!STRIPE - когато сайтът е на живо трябва да мине към productions keys and account!!
+[done] STRIPE - когато сайтът е на живо трябва да мине към productions keys and account!!
 
 [done] user page orders and friends two rows with headings
 [done] \*orders
@@ -67,13 +82,14 @@
 [done] емейл provider-а да бъде сайтът
 [done] sitemap
 [done] cron job or something similar to handle the daily sending emails
+
 - TODOS
-?? add basic Seo jsonld and make each page with correct metadata ??
-?? pwa if its possible ??
+  ?? add basic Seo jsonld and make each page with correct metadata ??
+  ?? pwa if its possible ??
 
 _emails_
-  [done] all needed emails that will be send from the front end and the admin
-  [done] when user make order - email to client with link to admin orders
+[done] all needed emails that will be send from the front end and the admin
+[done] when user make order - email to client with link to admin orders
 
 _migration scripts_
 
@@ -90,16 +106,11 @@ _migration scripts_
 
 [done] - "Прехвърля се в количката с 0лв и вече допълнително ще изпращаме оферти" - Events
 
-## **ADDONS**
-Визулизирането и фукционалноста на началното съобщение ще отнеме грубо - 1 час
-добавянето на чекбоксите и функционалността ще отнеме - 1 час
-Ние ще се оправим с pdf файла. Добавянето към мейла с потвърждение с опция "изтегли", ще отнеме 1 час
-3 часа
-
 **IMPORTANT**
 -- each new user "admin", needs to be verifiied manually - [database]
 
 **AFTER LIVE**
+
 - bg-english texts
 
 **BEFORE HANDOVER**
@@ -107,11 +118,10 @@ _migration scripts_
 [done] да се създаде vercel na клиент
 [done] да се създаде Neon на клиент
 [done] да се оптимизират снимките (unoptimize да бъде динамично)
+
 - да се изтрият поръчките
-[done] да променя всичко от ...vercel.app към live domain и env в нов Vercel URL..
+  [done] да променя всичко от ...vercel.app към live domain и env в нов Vercel URL..
 
 **BACKUP**
-- backup jsons in backup-json branch
 
-на адрес - obichaite-se.com
-А - 185.45.66.207
+- backup jsons in backup-json branch

@@ -133,7 +133,7 @@ export default async function Category({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <div className="w-full pt-[52px] md:pt-[140px]">
+      <div className="w-full pt-[76px] md:pt-[164px]">
         <ProductsCardGridWithFilters products={productsToRender} heading={category.title} />
       </div>
 
