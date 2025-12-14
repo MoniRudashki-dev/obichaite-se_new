@@ -4,14 +4,14 @@ MIDDLE BITS
 - [done] products to META -> AV - [estimate] [2hours]
 - meta tags -> AV - in progress - [estimate] [4hours]
 - ДНД точки 1&&2 -> SR - [estimate] [3hours]
-- [done-in-dev] ДНД точка 3 -> SR - [estimate] [1hour]
+- [done-in-dev-sr] ДНД точка 3 -> SR - [estimate] [1hour]
 - ДНД точка 4 -> AV - [estimate] [8hours]
-- [done-in-dev] ДНД точка 5 -> SR - [estimate] [0hours]
-- [done-in-dev] ДНД точка 6 -> SR - [estimate] [1hours]
-- ДНД точка 7 -> SR - [estimate] [2:30hours]
+- [done-in-dev-sr] ДНД точка 5 -> SR - [estimate] [0hours]
+- [done-in-dev-sr] ДНД точка 6 -> SR - [estimate] [1hours]
+- [done-in-dev-sr] ДНД точка 7 -> SR - [estimate] [2:30hours]
 - ДНД точка 8 -> AV - [estimate] [2hours] - waiting for designs examples
 - ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
-- ДНД точка 10 -> SR - [estimate] [2hours]
+- [done-in-dev-sr] ДНД точка 10 -> SR - [estimate] [2hours]
 
 === PROJECT AGENDA ===
 
