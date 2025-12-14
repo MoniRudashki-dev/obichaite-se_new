@@ -4,6 +4,7 @@
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import { ExtendedProduct } from '@/store/features/checkout'
+import { Product, SubCategory } from '@/payload-types'
 
 export type MakeOrderInput = {
   items: ExtendedProduct[]
@@ -170,5 +171,45 @@ export async function checkForDiscount(email: string): Promise<{ data: boolean }
   } catch (error) {
     console.log(error)
     return { data: false }
+  }
+}
+
+export async function getSuggestions(products: Product[]): Promise<{ data: Product[] }> {
+  try {
+    const payload = await getPayload({ config: configPromise })
+
+    const subCategoriesIds = products.map((product) => (product.subCategory as SubCategory).id)
+
+    if (subCategoriesIds.length === 0) return { data: [] }
+
+    const limit = subCategoriesIds.length * 6
+
+    const result = await payload.find({
+      collection: 'product',
+      where: {
+        and: [
+          {
+            _status: {
+              equals: 'published',
+            },
+          },
+          {
+            subCategory: {
+              in: subCategoriesIds,
+            },
+          },
+        ],
+      },
+      depth: 1,
+      pagination: false,
+      limit: limit,
+    })
+
+    if (result.docs.length === 0) return { data: [] }
+
+    return { data: result.docs }
+  } catch (error) {
+    console.log(error)
+    return { data: [] }
   }
 }

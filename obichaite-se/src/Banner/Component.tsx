@@ -9,11 +9,13 @@ export async function BannerComponent() {
   if (!bannerData?.messages?.length) return null
 
   return (
-    <AnnouncementBar
-      messages={bannerData.messages.map((m) => m.message)}
-      className="bg-bordo text-white"
-      textClassName="text-sm font-medium"
-    />
+    <div className="fixed top-0 left-0 right-0 z-[10]">
+      <AnnouncementBar
+        messages={bannerData.messages.map((m) => m.message)}
+        className="bg-bordo text-white"
+        textClassName="text-sm font-medium"
+      />
+    </div>
   )
 }
 

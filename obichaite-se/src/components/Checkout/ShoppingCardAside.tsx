@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { use, useEffect } from 'react'
 import { GenericImage, GenericParagraph } from '../Generic'
 import { ArrowIcon, CloseCircle, DeleteIcon, MinusIcon, PlusIcon } from '@/assets/icons'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
@@ -9,20 +9,40 @@ import {
   removeOrderQuantity,
   removeProductFromShoppingCart,
   setShoppingCardOpen,
+  setUserHaveDiscount,
 } from '@/store/features/checkout'
 import { useCheckout } from '@/hooks/useCheckout'
 import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 import { Media } from '@/payload-types'
 import { removeFromCart } from '@/action/products/shoppingCart'
 import Link from 'next/link'
+import { checkForDiscount } from '@/action/checkout'
 
 const ShoppingCardAside = () => {
   const dispatch = useAppDispatch()
   const { removeFromLocalStorage } = useCheckout()
   const userId = useAppSelector((state) => state.root.user?.id)
+  const userEmail = useAppSelector((state) => state.root.user?.email)
   const { calculateTotalPrice, calculateRemainSum } = useCheckout()
   const shoppingCardOpen = useAppSelector((state) => state.checkout.shoppingCardOpen)
   const products = useAppSelector((state) => state.checkout.products)
+  const { userHaveDiscount } = useAppSelector((state) => state.checkout)
+
+  const handleCheckDiscount = async () => {
+    const didUserHaveDiscount = await checkForDiscount(userEmail as string)
+
+    if (!!didUserHaveDiscount.data) {
+      dispatch(setUserHaveDiscount(true))
+    } else {
+      dispatch(setUserHaveDiscount(false))
+    }
+  }
+
+  useEffect(() => {
+    if (!userEmail) return
+
+    handleCheckDiscount()
+  }, [userEmail])
 
   const productsContent = products.map((product) => {
     const media = product?.mediaArray?.[0].file as Media
@@ -138,6 +158,19 @@ const ShoppingCardAside = () => {
 
   const remain = Number(calculateRemainSum().toFixed(0))
 
+  let totalPrice = (
+    <>
+      {calculateTotalPrice().toFixed(2)} лв ({priceToEuro(calculateTotalPrice())}€)
+    </>
+  )
+  if (userHaveDiscount) {
+    totalPrice = (
+      <>
+        {(calculateTotalPrice() * 0.9).toFixed(2)} лв ({priceToEuro(calculateTotalPrice() * 0.9)}€)
+      </>
+    )
+  }
+
   return (
     <aside
       className={`fixed top-0 bottom-0 right-0 w-full max-w-[500px] bg-white z-[12] flex flex-col
@@ -199,6 +232,11 @@ const ShoppingCardAside = () => {
         )}
       </div>
 
+      {userHaveDiscount && (
+        <div className="bg-bordo text-white text-center py-[4px] md:py-[3px]">
+          <p className='text-[12px] md:text-[14px]'>* Вие получавате -10% отстъпка от крайната цена!.</p>
+        </div>
+      )}
       <div className="w-full py-2 px-4 bg-black/20">
         <Link href="/checkout">
           <button
@@ -232,7 +270,7 @@ const ShoppingCardAside = () => {
                 pType="small"
                 textColor="text-white"
               >
-                {calculateTotalPrice().toFixed(2)} лв ({priceToEuro(calculateTotalPrice())}€)
+                {totalPrice}
               </GenericParagraph>
             </div>
           </button>

@@ -132,6 +132,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           priceRange: true,
           shortDescription: true,
           quantity: true,
+          subCategory: true,
         },
       })
 
@@ -169,6 +170,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           priceRange: true,
           shortDescription: true,
           quantity: true,
+          subCategory: true,
         },
       })
 

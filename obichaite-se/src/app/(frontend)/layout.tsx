@@ -156,6 +156,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           priceRange: true,
           shortDescription: true,
           quantity: true,
+          subCategory: true,
         },
       })
 

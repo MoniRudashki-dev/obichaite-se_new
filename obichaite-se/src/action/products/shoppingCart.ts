@@ -115,13 +115,13 @@ export async function getCartProductsByUserId(userId: number) {
       mediaArray: true,
       priceRange: true,
       shortDescription: true,
+      subCategory: true,
     },
-    depth: 1, // no need to expand relationships here unless you want them
+    depth: 1,
   })
 
   const docs = productsRes.docs
 
-  // With depth:1, items are full product docs
   const byId = new Map(docs.map((d: any) => [d.id, d]))
   const ordered = ids.map((id) => byId.get(id)).filter(Boolean)
 
