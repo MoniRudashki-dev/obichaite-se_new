@@ -33,7 +33,7 @@ const ProductsCardGridWithFilters = ({
 
   const slicesLists = slicedProducts.map((slice, index) => (
     <div key={index} className="w-full flex flex-col gap-m">
-      <ul className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <ul className="w-full grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-6 gap-x-1 gap-y-4">
         {slice.map((product) => (
           <li key={product.id} className="w-full relative">
             <ProductCard product={product} />

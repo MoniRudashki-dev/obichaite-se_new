@@ -36,7 +36,7 @@ const PromotionsCardsGrid = ({
           </GenericHeading>
         </div>
 
-        <ul className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        <ul className="w-full grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-6 gap-x-1 gap-y-4">
           {promotionCardContent}
         </ul>
       </div>
