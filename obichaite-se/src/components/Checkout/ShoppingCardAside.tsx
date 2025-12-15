@@ -1,6 +1,6 @@
 'use client'
 
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { GenericImage, GenericParagraph } from '../Generic'
 import { ArrowIcon, CloseCircle, DeleteIcon, MinusIcon, PlusIcon } from '@/assets/icons'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
