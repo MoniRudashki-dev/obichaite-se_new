@@ -1,6 +1,5 @@
 'use client'
 
-import { CloseCircle } from '@/assets/icons'
 import { GenericImage } from '@/components/Generic'
 import { Media, Promotion } from '@/payload-types'
 import { generateHref, LinkObject } from '@/utils/generateHref'
