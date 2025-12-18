@@ -2,7 +2,6 @@
 
 import { GenericImage } from '@/components/Generic'
 import { Media, Promotion } from '@/payload-types'
-import { generateHref, LinkObject } from '@/utils/generateHref'
 import Link from 'next/link'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 
