@@ -1,7 +1,8 @@
 'use client'
 
 import { GenericImage } from '@/components/Generic'
-import { Media, Promotion } from '@/payload-types'
+import { Media, Page, Promotion, SubCategory } from '@/payload-types'
+import { getCategorySlugById } from '@/utils/getCategorySlugById'
 import Link from 'next/link'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 
@@ -12,7 +13,7 @@ const PromotionModal = ({ data }: { data: Promotion }) => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = ''
     }
   }, [isOpen])
 
@@ -25,6 +26,17 @@ const PromotionModal = ({ data }: { data: Promotion }) => {
   }, [])
 
   const media = data?.media as Media
+
+  let href = (data?.links?.[0]?.link?.reference?.value as Page)?.slug
+  if (data?.links?.[0]?.link?.reference?.relationTo === 'category') {
+    href = `/kategorii/${href}`
+  }
+  if (data?.links?.[0]?.link?.reference?.relationTo === 'sub-category') {
+    const parentSlug = getCategorySlugById(
+      (data?.links?.[0]?.link?.reference?.value as SubCategory)?.parentCategory as number,
+    )
+    href = `/kategorii/${parentSlug}/${href}`
+  }
 
   return (
     <div
@@ -61,8 +73,11 @@ const PromotionModal = ({ data }: { data: Promotion }) => {
 
       <article className="w-full content_wrapper flex justify-center items-center">
         <Link
-          href={`/kategorii/rychnoizraboteni-podarytsi/koledna-magiq`}
+          href={`${href}`}
           className="w-full h-full flex justify-center items-center"
+          title="Коледна магия"
+          aria-label="Коледна магия"
+          onClick={() => setIsOpen(false)}
         >
           <GenericImage
             src={media?.url as string}
