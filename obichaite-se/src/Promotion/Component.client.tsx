@@ -62,7 +62,7 @@ const PromotionModal = ({ data }: { data: Promotion }) => {
 
       <article className="w-full content_wrapper flex justify-center items-center">
         <Link
-          href={generateHref(data?.links?.[0] as LinkObject) || '/'}
+          href={`/kategorii/rychnoizraboteni-podarytsi/koledna-magiq`}
           className="w-full h-full flex justify-center items-center"
         >
           <GenericImage
