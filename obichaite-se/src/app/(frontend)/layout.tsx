@@ -21,6 +21,7 @@ import SetCurrentUser from '@/components/StateManagers/SetCurrentUser'
 import CustomConsent from '@/components/Custom/CustomConsent'
 import { cookies } from 'next/headers'
 import BannerComponent from '@/Banner/Component'
+import PromotionComponent from '@/Promotion/Component'
 
 // cookie consent
 const CONSENT_COOKIE_NAME = 'cookie-consent'
@@ -193,6 +194,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             <SetCurrentUser />
 
             <CustomConsent initialConsent={cookieConsent} />
+
+            <PromotionComponent />
           </main>
         </body>
       </html>

@@ -9,7 +9,7 @@ MIDDLE BITS
 - [preview] ДНД точка 5 -> SR - [estimate] [0hours]
 - [preview] ДНД точка 6 -> SR - [estimate] [1hours]
 - [preview] ДНД точка 7 -> SR - [estimate] [2:30hours]
-- ДНД точка 8 -> AV - [estimate] [2hours] - waiting for designs examples
+- ДНД точка 8 -> SR - [estimate] [2hours] - waiting for designs examples
 - ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
 - [preview] ДНД точка 10 -> SR - [estimate] [2hours]
 

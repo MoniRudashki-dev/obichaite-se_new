@@ -106,11 +106,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     banner: Banner;
+    promotion: Promotion;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     banner: BannerSelect<false> | BannerSelect<true>;
+    promotion: PromotionSelect<false> | PromotionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1504,6 +1506,54 @@ export interface Banner {
   createdAt?: string | null;
 }
 /**
+ * Появяващ се елемент, които показва текущи промоции/акции
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "promotion".
+ */
+export interface Promotion {
+  id: number;
+  media: number | Media;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom' | 'anchorSectionId') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'product';
+                value: number | Product;
+              } | null)
+            | ({
+                relationTo: 'category';
+                value: number | Category;
+              } | null)
+            | ({
+                relationTo: 'sub-category';
+                value: number | SubCategory;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Дизайн на линк
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Ако това поле бъде активирано, промоцията ще бъде видима
+   */
+  isActive?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -1607,6 +1657,32 @@ export interface BannerSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "promotion_select".
+ */
+export interface PromotionSelect<T extends boolean = true> {
+  media?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  isActive?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
