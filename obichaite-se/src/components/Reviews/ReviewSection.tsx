@@ -3,7 +3,7 @@
 import { Media, Review } from '@/payload-types'
 import React, { useState } from 'react'
 import { GenericButton, GenericHeading, GenericImage, GenericParagraph } from '../Generic'
-import { StarIcon, StarIconReview, StarIconReviewColored } from '@/assets/icons'
+import { StarIcon, StarIconReview } from '@/assets/icons'
 
 const ReviewSection = ({ reviews }: { reviews: Review[] }) => {
   const [showMore, setShowMore] = useState(false)
