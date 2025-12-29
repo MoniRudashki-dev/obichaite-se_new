@@ -123,14 +123,16 @@ const ReviewSection = ({ reviews }: { reviews: Review[] }) => {
           {showMore ? reviewsContent : reviewsContent.slice(0, 2)}
         </ul>
 
-        <div className="border-t-[1px] border-t-bordo/80 flex justify-center item">
-          <GenericButton
-            click={() => setShowMore(!showMore)}
-            styleClass="w-full md:w-auto mt-4 md:mt-6"
-          >
-            {!showMore ? 'Покажи повече' : 'Покажи по-малко'}
-          </GenericButton>
-        </div>
+        {reviews.length > 2 && (
+          <div className="border-t-[1px] border-t-bordo/80 flex justify-center item">
+            <GenericButton
+              click={() => setShowMore(!showMore)}
+              styleClass="w-full md:w-auto mt-4 md:mt-6"
+            >
+              {!showMore ? 'Покажи повече' : 'Покажи по-малко'}
+            </GenericButton>
+          </div>
+        )}
       </div>
     </section>
   )
