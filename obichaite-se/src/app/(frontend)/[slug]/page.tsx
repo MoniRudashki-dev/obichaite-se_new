@@ -9,10 +9,11 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import HeroCommon from '@/Hero/Common'
 import { CategoriesSection } from '@/components/Categories'
-import { Category, Product } from '@/payload-types'
+import { Category, Product, Review } from '@/payload-types'
 import { PromotionsCardsGrid } from '@/components/Product'
 import BenefitsSection from '@/components/Custom/BenefitsSection'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import ReviewSection from '@/components/Reviews/ReviewSection'
 // import { AboutUsJsonLd, HomePageJsonLd, OrganizationJsonLd } from '@/components/SEO'
 
 export async function generateStaticParams() {
@@ -95,6 +96,8 @@ export default async function Page({ params: paramsPromise }: Args) {
   let promotionProducts: Product[] = []
 
   let bestSellers: Product[] = []
+
+  let reviews: Review[] = []
 
   if (!!itIsHome) {
     try {
@@ -185,17 +188,41 @@ export default async function Page({ params: paramsPromise }: Args) {
     } catch (error) {
       console.log('error', error)
     }
+
+    try {
+      const currentReviews = await payload.find({
+        collection: 'reviews',
+        draft: false,
+        limit: 2000,
+        overrideAccess: true,
+        pagination: false,
+        where: {
+          and: [
+            {
+              isInHomePage: {
+                equals: true,
+              },
+            },
+            {
+              approved: {
+                equals: true,
+              },
+            },
+          ],
+        },
+        //get only the reviews with property 'itIsHome' set to true
+      })
+
+      if (currentReviews.docs.length > 0) {
+        reviews = currentReviews.docs
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
   }
 
   return (
     <>
-      {/* {slug === 'home' && (
-        <>
-          <OrganizationJsonLd />
-          <HomePageJsonLd />
-          <CategoriesItemList />
-        </>
-      )} */}
       <article className="w-full">
         <PayloadRedirects disableNotFound url={url} />
 
@@ -221,6 +248,8 @@ export default async function Page({ params: paramsPromise }: Args) {
             <RenderBlocks blocks={layout} />
           </div>
         )}
+
+        {!!reviews?.length && <ReviewSection reviews={reviews} />}
       </article>
     </>
   )

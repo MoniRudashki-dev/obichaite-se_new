@@ -2,7 +2,9 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { PromotionsCardsGrid } from '@/components/Product'
 import SingleProduct from '@/components/Product/SingleProduct'
-import { Category, Product } from '@/payload-types'
+import ReviewForm from '@/components/Reviews/ReviewForm'
+import ReviewSection from '@/components/Reviews/ReviewSection'
+import { Category, Product, Review } from '@/payload-types'
 import { generateMeta } from '@/utils/generateMeta'
 import shuffle from '@/utils/seedShuffle'
 import configPromise from '@payload-config'
@@ -141,6 +143,44 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
     allRelatedToRender = shuffled.slice(0, 6)
   }
 
+  let reviews: Review[] = []
+
+  try {
+    const currentReviews = await payload.find({
+      collection: 'reviews',
+      draft: false,
+      limit: 2000,
+      overrideAccess: true,
+      pagination: false,
+      where: {
+        and: [
+          {
+            isInHomePage: {
+              equals: true,
+            },
+          },
+          {
+            approved: {
+              equals: true,
+            },
+          },
+          {
+            product: {
+              equals: product.id,
+            },
+          },
+        ],
+      },
+      //get only the reviews with property 'itIsHome' set to true
+    })
+
+    if (currentReviews.docs.length > 0) {
+      reviews = currentReviews.docs
+    }
+  } catch (error) {
+    console.log('error', error)
+  }
+
   return (
     <>
       <article className="w-full">
@@ -166,6 +206,12 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
             heading="Свързани продукти"
           />
         )}
+
+        {!!reviews?.length && <ReviewSection reviews={reviews} />}
+
+        <div className="w-full white-pink-background px-4 md:px-6 xl:px-10">
+          <ReviewForm productId={product.id} />
+        </div>
       </article>
     </>
   )

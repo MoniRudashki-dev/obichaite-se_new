@@ -74,6 +74,7 @@ export interface Config {
     product: Product;
     'sub-category': SubCategory;
     order: Order;
+    reviews: Review;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -91,6 +92,7 @@ export interface Config {
     product: ProductSelect<false> | ProductSelect<true>;
     'sub-category': SubCategorySelect<false> | SubCategorySelect<true>;
     order: OrderSelect<false> | OrderSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -565,6 +567,32 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: number;
+  title: string;
+  rating: '1' | '2' | '3' | '4' | '5';
+  /**
+   * Ако бъде удобренo, ревюто ще бъде видимо в сайтът
+   */
+  approved?: boolean | null;
+  /**
+   * Ако бъде удобренo, ревюто ще бъде видимо в началната страница
+   */
+  isInHomePage?: boolean | null;
+  message: string;
+  author: string;
+  product: number | Product;
+  /**
+   * Снимка към Ревюто
+   */
+  media?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -833,6 +861,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'order';
         value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: number | Review;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1146,6 +1178,22 @@ export interface OrderSelect<T extends boolean = true> {
       };
   clientNotes?: T;
   internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  title?: T;
+  rating?: T;
+  approved?: T;
+  isInHomePage?: T;
+  message?: T;
+  author?: T;
+  product?: T;
+  media?: T;
   updatedAt?: T;
   createdAt?: T;
 }

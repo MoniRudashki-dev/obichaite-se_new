@@ -21,6 +21,7 @@ import { SubCategory } from './collections/SubCategory/SubCategory'
 import { Order } from './collections/Order/Order'
 import { Banner } from './Banner/config'
 import { Promotion } from './Promotion/config'
+import { Reviews } from './collections/Reviews/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,7 +56,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Category, Product, SubCategory, Order],
+  collections: [Users, Media, Pages, Category, Product, SubCategory, Order, Reviews],
   globals: [Header, Footer, Banner, Promotion],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -72,16 +73,16 @@ export default buildConfig({
   sharp,
   plugins: [payloadCloudPlugin(), ...plugins],
   email: nodemailerAdapter({
-  defaultFromAddress: process.env.EMAIL_FROM_ADDRESS!,
-  defaultFromName: process.env.EMAIL_FROM_NAME!,
-  transportOptions: {
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: true, // true for 465, false for 587
-    auth: {
-      user: process.env.SMTP_USER!,
-      pass: process.env.SMTP_PASS!,
+    defaultFromAddress: process.env.EMAIL_FROM_ADDRESS!,
+    defaultFromName: process.env.EMAIL_FROM_NAME!,
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 465,
+      secure: true, // true for 465, false for 587
+      auth: {
+        user: process.env.SMTP_USER!,
+        pass: process.env.SMTP_PASS!,
+      },
     },
-  },
-})
+  }),
 })
