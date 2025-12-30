@@ -19,14 +19,8 @@ import GenericNotification from '@/components/Generic/GenericNotification'
 import { ShoppingCartManager } from '@/components/StateManagers'
 import SetCurrentUser from '@/components/StateManagers/SetCurrentUser'
 import CustomConsent from '@/components/Custom/CustomConsent'
-import { cookies } from 'next/headers'
 import BannerComponent from '@/Banner/Component'
 import PromotionComponent from '@/Promotion/Component'
-import Script from 'next/script'
-
-// cookie consent
-const CONSENT_COOKIE_NAME = 'cookie-consent'
-const CONSENT_COOKIE_VALUE = 'granted'
 
 const SITE_NAME = 'Обичайте се'
 
