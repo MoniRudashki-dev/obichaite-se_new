@@ -31,18 +31,9 @@ const CustomConsent = () => {
     }
   }
 
-  function gtag(
-    firstArg: string,
-    secondArg: string,
-    thirdArg: {
-      ad_storage: string
-      ad_user_data: string
-      ad_personalization: string
-      analytics_storage: string
-    },
-  ) {
+  function gtag(...args: any) {
     ;(window as any).dataLayer = (window as any).dataLayer || []
-    ;(window as any).dataLayer.push(firstArg, secondArg, thirdArg)
+    ;(window as any).dataLayer.push({ ...args })
   }
 
   function consentGrantedAdStorage() {
