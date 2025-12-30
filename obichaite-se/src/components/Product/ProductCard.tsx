@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
+import { ADD_TO_CART } from '@/services/anatilitics'
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch()
@@ -184,6 +185,17 @@ const ProductCard = ({ product }: { product: Product }) => {
 
                       if (!!userId) {
                         addToCart(product?.id, userId!)
+                        const priceForProduct = product.promoPrice
+                          ? product.promoPrice
+                          : product.price || 0
+                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                          {
+                            item_id: product?.id,
+                            item_name: product?.title,
+                            price: priceForProduct,
+                            quantity: 1,
+                          },
+                        ])
                       } else {
                         addToLocalStorage(product)
                       }
@@ -217,6 +229,17 @@ const ProductCard = ({ product }: { product: Product }) => {
                       )
                       if (!!userId) {
                         addToCart(product?.id, userId!)
+                        const priceForProduct = product.promoPrice
+                          ? product.promoPrice
+                          : product.price || 0
+                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                          {
+                            item_id: product?.id,
+                            item_name: product?.title,
+                            price: priceForProduct,
+                            quantity: 1,
+                          },
+                        ])
                       } else {
                         addToLocalStorage(product)
                       }

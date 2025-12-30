@@ -1,23 +1,61 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GenericButton, GenericParagraph } from '../Generic'
 import Link from 'next/link'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import { setConsentActive } from '@/store/features/root'
-import { GoogleTagManager } from '../GoogleTagManager'
 import { useState } from 'react'
+import cookieConsent from '@/action/cookieConsent'
 
-const CustomConsent = ({ initialConsent }: { initialConsent: boolean }) => {
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
+const CustomConsent = () => {
   const dispatch = useAppDispatch()
-  const [hasConsent, setHasConsent] = useState(initialConsent)
+  const [hasConsent, setHasConsent] = useState(true)
   const isActive = useAppSelector((state) => state.root.consentActive)
 
   const handleAccept = () => {
     document.cookie = 'cookie-consent=granted; path=/; max-age=15552000'
     setHasConsent(true)
+    handleCookieConsent()
     dispatch(setConsentActive(false))
   }
+
+  const handleCookieConsent = async () => {
+    const cookieConsentValue = await cookieConsent()
+
+    if (cookieConsentValue) {
+      consentGrantedAdStorage()
+      setHasConsent(true)
+    } else {
+      setHasConsent(false)
+    }
+  }
+
+  function consentGrantedAdStorage() {
+    // eslint-disable-next-line
+    function gtag() {
+      // eslint-disable-next-line
+      window.dataLayer.push(arguments)
+    }
+    // @ts-ignore
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted',
+    })
+  }
+
+  useEffect(() => {
+    handleCookieConsent()
+  }, [])
+
   return (
     <>
       {!hasConsent && (
@@ -46,8 +84,6 @@ const CustomConsent = ({ initialConsent }: { initialConsent: boolean }) => {
           </div>
         </div>
       )}
-
-      {hasConsent && <GoogleTagManager />}
     </>
   )
 }
