@@ -8,6 +8,12 @@ import { setConsentActive } from '@/store/features/root'
 import { useState } from 'react'
 import cookieConsent from '@/action/cookieConsent'
 
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
 const CustomConsent = () => {
   const dispatch = useAppDispatch()
   const [hasConsent, setHasConsent] = useState(true)
@@ -31,12 +37,13 @@ const CustomConsent = () => {
     }
   }
 
-  function gtag(...args: any) {
-    ;(window as any).dataLayer = (window as any).dataLayer || []
-    ;(window as any).dataLayer.push({ ...args })
-  }
-
   function consentGrantedAdStorage() {
+    // eslint-disable-next-line
+    function gtag() {
+      // eslint-disable-next-line
+      window.dataLayer.push(arguments)
+    }
+    // @ts-ignore
     gtag('consent', 'update', {
       ad_storage: 'granted',
       ad_user_data: 'granted',
