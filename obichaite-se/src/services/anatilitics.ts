@@ -1,3 +1,5 @@
+const isBrowser = typeof window !== 'undefined'
+
 export const ADD_TO_CART = (
   currency: string,
   value: string,
@@ -8,6 +10,8 @@ export const ADD_TO_CART = (
     quantity: number
   }[],
 ) => {
+  if (!isBrowser) return
+
   window.dataLayer = window.dataLayer || []
   window.dataLayer.push({
     event: 'add_to_cart',
