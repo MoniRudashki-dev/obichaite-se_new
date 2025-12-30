@@ -173,6 +173,17 @@ const ProductCard = ({ product }: { product: Product }) => {
                     styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
                     click={() => {
                       dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
+                      const priceForProduct = product.promoPrice
+                        ? product.promoPrice
+                        : product.price || 0
+                      ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                        {
+                          item_id: product?.id,
+                          item_name: product?.title,
+                          price: priceForProduct,
+                          quantity: 1,
+                        },
+                      ])
                       dispatch(
                         setNotification({
                           showNotification: true,
@@ -185,17 +196,6 @@ const ProductCard = ({ product }: { product: Product }) => {
 
                       if (!!userId) {
                         addToCart(product?.id, userId!)
-                        const priceForProduct = product.promoPrice
-                          ? product.promoPrice
-                          : product.price || 0
-                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                          {
-                            item_id: product?.id,
-                            item_name: product?.title,
-                            price: priceForProduct,
-                            quantity: 1,
-                          },
-                        ])
                       } else {
                         addToLocalStorage(product)
                       }
@@ -217,6 +217,17 @@ const ProductCard = ({ product }: { product: Product }) => {
                     styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
                     click={() => {
                       dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
+                      const priceForProduct = product.promoPrice
+                        ? product.promoPrice
+                        : product.price || 0
+                      ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                        {
+                          item_id: product?.id,
+                          item_name: product?.title,
+                          price: priceForProduct,
+                          quantity: 1,
+                        },
+                      ])
 
                       dispatch(
                         setNotification({
@@ -232,14 +243,6 @@ const ProductCard = ({ product }: { product: Product }) => {
                         const priceForProduct = product.promoPrice
                           ? product.promoPrice
                           : product.price || 0
-                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                          {
-                            item_id: product?.id,
-                            item_name: product?.title,
-                            price: priceForProduct,
-                            quantity: 1,
-                          },
-                        ])
                       } else {
                         addToLocalStorage(product)
                       }

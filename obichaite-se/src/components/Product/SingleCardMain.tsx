@@ -169,6 +169,15 @@ const SingleCardMain = ({ product }: { product: Product }) => {
               title="Добави в Количка"
               onClick={() => {
                 dispatch(addProductToShoppingCart({ ...product, orderQuantity: orderQuantity }))
+                const priceForProduct = product.promoPrice ? product.promoPrice : product.price || 0
+                ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                  {
+                    item_id: product?.id,
+                    item_name: product?.title,
+                    price: priceForProduct,
+                    quantity: 1,
+                  },
+                ])
                 dispatch(
                   setNotification({
                     showNotification: true,
@@ -180,17 +189,6 @@ const SingleCardMain = ({ product }: { product: Product }) => {
                 )
                 if (!!userId) {
                   addToCart(product.id, userId)
-                  const priceForProduct = product.promoPrice
-                    ? product.promoPrice
-                    : product.price || 0
-                  ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                    {
-                      item_id: product?.id,
-                      item_name: product?.title,
-                      price: priceForProduct,
-                      quantity: 1,
-                    },
-                  ])
                 } else {
                   addToLocalStorage(product)
                 }
