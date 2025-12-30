@@ -240,9 +240,6 @@ const ProductCard = ({ product }: { product: Product }) => {
                       )
                       if (!!userId) {
                         addToCart(product?.id, userId!)
-                        const priceForProduct = product.promoPrice
-                          ? product.promoPrice
-                          : product.price || 0
                       } else {
                         addToLocalStorage(product)
                       }
