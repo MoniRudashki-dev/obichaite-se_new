@@ -104,6 +104,49 @@ export const Pages: CollectionConfig<'pages'> = {
                 },
               ],
             },
+            {
+              name: 'representatives',
+              type: 'group',
+              label: 'Представители',
+              //I need to show that section only if the page slug === home
+              admin: {
+                condition: (data) => data.slug === 'home',
+              },
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'content',
+                  type: 'array',
+                  label: 'Съдържание',
+                  required: true,
+                  admin: {
+                    initCollapsed: true,
+                    description:
+                      'Всяко едно изречение от съдържанието, което ще бъде изобразено трябва да бъде в този масив от текстове.',
+                  },
+                  fields: [
+                    {
+                      name: 'text',
+                      type: 'text',
+                      required: true,
+                    },
+                  ],
+                },
+                {
+                  name: 'mediaArray',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                  label: 'Снимки',
+                  maxDepth: 2,
+                  hasMany: true,
+                },
+              ],
+            },
           ],
           label: 'Съдържание',
         },
