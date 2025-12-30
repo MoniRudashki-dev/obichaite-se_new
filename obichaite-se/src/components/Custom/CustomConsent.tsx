@@ -10,7 +10,7 @@ import cookieConsent from '@/action/cookieConsent'
 
 const CustomConsent = () => {
   const dispatch = useAppDispatch()
-  const [hasConsent, setHasConsent] = useState(false)
+  const [hasConsent, setHasConsent] = useState(true)
   const isActive = useAppSelector((state) => state.root.consentActive)
 
   const handleAccept = () => {
@@ -25,6 +25,9 @@ const CustomConsent = () => {
 
     if (cookieConsentValue) {
       consentGrantedAdStorage()
+      setHasConsent(true)
+    } else {
+      setHasConsent(false)
     }
   }
 
