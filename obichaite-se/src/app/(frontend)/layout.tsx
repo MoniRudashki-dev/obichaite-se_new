@@ -22,6 +22,7 @@ import CustomConsent from '@/components/Custom/CustomConsent'
 import { cookies } from 'next/headers'
 import BannerComponent from '@/Banner/Component'
 import PromotionComponent from '@/Promotion/Component'
+import Script from 'next/script'
 
 // cookie consent
 const CONSENT_COOKIE_NAME = 'cookie-consent'
@@ -118,11 +119,9 @@ export const metadata: Metadata = {
 }
 
 const isDev = process.env.NODE_ENV === 'development'
+const GTM_ID = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
-  const cookieStore = await cookies()
-  const cookieConsent = cookieStore.get(CONSENT_COOKIE_NAME)?.value === CONSENT_COOKIE_VALUE
-
   const { children } = props
   const payload = await getPayload({ config: configPromise })
   const productsForSearch = isDev
@@ -169,6 +168,34 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 
           <link rel="preconnect prefetch" href="https://obichaite-se.com/" />
+
+          <script id="default-consent">
+            {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+           gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied'
+  });`}
+          </script>
+
+          <script id="gtm-base">{`
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${GTM_ID}');
+      `}</script>
+
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
         </head>
         <body>
           <main id="content" className="min-h-[100svh] overflow-x-clip">
@@ -193,9 +220,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
             <SetCurrentUser />
 
-            <CustomConsent initialConsent={cookieConsent} />
-
             <PromotionComponent />
+
+            <CustomConsent />
           </main>
         </body>
       </html>
