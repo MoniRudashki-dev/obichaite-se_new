@@ -43,6 +43,13 @@ const ReviewForm = ({ productId }: { productId: number }) => {
     const authorError = author.length < 3 ? 'Името трябва да е поне 3 символа' : ''
     const messageError = message.length < 3 ? 'Съобщението трябва да е поне 3 символа' : ''
 
+    //check the file is valid by size
+    const imageFile = formData.get('image') as File | null
+    if (imageFile && imageFile.size > 4500000) {
+      setError('Моля изберете файл с размер до 4.5 MB')
+      return
+    }
+
     if (!acceptTerms || !acceptPrivacy) {
       setError('Трябва да се съгласите с задължителните условия, за потвърждаване на поръчката')
     }
@@ -53,14 +60,19 @@ const ReviewForm = ({ productId }: { productId: number }) => {
     }
 
     startTransition(async () => {
-      const result = await createReview(formData)
+      try {
+        const result = await createReview(formData)
 
-      if (!result?.ok) {
+        if (!result?.ok) {
+          setError('Възникна грешка при изпращане на отзива')
+          return
+        }
+
+        setIsSuccess(true)
+      } catch (err) {
+        console.log(err)
         setError('Възникна грешка при изпращане на отзива')
-        return
       }
-
-      setIsSuccess(true)
     })
   }
 

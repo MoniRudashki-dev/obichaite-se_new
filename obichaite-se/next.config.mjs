@@ -27,6 +27,11 @@ const nextConfig = {
   },
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '4500kb',
+    },
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

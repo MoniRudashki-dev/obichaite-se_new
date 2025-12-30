@@ -401,6 +401,17 @@ export interface Page {
         id?: string | null;
       }[]
     | null;
+  representatives?: {
+    title: string;
+    /**
+     * Всяко едно изречение от съдържанието, което ще бъде изобразено трябва да бъде в този масив от текстове.
+     */
+    content: {
+      text: string;
+      id?: string | null;
+    }[];
+    mediaArray: (number | Media)[];
+  };
   meta?: {
     title?: string | null;
     /**
@@ -999,6 +1010,18 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         media?: T;
         id?: T;
+      };
+  representatives?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        mediaArray?: T;
       };
   meta?:
     | T
