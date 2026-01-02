@@ -1,17 +1,13 @@
 ## **ADDONS DECEMBER**
+
 [const] ДОПЪЛНИТЕЛНИ НАСТРОЙКИ ДОКУМЕНТ = ДНД
 MIDDLE BITS
-- [done] products to META -> AV - [estimate] [2hours]
+
 - meta tags -> AV - in progress - [estimate] [4hours]
-- [done] точки 1&&2 -> SR - [estimate] [3hours]
-- [done] ДНД точка 3 -> SR - [estimate] [1hour]
-- [done] 4 -> AV - [estimate] [8hours]
-- [done] ДНД точка 5 -> SR - [estimate] [0hours]
-- [done] ДНД точка 6 -> SR - [estimate] [1hours]
-- [done] ДНД точка 7 -> SR - [estimate] [2:30hours]
-- [done] ДНД 8 -> SR - [estimate] [2hours]
 - ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
-- [done] ДНД точка 10 -> SR - [estimate] [2hours]
+  [done] да се оправи цената към админ като има discount - [FEEDBACK]
+  [done] price euro to be first priority in visualization SR - 30 min
+  [progress] checkout to get price in euro???, each other segment that include 'лв', to be changed (admin and so on)
 
 === PROJECT AGENDA ===
 
