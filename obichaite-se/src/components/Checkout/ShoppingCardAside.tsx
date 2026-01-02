@@ -137,13 +137,13 @@ const ShoppingCardAside = () => {
                   <>
                     {product?.promoPrice ? (
                       <>
-                        {(product.promoPrice * product.orderQuantity).toFixed(2)} лв. (
-                        {priceToEuro(product.promoPrice * product.orderQuantity)})€
+                        {priceToEuro(product.promoPrice * product.orderQuantity)}€ (
+                        {(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)
                       </>
                     ) : (
                       <>
-                        {(product.price! * product.orderQuantity).toFixed(2)} лв. (
-                        {priceToEuro(product.price! * product.orderQuantity)})€
+                        {priceToEuro(product.price! * product.orderQuantity)}€ (
+                        {(product.price! * product.orderQuantity).toFixed(2)} лв.)
                       </>
                     )}
                   </>
@@ -160,13 +160,13 @@ const ShoppingCardAside = () => {
 
   let totalPrice = (
     <>
-      {calculateTotalPrice().toFixed(2)} лв ({priceToEuro(calculateTotalPrice())}€)
+      {priceToEuro(calculateTotalPrice())}€ ({calculateTotalPrice().toFixed(2)} лв)
     </>
   )
   if (userHaveDiscount) {
     totalPrice = (
       <>
-        {(calculateTotalPrice() * 0.9).toFixed(2)} лв ({priceToEuro(calculateTotalPrice() * 0.9)}€)
+        {priceToEuro(calculateTotalPrice() * 0.9)} € ({(calculateTotalPrice() * 0.9).toFixed(2)} лв)
       </>
     )
   }
@@ -234,7 +234,9 @@ const ShoppingCardAside = () => {
 
       {userHaveDiscount && (
         <div className="bg-bordo text-white text-center py-[4px] md:py-[3px]">
-          <p className='text-[12px] md:text-[14px]'>* Вие получавате -10% отстъпка от крайната цена!.</p>
+          <p className="text-[12px] md:text-[14px]">
+            * Вие получавате -10% отстъпка от крайната цена!.
+          </p>
         </div>
       )}
       <div className="w-full py-2 px-4 bg-black/20">

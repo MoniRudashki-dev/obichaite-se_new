@@ -142,7 +142,7 @@ const CheckoutForm = () => {
     }
 
     startTransition(async () => {
-      const response = await makeOrder(requestBody, userId as number | null)
+      const response = await makeOrder(requestBody, userId as number | null, userHaveDiscount)
 
       if (response.ok) {
         setOrderNumber(response.orderNumber as string)
@@ -377,7 +377,7 @@ const CheckoutForm = () => {
                       pType="small"
                       textColor="text-white"
                     >
-                      {totalPrice.toFixed(2)} лв ({priceToEuro(totalPrice)}€)
+                      {priceToEuro(totalPrice)}€ ({totalPrice.toFixed(2)} лв)
                     </GenericParagraph>
                   </div>
 
