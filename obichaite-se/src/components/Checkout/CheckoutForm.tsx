@@ -29,6 +29,7 @@ import { createPaymentIntentAction } from '@/Stripe/action'
 import { PaymentSection } from '@/Stripe/components'
 import EmailInputWithAction from './EmailInputWithActions'
 import { Order } from '@/payload-types'
+import { PURCHASE } from '@/services/anatilitics'
 
 const CheckoutForm = () => {
   const dispatch = useAppDispatch()
@@ -174,6 +175,20 @@ const CheckoutForm = () => {
             userEmail: formValues.email as string,
             orderNumber: response.orderNumber as string,
           })
+
+          // purchase trigger
+          PURCHASE(
+            'EUR',
+            String(calculateTotalPrice().toFixed(0)),
+            products.map((product) => {
+              return {
+                item_id: product?.id,
+                item_name: product?.title,
+                price: product.promoPrice ? product.promoPrice : product.price || 0,
+                quantity: product.orderQuantity,
+              }
+            }),
+          )
         }
         dispatch(clearProducts())
         dispatch(setUserHaveDiscount(false))
