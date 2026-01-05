@@ -3,7 +3,11 @@
 import { DeleteIcon, MinusIcon, PlusIcon } from '@/assets/icons'
 import { useAppDispatch } from '@/hooks/redux-hooks'
 import { Media, Product } from '@/payload-types'
-import { addOrderQuantity, removeOrderQuantity, removeProductFromShoppingCart } from '@/store/features/checkout'
+import {
+  addOrderQuantity,
+  removeOrderQuantity,
+  removeProductFromShoppingCart,
+} from '@/store/features/checkout'
 import React from 'react'
 import { GenericImage, GenericParagraph } from '../Generic'
 import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
@@ -93,13 +97,13 @@ const CheckoutProduct = ({ product }: { product: Product & { orderQuantity: numb
                 <>
                   {product?.promoPrice ? (
                     <>
-                      {(product.promoPrice * product.orderQuantity).toFixed(2)} лв. (
-                      {priceToEuro(product.promoPrice * product.orderQuantity)})€
+                      {priceToEuro(product.promoPrice * product.orderQuantity)}€ (
+                      {(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)
                     </>
                   ) : (
                     <>
-                      {(product.price! * product.orderQuantity).toFixed(2)} лв. (
-                      {priceToEuro(product.price! * product.orderQuantity)})€
+                      {priceToEuro(product.price! * product.orderQuantity)}€ (
+                      {(product.price! * product.orderQuantity).toFixed(2)} лв.)
                     </>
                   )}
                 </>

@@ -33,7 +33,7 @@ export async function sendNewOrderEmailAction({ orderId, items, total }: SendNew
     orderId,
     items,
     total,
-    currency: 'лв.',
+    currency: 'eu/лв.',
     adminOrderUrl,
   })
 
@@ -60,7 +60,7 @@ export async function sendConfirmedOrderEmail({
     orderId,
     items,
     total,
-    currency: 'лв.',
+    currency: 'eu/лв.',
     userName: userName!,
     orderNumber,
   })
@@ -99,7 +99,7 @@ export async function sendChangeStatusOrderEmail({
     orderId,
     items,
     total,
-    currency: 'лв.',
+    currency: 'eu/лв.',
     userName: userName!,
     orderStatus: orderStatus as string,
   })

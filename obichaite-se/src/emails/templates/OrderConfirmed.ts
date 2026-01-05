@@ -1,3 +1,5 @@
+import { priceToEuro } from "@/utils/calculatePriceFromLvToEuro"
+
 type OrderItem = {
   name: string
   quantity: number
@@ -20,7 +22,7 @@ const pdfLink = getPdfLink()
 
 export const OrderConfirmed = {
   subject: ({ orderId }: { orderId: number }) => `Поръчката ви е потвърдена #${orderId}`,
-  html: ({ orderId, items, total, currency = 'лв.', userName, orderNumber }: NewOrderEmailArgs) => {
+  html: ({ orderId, items, total, currency = 'eu/лв.', userName, orderNumber }: NewOrderEmailArgs) => {
     const logoUrl = getLogoUrl()
 
     const itemsRows =
@@ -101,7 +103,7 @@ export const OrderConfirmed = {
             </tr>
             <tr>
               <td align="right" style="padding:12px 24px 8px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#111111;font-weight:600;border-top:1px solid #f0f0f0;">
-                Обща стойност: ${total.toFixed(2)} ${currency}
+                Обща стойност: ${priceToEuro(total)} ${total.toFixed(2)} ${currency}
               </td>
             </tr>
             

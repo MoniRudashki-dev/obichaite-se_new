@@ -43,9 +43,11 @@ const ProductCard = ({ product }: { product: Product }) => {
         textColor="text-brown"
         extraClass="text-center"
       >
-        <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>{price.toFixed(2)}</span>
+        <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>
+          {priceToEuro(price)}
+        </span>
         <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
-          {promoPrice && ` ${promoPrice.toFixed(2)}`}лв
+          {!!promoPrice && ` ${priceToEuro(promoPrice)}`}€
         </span>
       </GenericParagraph>
       <div className="w-full h-[1px] bg-brown/80"></div>
@@ -55,11 +57,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         textColor="text-brown"
         extraClass="text-center"
       >
-        <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>
-          {priceToEuro(price)}
-        </span>
+        <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>{price.toFixed(2)}</span>
         <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
-          {!!promoPrice && ` ${priceToEuro(promoPrice)}`}€
+          {promoPrice && ` ${promoPrice.toFixed(2)}`}лв
         </span>
       </GenericParagraph>
     </div>
@@ -72,8 +72,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         extraClass="text-center"
       >
         <span className={`${!!havePriceRange && 'text-[16px]'}`}>
-          {Number(priceRange?.split('-')?.[0]).toFixed(0)}-
-          {Number(priceRange?.split('-')?.[1]).toFixed(0)}лв
+          {priceToEuro(Number(priceRange?.split('-')?.[0]))}-
+          {priceToEuro(Number(priceRange?.split('-')?.[1]))}€
         </span>
       </GenericParagraph>
       <div className="w-full h-[1px] bg-brown/80"></div>
@@ -84,8 +84,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         extraClass="text-center"
       >
         <span className={`${!!havePriceRange && 'text-[16px]'}`}>
-          {priceToEuro(Number(priceRange?.split('-')?.[0]))}-
-          {priceToEuro(Number(priceRange?.split('-')?.[1]))}€
+          {Number(priceRange?.split('-')?.[0]).toFixed(0)}-
+          {Number(priceRange?.split('-')?.[1]).toFixed(0)}лв
         </span>
       </GenericParagraph>
     </div>

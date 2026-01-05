@@ -26,6 +26,7 @@ export type MakeOrderInput = {
 export async function makeOrder(
   input: MakeOrderInput,
   userId: number | null,
+  userHaveDiscount: boolean,
 ): Promise<{
   ok: boolean
   orderId: number | null
@@ -121,7 +122,7 @@ export async function makeOrder(
         paymentStatus: paymentStatus,
 
         items: orderItems,
-        total,
+        total: userHaveDiscount ? total * 0.9 : total,
         freeShipping: itsFreeShipping,
         customerName,
         customerEmail,
@@ -162,6 +163,8 @@ export async function checkForDiscount(email: string): Promise<{ data: boolean }
       pagination: false,
       limit: 1,
     })
+
+    console.log('result', result.docs)
 
     if (result.docs.length > 0) {
       return { data: false }
