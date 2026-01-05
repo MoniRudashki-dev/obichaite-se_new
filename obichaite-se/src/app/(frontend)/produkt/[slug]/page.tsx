@@ -1,4 +1,5 @@
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import PageViewComponent from '@/components/PageViewComponent'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { PromotionsCardsGrid } from '@/components/Product'
 import SingleProduct from '@/components/Product/SingleProduct'
@@ -184,6 +185,9 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
   return (
     <>
       <article className="w-full">
+        {/* TODO move? */}
+        <PageViewComponent {...product} />
+
         {/* Allows redirects for valid pages too */}
         <PayloadRedirects disableNotFound url={url} />
 

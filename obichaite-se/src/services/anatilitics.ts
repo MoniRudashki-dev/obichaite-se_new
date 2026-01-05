@@ -46,24 +46,44 @@ export const PURCHASE = (
   })
 }
 
-// export const CONTENT_VIEW = (
-//   currency: string,
-//   value: string,
-//   items: {
-//     item_id: number
-//     item_name: string
-//     price: number
-//   }
-// ) => {
-//   if (!isBrowser) return
+export const VIEW_CONTENT = (
+  currency: string,
+  value: string,
+  items: {
+    item_id: string
+    item_name: string
+    price: number
+    quantity: number
+  }[],
+) => {
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({
+    event: 'view_content',
+    ecommerce: {
+      currency,
+      value,
+      items,
+    },
+  })
+}
 
-//   window.dataLayer = window.dataLayer || []
-//   window.dataLayer.push({
-//     event: 'content_view',
-//     ecommerce: {
-//       currency: currency,
-//       value: value,
-//       items: [items],
-//     },
-//   })
-// }
+export const INITIATE_CHECKOUT = (
+  currency: string,
+  value: string,
+  items: {
+    item_id: string
+    item_name: string
+    price: number
+    quantity: number
+  }[],
+) => {
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({
+    event: 'initiate_checkout',
+    ecommerce: {
+      currency,
+      value,
+      items,
+    },
+  })
+}
