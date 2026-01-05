@@ -26,22 +26,22 @@ export const ADD_TO_CART = (
 export const PURCHASE = (
   currency: string,
   value: string,
+  order_id: string,
   items: {
-    item_id: number
+    item_id: string
     item_name: string
     price: number
     quantity: number
   }[],
 ) => {
-  if (!isBrowser) return
-
   window.dataLayer = window.dataLayer || []
   window.dataLayer.push({
     event: 'purchase',
     ecommerce: {
-      currency: currency,
-      value: value,
-      items: items,
+      transaction_id: order_id,
+      currency,
+      value,
+      items,
     },
   })
 }

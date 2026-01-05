@@ -178,11 +178,12 @@ const CheckoutForm = () => {
 
           // purchase trigger
           PURCHASE(
-            'EUR',
+            'BGN',
             String(calculateTotalPrice().toFixed(0)),
+            response.orderNumber as string,
             products.map((product) => {
               return {
-                item_id: product?.id,
+                item_id: String(product?.id),
                 item_name: product?.title,
                 price: product.promoPrice ? product.promoPrice : product.price || 0,
                 quantity: product.orderQuantity,
