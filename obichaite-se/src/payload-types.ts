@@ -406,7 +406,16 @@ export interface Page {
     /**
      * Всяко едно изречение от съдържанието, което ще бъде изобразено трябва да бъде в този масив от текстове.
      */
-    content: {
+    content?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Всяко едно изречение от съдържанието, което ще бъде изобразено трябва да бъде в този масив от текстове.
+     */
+    content2: {
       text: string;
       id?: string | null;
     }[];
@@ -1016,6 +1025,12 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         title?: T;
         content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        content2?:
           | T
           | {
               text?: T;

@@ -361,3 +361,50 @@ video::-webkit-media-controls-start-playback-button {
     );
   background-size: 42px 42px;
 }
+
+.marquee {
+  animation: vertical-marquee 18s linear infinite;
+}
+.marqueePaused {
+  animation-play-state: paused;
+}
+
+@keyframes vertical-marquee-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes vertical-marquee-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes maskedLineIn {
+  from {
+    transform: translateY(110%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes maskedLineOut {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-110%);
+    opacity: 0.9;
+  }
+}

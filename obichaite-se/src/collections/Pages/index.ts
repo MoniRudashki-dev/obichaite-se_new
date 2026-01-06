@@ -122,7 +122,7 @@ export const Pages: CollectionConfig<'pages'> = {
                   name: 'content',
                   type: 'array',
                   label: 'Съдържание',
-                  required: true,
+                  required: false,
                   admin: {
                     initCollapsed: true,
                     description:
@@ -132,6 +132,24 @@ export const Pages: CollectionConfig<'pages'> = {
                     {
                       name: 'text',
                       type: 'text',
+                      required: true,
+                    },
+                  ],
+                },
+                {
+                  name: 'content2',
+                  type: 'array',
+                  label: 'Съдържание',
+                  required: true,
+                  admin: {
+                    initCollapsed: true,
+                    description:
+                      'Всяко едно изречение от съдържанието, което ще бъде изобразено трябва да бъде в този масив от текстове.',
+                  },
+                  fields: [
+                    {
+                      name: 'text',
+                      type: 'textarea',
                       required: true,
                     },
                   ],

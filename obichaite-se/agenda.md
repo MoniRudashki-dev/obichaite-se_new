@@ -3,11 +3,9 @@
 [const] ДОПЪЛНИТЕЛНИ НАСТРОЙКИ ДОКУМЕНТ = ДНД
 MIDDLE BITS
 
-- meta tags -> AV - in progress - [estimate] [4hours]
+[done] meta tags -> [AV] [6hours]
+[done] price to euro everywhere [SR] - [1:30hours]
 - ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
-  [done] да се оправи цената към админ като има discount - [FEEDBACK]
-  [done] price euro to be first priority in visualization SR - 30 min
-  [progress] checkout to get price in euro???, each other segment that include 'лв', to be changed (admin and so on)
 
 === PROJECT AGENDA ===
 

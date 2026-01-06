@@ -14,6 +14,7 @@ import { PromotionsCardsGrid } from '@/components/Product'
 import BenefitsSection from '@/components/Custom/BenefitsSection'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import ReviewSection from '@/components/Reviews/ReviewSection'
+import RepresentationSection from '@/components/Custom/RepresentationSection'
 // import { AboutUsJsonLd, HomePageJsonLd, OrganizationJsonLd } from '@/components/SEO'
 
 export async function generateStaticParams() {
@@ -247,6 +248,10 @@ export default async function Page({ params: paramsPromise }: Args) {
           <div className="pt-[76px] md:pt-[164px]">
             <RenderBlocks blocks={layout} />
           </div>
+        )}
+
+        {!!page.representatives?.title && itIsHome && (
+          <RepresentationSection representatives={page.representatives} />
         )}
 
         {!!reviews?.length && <ReviewSection reviews={reviews} />}
