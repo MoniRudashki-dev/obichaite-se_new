@@ -87,3 +87,14 @@ export const INITIATE_CHECKOUT = (
     },
   })
 }
+
+export const SEARCH = (searchTerm: string) => {
+  if (typeof window === 'undefined') return
+  if (!searchTerm?.trim()) return
+
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({
+    event: 'search',
+    search_term: searchTerm.trim(),
+  })
+}

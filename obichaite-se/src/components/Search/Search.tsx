@@ -8,6 +8,7 @@ import { CloseCircle } from '@/assets/icons'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import { setOpenSearch } from '@/store/features/root'
 import { PromotionsCardsGrid } from '../Product'
+import { SEARCH } from '@/services/anatilitics'
 
 const Search = ({ products }: { products: Product[] }) => {
   const dispatch = useAppDispatch()
@@ -26,6 +27,9 @@ const Search = ({ products }: { products: Product[] }) => {
     const productResults = products.filter((item) => containsQuery(item.title, inputValue))
 
     setSearchResults(productResults)
+
+    //GTM TRIGGER SEARCH
+    SEARCH(inputValue)
   }
 
   useEffect(() => {
