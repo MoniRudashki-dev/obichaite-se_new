@@ -5,7 +5,7 @@ MIDDLE BITS
 
 [done] meta tags -> [AV] [6hours]
 [done] price to euro everywhere [SR] - [1:30hours]
-- ДНД точка 9 -> SR - [estimate] [3hours] - waiting for designs examples
+[done] точка 9 -> SR - [3hours]
 
 === PROJECT AGENDA ===
 
