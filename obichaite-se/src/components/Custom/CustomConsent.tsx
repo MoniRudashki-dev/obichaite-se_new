@@ -50,6 +50,9 @@ const CustomConsent = () => {
       ad_personalization: 'granted',
       analytics_storage: 'granted',
     })
+
+    const dataLayer = window.dataLayer || []
+    dataLayer.push({ event: 'consent_granted' })
   }
 
   useEffect(() => {
