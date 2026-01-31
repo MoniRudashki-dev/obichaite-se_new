@@ -19,6 +19,8 @@ const HeaderClient = ({ headerData }: { headerData: DataFromGlobalSlug<'header'>
   const dispatch = useAppDispatch()
   const { calculateTotalPrice } = useCheckout()
   const shoppingCartProducts = useAppSelector((state) => state.checkout.products)
+  const searchOpen = useAppSelector((state) => state.root.openSearch)
+
   const user = useAppSelector((state) => state.root.user)
   const { categoryItems, logo } = headerData as Header
   const [pending, start] = useTransition()
@@ -28,12 +30,12 @@ const HeaderClient = ({ headerData }: { headerData: DataFromGlobalSlug<'header'>
   const [openCategoryIndex, setOpenCategoryIndex] = useState(-1)
 
   useEffect(() => {
-    if (openMenu) {
+    if (openMenu || searchOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
-  }, [openMenu])
+  }, [openMenu, searchOpen])
 
   const linksContent = categoryItems?.map((item, i) => {
     if (!item?.link?.label) return null

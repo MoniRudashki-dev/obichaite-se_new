@@ -23,7 +23,6 @@ const Search = ({ products }: { products: Product[] }) => {
       setSearchResults(null)
       return
     }
-
     const productResults = products.filter((item) => containsQuery(item.title, inputValue))
 
     setSearchResults(productResults)
@@ -41,7 +40,7 @@ const Search = ({ products }: { products: Product[] }) => {
 
   return (
     <section
-      className={`fixed z-[12]  top-0 left-0 right-0 flex flex-col border-b-[2px] border-brown white_background_bubble
+      className={`fixed z-[12] top-0 left-0 right-0 flex flex-col border-b-[2px] border-brown white_background_bubble
     ${searchOpen ? 'translate-y-0' : 'translate-y-[-100%]'} transition-[transform] duration-500 ease-in-out`}
     >
       <div className="absolute top-4 right-4 flex justify-center items-center">
@@ -69,7 +68,7 @@ const Search = ({ products }: { products: Product[] }) => {
 
         <div className="flex flex-col md:flex-row gap-4 md:gap-[unset] justify-center items-start w-full">
           <input
-            className="w-full md:min-w-[300px] h-[48px] xl:min-w-[400px] p-1 outline-none bg-transparent placeholder:text-brown font-sansation font-[400] 
+            className="w-full md:min-w-[300px] h-[48px] xl:min-w-[400px] p-1 outline-none bg-transparent placeholder:text-brown font-sansation font-[400]
         text-[16px] xl:text-[18px] placeholder:font-sansation placeholder:text-brown/80 border-b-[1px] border-brown"
             type="text"
             placeholder="Потърси артикул.."
@@ -90,7 +89,7 @@ const Search = ({ products }: { products: Product[] }) => {
       </div>
 
       <div
-        className={`absolute top-full left-0 right-0 transition-[opacity] duration-700 ease-in-out border-b-[2px] border-brown pb-10 white-pink-background
+        className={`absolute top-full  left-0 right-0 [&>section]:min-h-[unset] [&>section]:h-full [&>section]:max-h-[calc(100svh-212px-42px-40px)] md:[&>section]:max-h-[calc(100svh-234px-50px-30px)]  [&>section]:overflow-y-auto transition-[opacity] duration-700 ease-in-out border-b-[2px] border-brown pb-20 white-pink-background
             ${!!searchResults && searchResults.length > 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
         <PromotionsCardsGrid
