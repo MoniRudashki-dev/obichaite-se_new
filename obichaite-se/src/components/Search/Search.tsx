@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import { setOpenSearch } from '@/store/features/root'
 import { PromotionsCardsGrid } from '../Product'
 import { SEARCH } from '@/services/anatilitics'
+import { usePathname } from 'next/navigation'
 
 const Search = ({ products }: { products: Product[] }) => {
   const dispatch = useAppDispatch()
@@ -16,6 +17,7 @@ const Search = ({ products }: { products: Product[] }) => {
   const [inputValue, setInputValue] = useState('')
   const [searchResults, setSearchResults] = useState<null | Product[]>(null)
   const [slideIndex, setSlideIndex] = useState(1)
+  const pathname = usePathname()
 
   const handleSearch = () => {
     if (inputValue === '') {
@@ -37,6 +39,12 @@ const Search = ({ products }: { products: Product[] }) => {
     setInputValue('')
     setSearchResults(null)
   }, [searchOpen])
+
+  useEffect(() => {
+    dispatch(setOpenSearch(false))
+    setInputValue('')
+    setSearchResults(null)
+  }, [pathname])
 
   return (
     <section
