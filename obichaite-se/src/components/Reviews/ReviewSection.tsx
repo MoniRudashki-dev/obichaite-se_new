@@ -20,13 +20,13 @@ const ReviewSection = ({ reviews }: { reviews: Review[] }) => {
     })
 
     //render media fallback logo
-    const mediaSrc = (review.media as Media)?.url || '/logo.png'
+    const mediaSrc = (review.media as Media)?.url || null
 
     return (
       <li className="w-full" key={review.id}>
         <div className="rounded-xl border-[1px] border-bordo p-4 md:p-6 pb-4 md:pb-6 flex flex-col white-pink-background">
           <div className="flex flex-col gap-4 md:gap-[unset] xl:flex-row w-full">
-            <div className="flex-1 flex flex-col justify-center items-center gap-4 md:gap-5">
+            <div className="flex-1 flex flex-col justify-center mb-1 items-center gap-4 md:gap-5">
               <GenericHeading
                 headingType="h5"
                 fontStyle="font-sansation font-[700]"
@@ -38,15 +38,17 @@ const ReviewSection = ({ reviews }: { reviews: Review[] }) => {
 
               <div className="flex items-center gap-1">{stars}</div>
             </div>
-            <div className="flex-1 md:p-6">
-              <GenericImage
-                src={mediaSrc}
-                alt={review.author}
-                wrapperClassName="w-full h-full min-h-[250px] relative"
-                imageClassName="w-full h-full object-cover"
-                fill={true}
-              />
-            </div>
+            {!!mediaSrc && (
+              <div className="flex-1 md:p-6">
+                <GenericImage
+                  src={mediaSrc}
+                  alt={review.author}
+                  wrapperClassName="w-full h-full min-h-[250px] relative"
+                  imageClassName="w-full h-full object-cover"
+                  fill={true}
+                />
+              </div>
+            )}
           </div>
 
           <div className="w-full">
