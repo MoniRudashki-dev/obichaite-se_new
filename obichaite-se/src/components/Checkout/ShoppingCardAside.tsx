@@ -157,7 +157,7 @@ const ShoppingCardAside = () => {
     )
   })
 
-  const remain = Number(calculateRemainSum().toFixed(0))
+  const remain = Number(calculateRemainSum().toFixed(2))
 
   let totalPrice = (
     <>

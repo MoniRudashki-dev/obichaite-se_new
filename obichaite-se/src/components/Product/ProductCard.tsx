@@ -84,8 +84,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         extraClass="text-center"
       >
         <span className={`${!!havePriceRange && 'text-[16px]'}`}>
-          {Number(priceRange?.split('-')?.[0]).toFixed(0)}-
-          {Number(priceRange?.split('-')?.[1]).toFixed(0)}лв
+          {Number(priceRange?.split('-')?.[0]).toFixed(2)}-
+          {Number(priceRange?.split('-')?.[1]).toFixed(2)}лв
         </span>
       </GenericParagraph>
     </div>

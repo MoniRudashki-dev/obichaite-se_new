@@ -78,7 +78,7 @@ const CheckoutForm = () => {
     deliveryOffice: '',
   })
 
-  const remain = Number(calculateRemainSum().toFixed(0))
+  const remain = Number(calculateRemainSum().toFixed(2))
 
   const submitHandler = async () => {
     setError('')
@@ -160,7 +160,7 @@ const CheckoutForm = () => {
                 quantity: item.orderQuantity,
               }
             }),
-            total: Number(calculateTotalPrice().toFixed(0)),
+            total: Number(calculateTotalPrice().toFixed(2)),
           })
           sendConfirmedOrderEmail({
             orderId: response.orderId,
@@ -170,7 +170,7 @@ const CheckoutForm = () => {
                 quantity: item.orderQuantity,
               }
             }),
-            total: Number(calculateTotalPrice().toFixed(0)),
+            total: Number(calculateTotalPrice().toFixed(2)),
             userName: formValues.name as string,
             userEmail: formValues.email as string,
             orderNumber: response.orderNumber as string,
@@ -179,7 +179,7 @@ const CheckoutForm = () => {
           // purchase trigger
           PURCHASE(
             'BGN',
-            String(calculateTotalPrice().toFixed(0)),
+            String(calculateTotalPrice().toFixed(2)),
             response.orderNumber as string,
             products.map((product) => {
               return {
