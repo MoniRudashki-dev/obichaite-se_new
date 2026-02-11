@@ -242,6 +242,22 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  inquiryFormFields?:
+    | {
+        title: string;
+        type: 'select' | 'text' | 'date_text';
+        required?: boolean | null;
+        placeholder?: string | null;
+        options?:
+          | {
+              label: string;
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -253,6 +269,10 @@ export interface Product {
   category: number | Category;
   subCategory: number | SubCategory;
   otherSubCategories?: (number | SubCategory)[] | null;
+  /**
+   * Ако това поле бъде активно, вместо цена ще показва бутон за запитване, който ще отваря формата за запитване.
+   */
+  showInquiryForm?: boolean | null;
   price?: number | null;
   quantity: number;
   promoPrice?: number | null;
@@ -1135,6 +1155,22 @@ export interface ProductSelect<T extends boolean = true> {
         file?: T;
         id?: T;
       };
+  inquiryFormFields?:
+    | T
+    | {
+        title?: T;
+        type?: T;
+        required?: T;
+        placeholder?: T;
+        options?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   meta?:
     | T
     | {
@@ -1145,6 +1181,7 @@ export interface ProductSelect<T extends boolean = true> {
   category?: T;
   subCategory?: T;
   otherSubCategories?: T;
+  showInquiryForm?: T;
   price?: T;
   quantity?: T;
   promoPrice?: T;

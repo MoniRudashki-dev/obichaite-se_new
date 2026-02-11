@@ -55,6 +55,8 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
   const product = await queryProductBySlug({ slug })
   if (!product) return <PayloadRedirects url={url} />
 
+  console.log('product', product)
+
   //first in one query needs to get all best sellers and promotion in product category
   const payload = await getPayload({ config: configPromise })
   const allPromotionsAndBestSellers = await payload.find({

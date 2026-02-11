@@ -11,7 +11,6 @@ import {
   MetaDescriptionField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-// import { revalidateProduct, revalidateDeleteProduct } from './hooks/revalidateProduct'
 import {
   lexicalEditor,
   HeadingFeature,
@@ -19,6 +18,8 @@ import {
   InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical'
 import { revalidateDeleteProduct, revalidateProduct } from './hooks/revalidateProduct'
+import { ensureInquiryDefaults } from './hooks/ensureInquiryDefaults'
+import { getDefaultInquiryQuestions } from './hooks/inquiryDefaults'
 
 export const Product: CollectionConfig = {
   slug: 'product',
@@ -127,6 +128,49 @@ export const Product: CollectionConfig = {
       ],
     },
     {
+      name: 'inquiryFormFields',
+      type: 'array',
+      label: 'Полетата във формата за запитване',
+      defaultValue: getDefaultInquiryQuestions,
+      admin: {
+        condition: (data) => Boolean(data?.showInquiryForm),
+        initCollapsed: true,
+      },
+      fields: [
+        { name: 'title', type: 'text', required: true, label: 'Заглавие' },
+        {
+          name: 'type',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Падащо меню', value: 'select' },
+            { label: 'Текст', value: 'text' },
+            { label: 'Дата + текст', value: 'date_text' },
+          ],
+        },
+        { name: 'required', type: 'checkbox', defaultValue: true, label: 'Задължително' },
+        {
+          name: 'placeholder',
+          type: 'text',
+          label: 'Placeholder',
+          admin: { condition: (_, s) => s?.type === 'text' || s?.type === 'date_text' },
+        },
+        {
+          name: 'options',
+          type: 'array',
+          label: 'Опции',
+          admin: {
+            condition: (_, s) => s?.type === 'select',
+            initCollapsed: true,
+          },
+          fields: [
+            { name: 'label', type: 'text', required: true },
+            { name: 'value', type: 'text', required: true },
+          ],
+        },
+      ],
+    },
+    {
       type: 'tabs',
       tabs: [
         {
@@ -189,6 +233,20 @@ export const Product: CollectionConfig = {
         allowCreate: false,
         allowEdit: false,
         appearance: 'drawer',
+      },
+    },
+    {
+      name: 'showInquiryForm',
+      type: 'checkbox',
+      label: 'Показване на формата за запитване',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Ако това поле бъде активно, вместо цена ще показва бутон за запитване, който ще отваря формата за запитване.',
+        condition: (data) => {
+          return data.category === 2
+        },
       },
     },
     {
@@ -280,6 +338,7 @@ export const Product: CollectionConfig = {
     ...slugField(),
   ],
   hooks: {
+    beforeValidate: [ensureInquiryDefaults],
     afterChange: [revalidateProduct],
     afterDelete: [revalidateDeleteProduct],
   },
