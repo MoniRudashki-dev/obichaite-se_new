@@ -160,11 +160,11 @@ const ProductCard = ({ product }: { product: Product }) => {
 
           {product.showInquiryForm ? (
             <>
-              <button
-                onClick={() => {
+              <GenericButton
+                click={() => {
                   setShowInquiryFormModal(true)
                 }}
-                className="w-full mt-5 md:mt-auto rounded-[24px] flex flex-col justify-center items-center red_background py-4 px-4 disabled:cursor-not-allowed disabled:opacity-50"
+                styleClass="w-full mt-5 md:mt-auto flex flex-col justify-center items-center red_background py-4 px-4 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <GenericParagraph
                   fontStyle="font-sansation font-[700]"
@@ -183,7 +183,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 >
                   Безплатно и без ангажимент
                 </GenericParagraph>
-              </button>
+              </GenericButton>
 
               {showInquiryFormModal && (
                 <ProductInquiryFormModal
