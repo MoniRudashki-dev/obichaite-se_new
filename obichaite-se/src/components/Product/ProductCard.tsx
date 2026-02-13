@@ -12,6 +12,7 @@ import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
 import { ADD_TO_CART } from '@/services/anatilitics'
+import { ProductInquiryFormModal } from './ProductInquiryFormModal'
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch()
@@ -19,6 +20,8 @@ const ProductCard = ({ product }: { product: Product }) => {
   const userId = useAppSelector((state) => state.root.user?.id)
   const shoppingCartProducts = useAppSelector((state) => state.checkout.products)
   const productExistsInCart = shoppingCartProducts.find((item) => item.id === product.id)
+  const [showInquiryFormModal, setShowInquiryFormModal] = useState(false)
+
   const {
     mediaArray,
     title,
@@ -104,7 +107,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       )}
       <article
-        className="w-full bg-[#e6cbcd] rounded-[12px] pb-1 md:pb-4 relative overflow-hidden border-[1px] border-bordo/20"
+        className="w-full h-full bg-[#e6cbcd] rounded-[12px] pb-1 md:pb-4 relative overflow-hidden border-[1px] border-bordo/20"
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         onClick={() => {
@@ -139,7 +142,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             </Link>
           </div>
 
-          <div className="w-full flex flex-col md:flex-row gap-[6px] mt-[6px] md:mt-[unset] md:gap-[unset] md:justify-between md:items-center md:h-[110px] relative z-[2]">
+          <div className="w-full flex flex-col  md:flex-row gap-[6px] mt-[6px] md:mt-[unset] md:gap-[unset] md:justify-between md:items-center md:h-[110px] relative z-[2]">
             <div className="w-full md:max-w-[66%]">
               <GenericHeading
                 headingType="h5"
@@ -152,113 +155,152 @@ const ProductCard = ({ product }: { product: Product }) => {
               </GenericHeading>
             </div>
 
-            {priceSection}
+            {product.showInquiryForm ? null : priceSection}
           </div>
 
-          <div className="w-full mt-[6px] md:mt-[unset]">
-            {product.quantity === 0 ? (
-              <GenericParagraph
-                pType="regular"
-                fontStyle="font-sansation font-[700]"
-                textColor="text-bordo"
-                extraClass="uppercase text-center"
+          {product.showInquiryForm ? (
+            <>
+              <button
+                onClick={() => {
+                  setShowInquiryFormModal(true)
+                }}
+                className="w-full mt-5 md:mt-auto rounded-[24px] flex flex-col justify-center items-center red_background py-4 px-4 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Изчерапана наличност
-              </GenericParagraph>
-            ) : (
-              <>
-                {product?.havePriceRange ? (
-                  <GenericButton
-                    variant="primary"
-                    styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
-                    click={() => {
-                      dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
-                      const priceForProduct = product.promoPrice
-                        ? product.promoPrice
-                        : product.price || 0
-                      ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                        {
-                          item_id: product?.id,
-                          item_name: product?.title,
-                          price: priceForProduct,
-                          quantity: 1,
-                        },
-                      ])
-                      dispatch(
-                        setNotification({
-                          showNotification: true,
-                          message: !!productExistsInCart
-                            ? `Kъм (${product?.title}) беше дованен 1 брой`
-                            : `(${product?.title}) беше добавен в количката`,
-                          type: 'success',
-                        }),
-                      )
+                <GenericParagraph
+                  fontStyle="font-sansation font-[700]"
+                  pType="large"
+                  textColor="text-white"
+                  extraClass="uppercase"
+                >
+                  Запитай сега
+                </GenericParagraph>
 
-                      if (!!userId) {
-                        addToCart(product?.id, userId!)
-                      } else {
-                        addToLocalStorage(product)
-                      }
-                    }}
-                    type="button"
-                    ariaLabel="Добави"
-                  >
-                    <p className="text-[12px] md:text-[20px]">Добави</p>
-                    <div
-                      className="w-[16px] h-[16px] md:w-[24px] md:h-[24px] flex justify-center items-center
-          [&>svg_path]:fill-white [&>svg_path]:transition-all duration-300 ease-in-out"
-                    >
-                      <ShoppingCartIcon />
-                    </div>
-                  </GenericButton>
-                ) : (
-                  <GenericButton
-                    variant="primary"
-                    styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
-                    click={() => {
-                      dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
-                      const priceForProduct = product.promoPrice
-                        ? product.promoPrice
-                        : product.price || 0
-                      ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                        {
-                          item_id: product?.id,
-                          item_name: product?.title,
-                          price: priceForProduct,
-                          quantity: 1,
-                        },
-                      ])
+                <GenericParagraph
+                  fontStyle="font-sansation font-[700]"
+                  pType="extraSmall"
+                  textColor="text-white"
+                  extraClass="uppercase"
+                >
+                  Безплатно и без ангажимент
+                </GenericParagraph>
+              </button>
 
-                      dispatch(
-                        setNotification({
-                          showNotification: true,
-                          message: !!productExistsInCart
-                            ? `Kъм (${product?.title}) беше дованен 1 брой`
-                            : `(${product?.title}) беше добавен в количката`,
-                          type: 'success',
-                        }),
-                      )
-                      if (!!userId) {
-                        addToCart(product?.id, userId!)
-                      } else {
-                        addToLocalStorage(product)
-                      }
-                    }}
-                    type="button"
-                    ariaLabel="Добави"
-                  >
-                    <p className="text-[12px] md:text-[20px]">Добави</p>
-                    <div
-                      className="w-[16px] h-[16px] md:w-[24px] md:h-[24px] flex justify-center items-center
-          [&>svg_path]:fill-white [&>svg_path]:transition-all duration-300 ease-in-out"
+              {showInquiryFormModal && (
+                <ProductInquiryFormModal
+                  open={showInquiryFormModal}
+                  onClose={() => setShowInquiryFormModal(false)}
+                  productId={String(product.id)}
+                  productTitle={product.title}
+                  fields={product.inquiryFormFields ?? []}
+                />
+              )}
+            </>
+          ) : (
+            <div className="w-full mt-[6px] md:mt-[unset]">
+              {product.quantity === 0 ? (
+                <GenericParagraph
+                  pType="regular"
+                  fontStyle="font-sansation font-[700]"
+                  textColor="text-bordo"
+                  extraClass="uppercase text-center"
+                >
+                  Изчерапана наличност
+                </GenericParagraph>
+              ) : (
+                <>
+                  {product?.havePriceRange ? (
+                    <GenericButton
+                      variant="primary"
+                      styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
+                      click={() => {
+                        dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
+                        const priceForProduct = product.promoPrice
+                          ? product.promoPrice
+                          : product.price || 0
+                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                          {
+                            item_id: product?.id,
+                            item_name: product?.title,
+                            price: priceForProduct,
+                            quantity: 1,
+                          },
+                        ])
+                        dispatch(
+                          setNotification({
+                            showNotification: true,
+                            message: !!productExistsInCart
+                              ? `Kъм (${product?.title}) беше дованен 1 брой`
+                              : `(${product?.title}) беше добавен в количката`,
+                            type: 'success',
+                          }),
+                        )
+
+                        if (!!userId) {
+                          addToCart(product?.id, userId!)
+                        } else {
+                          addToLocalStorage(product)
+                        }
+                      }}
+                      type="button"
+                      ariaLabel="Добави"
                     >
-                      <ShoppingCartIcon />
-                    </div>
-                  </GenericButton>
-                )}
-              </>
-            )}
-          </div>
+                      <p className="text-[12px] md:text-[20px]">Добави</p>
+                      <div
+                        className="w-[16px] h-[16px] md:w-[24px] md:h-[24px] flex justify-center items-center
+          [&>svg_path]:fill-white [&>svg_path]:transition-all duration-300 ease-in-out"
+                      >
+                        <ShoppingCartIcon />
+                      </div>
+                    </GenericButton>
+                  ) : (
+                    <GenericButton
+                      variant="primary"
+                      styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
+                      click={() => {
+                        dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
+                        const priceForProduct = product.promoPrice
+                          ? product.promoPrice
+                          : product.price || 0
+                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                          {
+                            item_id: product?.id,
+                            item_name: product?.title,
+                            price: priceForProduct,
+                            quantity: 1,
+                          },
+                        ])
+
+                        dispatch(
+                          setNotification({
+                            showNotification: true,
+                            message: !!productExistsInCart
+                              ? `Kъм (${product?.title}) беше дованен 1 брой`
+                              : `(${product?.title}) беше добавен в количката`,
+                            type: 'success',
+                          }),
+                        )
+                        if (!!userId) {
+                          addToCart(product?.id, userId!)
+                        } else {
+                          addToLocalStorage(product)
+                        }
+                      }}
+                      type="button"
+                      ariaLabel="Добави"
+                    >
+                      <p className="text-[12px] md:text-[20px]">Добави</p>
+                      <div
+                        className="w-[16px] h-[16px] md:w-[24px] md:h-[24px] flex justify-center items-center
+          [&>svg_path]:fill-white [&>svg_path]:transition-all duration-300 ease-in-out"
+                      >
+                        <ShoppingCartIcon />
+                      </div>
+                    </GenericButton>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </article>
     </>

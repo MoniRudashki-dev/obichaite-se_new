@@ -2,7 +2,7 @@
 
 import { Category, Product, SubCategory } from '@/payload-types'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GenericHeading, GenericParagraph } from '../Generic'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import {
@@ -16,6 +16,7 @@ import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
 import { ADD_TO_CART } from '@/services/anatilitics'
+import { ProductInquiryFormModal } from './ProductInquiryFormModal'
 
 const SingleCardMain = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch()
@@ -25,6 +26,8 @@ const SingleCardMain = ({ product }: { product: Product }) => {
   const existsInCart = shoppingCartProducts.find((item) => item.id === product.id)
   const [orderQuantity, setOrderQuantity] = useState(existsInCart?.orderQuantity || 1)
   const { category, title, subCategory, otherSubCategories } = product
+
+  const [showInquiryFormModal, setShowInquiryFormModal] = useState(false)
 
   const currentCategory = category as Category
 
@@ -48,11 +51,22 @@ const SingleCardMain = ({ product }: { product: Product }) => {
     )
   })
 
+  useEffect(() => {
+    if (!showInquiryFormModal) return
+    const onEsc = (e: KeyboardEvent) => e.key === 'Escape' && setShowInquiryFormModal(false)
+    document.addEventListener('keydown', onEsc)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onEsc)
+      document.body.style.overflow = ''
+    }
+  }, [showInquiryFormModal])
+
   return (
     <div className="flex-1 relative order-2 md:order-1">
       <div className="hidden md:block absolute left-0 top-[48px] w-[1px] h-[calc(100%-96px)] bg-brown/20 z-[2]"></div>
       <div className="hidden md:block absolute right-0 top-[48px] w-[1px] h-[calc(100%-96px)] bg-brown/20 z-[2]"></div>
-      <div className="flex flex-col p-4 md:p-6 w-full h-full">
+      <div className="flex flex-col p-4 md:p-6 w-full h-full ">
         <Link
           prefetch={true}
           href={`/kategorii/${currentCategory.slug}/${(subCategory as SubCategory)?.slug}`}
@@ -80,139 +94,182 @@ const SingleCardMain = ({ product }: { product: Product }) => {
           </GenericHeading>
         )}
 
-        <div className="flex justify-between items-center px-2 py-3 mt-auto mb-4">
-          <div className="flex justify-center items-center gap-3">
+        {product.showInquiryForm ? (
+          <>
             <button
-              className="p-2 max-w-[32px] max-h-[32px] flex justify-center items-center rounded-full border-[1px] border-brown
-                          disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => {
-                if (!!existsInCart) {
-                  dispatch(removeOrderQuantity({ id: product.id }))
-                }
-                setOrderQuantity((prev) => prev - 1)
+                setShowInquiryFormModal(true)
               }}
-              disabled={orderQuantity === 1}
-              aria-label="Премахни единица"
-              title="Премахни единица"
-              aria-disabled={orderQuantity === 1}
+              className="w-full mt-5 md:mt-auto rounded-[24px] flex flex-col justify-center items-center red_background py-4 px-4 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <MinusIcon />
-            </button>
-
-            <div className="border-[1px] bg-brown border-brown px-3 py-1 flex justify-center items-center">
               <GenericParagraph
-                fontStyle="font-kolka font-[500]"
-                pType="regular"
+                fontStyle="font-sansation font-[700]"
+                pType="large"
                 textColor="text-white"
-                extraClass="text-center"
+                extraClass="uppercase"
               >
-                {orderQuantity}
+                Запитай сега
               </GenericParagraph>
-            </div>
 
-            <button
-              className="p-2 max-w-[32px] max-h-[32px] flex justify-center items-center rounded-full border-[1px] border-brown"
-              onClick={() => {
-                if (!!existsInCart) {
-                  dispatch(addOrderQuantity({ id: product.id }))
-                }
-                setOrderQuantity((prev) => prev + 1)
-              }}
-              aria-label="Добави единица"
-              title="Добави единица"
-              aria-disabled={false}
-              disabled={false}
-            >
-              <PlusIcon />
+              <GenericParagraph
+                fontStyle="font-sansation font-[700]"
+                pType="extraSmall"
+                textColor="text-white"
+                extraClass="uppercase"
+              >
+                Безплатно и без ангажимент
+              </GenericParagraph>
             </button>
-          </div>
 
-          <div>
-            <GenericParagraph
-              fontStyle="font-sansation font-[700]"
-              pType="large"
-              textColor="text-bordo"
-            >
-              <>
-                {product?.promoPrice ? (
-                  <>
-                    {priceToEuro(product.promoPrice * orderQuantity)} € (
-                    {(product.promoPrice * orderQuantity).toFixed(2)} лв.)
-                  </>
-                ) : (
-                  <>
-                    {priceToEuro(product.price! * orderQuantity)} € (
-                    {(product.price! * orderQuantity).toFixed(2)} лв.)
-                  </>
-                )}
-              </>
-            </GenericParagraph>
-          </div>
-        </div>
+            {showInquiryFormModal && (
+              <ProductInquiryFormModal
+                open={showInquiryFormModal}
+                onClose={() => setShowInquiryFormModal(false)}
+                productId={String(product.id)}
+                productTitle={product.title}
+                fields={product.inquiryFormFields ?? []}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <div className="flex justify-between items-center px-2 py-3 mt-auto mb-4 ">
+              <div className="flex justify-center items-center gap-3">
+                <button
+                  className="p-2 max-w-[32px] max-h-[32px] flex justify-center items-center rounded-full border-[1px] border-brown
+                          disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => {
+                    if (!!existsInCart) {
+                      dispatch(removeOrderQuantity({ id: product.id }))
+                    }
+                    setOrderQuantity((prev) => prev - 1)
+                  }}
+                  disabled={orderQuantity === 1}
+                  aria-label="Премахни единица"
+                  title="Премахни единица"
+                  aria-disabled={orderQuantity === 1}
+                >
+                  <MinusIcon />
+                </button>
 
-        <div className="w-full">
-          {product.quantity === 0 ? (
-            <GenericParagraph
-              pType="regular"
-              fontStyle="font-sansation font-[700]"
-              textColor="text-bordo"
-              extraClass="uppercase"
-            >
-              Изчерапана наличност
-            </GenericParagraph>
-          ) : (
-            <button
-              className="w-full rounded-[24px] flex  justify-center items-center red_background py-4 px-4
-                      [&>div>div>svg]:hover:animate-bounce disabled:cursor-not-allowed disabled:opacity-50
-                      "
-              aria-label="Добави в Количка"
-              title="Добави в Количка"
-              onClick={() => {
-                dispatch(addProductToShoppingCart({ ...product, orderQuantity: orderQuantity }))
-                const priceForProduct = product.promoPrice ? product.promoPrice : product.price || 0
-                ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
-                  {
-                    item_id: product?.id,
-                    item_name: product?.title,
-                    price: priceForProduct,
-                    quantity: 1,
-                  },
-                ])
-                dispatch(
-                  setNotification({
-                    showNotification: true,
-                    message: existsInCart
-                      ? `Kъм (${product?.title}) бяха добавени ${orderQuantity} ${orderQuantity > 1 ? 'единици' : 'единица'}`
-                      : `(${product?.title}) беше добавен в количката`,
-                    type: 'success',
-                  }),
-                )
-                if (!!userId) {
-                  addToCart(product.id, userId)
-                } else {
-                  addToLocalStorage(product)
-                }
-              }}
-              disabled={orderQuantity === 0}
-              aria-disabled={orderQuantity === 0}
-            >
-              <div className="flex justify-center items-center">
+                <div className="border-[1px] bg-brown border-brown px-3 py-1 flex justify-center items-center">
+                  <GenericParagraph
+                    fontStyle="font-kolka font-[500]"
+                    pType="regular"
+                    textColor="text-white"
+                    extraClass="text-center"
+                  >
+                    {orderQuantity}
+                  </GenericParagraph>
+                </div>
+
+                <button
+                  className="p-2 max-w-[32px] max-h-[32px] flex justify-center items-center rounded-full border-[1px] border-brown"
+                  onClick={() => {
+                    if (!!existsInCart) {
+                      dispatch(addOrderQuantity({ id: product.id }))
+                    }
+                    setOrderQuantity((prev) => prev + 1)
+                  }}
+                  aria-label="Добави единица"
+                  title="Добави единица"
+                  aria-disabled={false}
+                  disabled={false}
+                >
+                  <PlusIcon />
+                </button>
+              </div>
+
+              <div>
                 <GenericParagraph
                   fontStyle="font-sansation font-[700]"
-                  pType="small"
-                  textColor="text-white"
+                  pType="large"
+                  textColor="text-bordo"
+                >
+                  <>
+                    {product?.promoPrice ? (
+                      <>
+                        {priceToEuro(product.promoPrice * orderQuantity)} € (
+                        {(product.promoPrice * orderQuantity).toFixed(2)} лв.)
+                      </>
+                    ) : (
+                      <>
+                        {priceToEuro(product.price! * orderQuantity)} € (
+                        {(product.price! * orderQuantity).toFixed(2)} лв.)
+                      </>
+                    )}
+                  </>
+                </GenericParagraph>
+              </div>
+            </div>
+
+            <div className="w-full">
+              {product.quantity === 0 ? (
+                <GenericParagraph
+                  pType="regular"
+                  fontStyle="font-sansation font-[700]"
+                  textColor="text-bordo"
                   extraClass="uppercase"
                 >
-                  Добави в Количка
+                  Изчерапана наличност
                 </GenericParagraph>
+              ) : (
+                <button
+                  className="w-full rounded-[24px] flex  justify-center items-center red_background py-4 px-4
+                      [&>div>div>svg]:hover:animate-bounce disabled:cursor-not-allowed disabled:opacity-50
+                      "
+                  aria-label="Добави в Количка"
+                  title="Добави в Количка"
+                  onClick={() => {
+                    dispatch(addProductToShoppingCart({ ...product, orderQuantity: orderQuantity }))
+                    const priceForProduct = product.promoPrice
+                      ? product.promoPrice
+                      : product.price || 0
+                    ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                      {
+                        item_id: product?.id,
+                        item_name: product?.title,
+                        price: priceForProduct,
+                        quantity: 1,
+                      },
+                    ])
+                    dispatch(
+                      setNotification({
+                        showNotification: true,
+                        message: existsInCart
+                          ? `Kъм (${product?.title}) бяха добавени ${orderQuantity} ${orderQuantity > 1 ? 'единици' : 'единица'}`
+                          : `(${product?.title}) беше добавен в количката`,
+                        type: 'success',
+                      }),
+                    )
+                    if (!!userId) {
+                      addToCart(product.id, userId)
+                    } else {
+                      addToLocalStorage(product)
+                    }
+                  }}
+                  disabled={orderQuantity === 0}
+                  aria-disabled={orderQuantity === 0}
+                >
+                  <div className="flex justify-center items-center">
+                    <GenericParagraph
+                      fontStyle="font-sansation font-[700]"
+                      pType="small"
+                      textColor="text-white"
+                      extraClass="uppercase"
+                    >
+                      Добави в Количка
+                    </GenericParagraph>
 
-                <div className="w-[20px] h-[20px] flex justify-center items-center ml-1">
-                  <ArrowIcon color="white" />
-                </div>
-              </div>
-            </button>
-          )}
-        </div>
+                    <div className="w-[20px] h-[20px] flex justify-center items-center ml-1">
+                      <ArrowIcon color="white" />
+                    </div>
+                  </div>
+                </button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

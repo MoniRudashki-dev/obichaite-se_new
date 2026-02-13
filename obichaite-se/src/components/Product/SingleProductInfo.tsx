@@ -28,7 +28,7 @@ const SingleProductInfo = ({ product }: { product: Product }) => {
             textColor="text-brown"
             extraClass="md:text-right"
           >
-            <RichTextFull description={description} className='md:!py-0 pr-1'/>
+            <RichTextFull description={description} className="md:!py-0 pr-1" />
           </GenericParagraph>
         </div>
 
