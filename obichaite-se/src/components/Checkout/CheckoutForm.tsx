@@ -30,8 +30,11 @@ import { PaymentSection } from '@/Stripe/components'
 import EmailInputWithAction from './EmailInputWithActions'
 import { Order } from '@/payload-types'
 import { PURCHASE } from '@/services/anatilitics'
+import { GlobalLoader } from '../Loader'
 
 const CheckoutForm = () => {
+  const [isClient, setIsClient] = useState(false)
+
   const dispatch = useAppDispatch()
   const { products, needToMakeOrder, userHaveDiscount } = useAppSelector((state) => state.checkout)
   const userId = useAppSelector((state) => state.root.user?.id)
@@ -205,6 +208,10 @@ const CheckoutForm = () => {
     dispatch(setNeedToMakeOrder(false))
   }, [needToMakeOrder])
 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   let paymentInfoText = 'Наложен платеж'
   if (formValues.paymentMethod === 'card') {
     paymentInfoText = 'Вашата поръчка е заплатена успешно'
@@ -224,6 +231,15 @@ const CheckoutForm = () => {
           { label: 'Наложен платеж', value: 'cash' },
           { label: 'Плащане по банков път', value: 'needBankTransfer' },
         ]
+
+  //Add client guard and loader to avoid hydration error
+  if (!isClient) {
+    return (
+      <div className="fixed inset-0 z-[20] bg-brown min-h-screen">
+        <GlobalLoader color={'#FFFFFF'} />
+      </div>
+    )
+  }
 
   return (
     <>

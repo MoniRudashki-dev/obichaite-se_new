@@ -164,8 +164,6 @@ export async function checkForDiscount(email: string): Promise<{ data: boolean }
       limit: 1,
     })
 
-    console.log('result', result.docs)
-
     if (result.docs.length > 0) {
       return { data: false }
     }

@@ -16,8 +16,8 @@ import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 import { Media } from '@/payload-types'
 import { removeFromCart } from '@/action/products/shoppingCart'
 import Link from 'next/link'
-import { checkForDiscount } from '@/action/checkout'
 import { INITIATE_CHECKOUT } from '@/services/anatilitics'
+import { useDiscount } from '@/hooks/useDiscount'
 
 const ShoppingCardAside = () => {
   const dispatch = useAppDispatch()
@@ -28,22 +28,16 @@ const ShoppingCardAside = () => {
   const shoppingCardOpen = useAppSelector((state) => state.checkout.shoppingCardOpen)
   const products = useAppSelector((state) => state.checkout.products)
   const { userHaveDiscount } = useAppSelector((state) => state.checkout)
-
-  const handleCheckDiscount = async () => {
-    const didUserHaveDiscount = await checkForDiscount(userEmail as string)
-
-    if (!!didUserHaveDiscount.data) {
-      dispatch(setUserHaveDiscount(true))
-    } else {
-      dispatch(setUserHaveDiscount(false))
-    }
-  }
+  const { handleCheckDiscount } = useDiscount()
 
   useEffect(() => {
-    if (!userEmail) return
+    if (!userEmail) {
+      dispatch(setUserHaveDiscount(false))
+      return
+    }
 
-    handleCheckDiscount()
-  }, [userEmail])
+    handleCheckDiscount(userEmail)
+  }, [userEmail, dispatch, handleCheckDiscount])
 
   const productsContent = products.map((product) => {
     const media = product?.mediaArray?.[0].file as Media
