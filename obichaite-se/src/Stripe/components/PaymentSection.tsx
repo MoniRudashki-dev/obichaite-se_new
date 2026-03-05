@@ -44,7 +44,7 @@ export default function PaymentSection({ items }: PaymentSectionProps) {
         setError(err instanceof Error ? err.message : 'Грешка при създаване на плащането.')
       }
     })
-  }, [items])
+  }, [items, userHaveDiscount])
 
   if (error) {
     return <div>Грешка: {error}</div>

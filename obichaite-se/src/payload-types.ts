@@ -277,6 +277,14 @@ export interface Product {
   quantity: number;
   promoPrice?: number | null;
   /**
+   * EUR Price
+   */
+  priceInEuro?: number | null;
+  /**
+   * Promo EUR price
+   */
+  promoPriceInEuro?: number | null;
+  /**
    * Ако това поле бъде активирано, продуктър ще излиза в секция най-продавани
    */
   bestSeller?: boolean | null;
@@ -1185,6 +1193,8 @@ export interface ProductSelect<T extends boolean = true> {
   price?: T;
   quantity?: T;
   promoPrice?: T;
+  priceInEuro?: T;
+  promoPriceInEuro?: T;
   bestSeller?: T;
   havePriceRange?: T;
   priceRange?: T;

@@ -5,15 +5,19 @@ import React, { useEffect } from 'react'
 
 const PageViewComponent = (product: Product) => {
   useEffect(() => {
-    VIEW_CONTENT('BGN', String(product.promoPrice ? product.promoPrice : product.price || 0), [
-      {
-        item_id: String(product.id),
-        item_name: product.title,
-        price: product.promoPrice ? product.promoPrice : product.price || 0,
-        quantity: 1,
-      },
-    ])
-  }, [])
+    VIEW_CONTENT(
+      'EUR',
+      String(product.promoPriceInEuro ? product.promoPriceInEuro : product.priceInEuro || 0),
+      [
+        {
+          item_id: String(product.id),
+          item_name: product.title,
+          price: product.promoPriceInEuro ? product.promoPriceInEuro : product.priceInEuro || 0,
+          quantity: 1,
+        },
+      ],
+    )
+  }, [product])
   return <></>
 }
 

@@ -2,9 +2,7 @@ import React from 'react'
 
 import { EyeIcon } from '@/assets/icons'
 import ErrorMessageBox from '../Generic/ErrorMessage'
-import { checkForDiscount } from '@/action/checkout'
-import { useAppDispatch } from '@/hooks/redux-hooks'
-import { setUserHaveDiscount } from '@/store/features/checkout'
+import { useDiscount } from '@/hooks/useDiscount'
 
 export type EmailInputWithActionProps<T> = {
   name: string
@@ -32,7 +30,7 @@ const EmailInputWithAction = <T,>({
   autoFocus = false,
   type = 'text',
 }: EmailInputWithActionProps<T>) => {
-  const dispatch = useAppDispatch()
+  const { handleCheckDiscount } = useDiscount()
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const validNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+']
 
@@ -58,13 +56,7 @@ const EmailInputWithAction = <T,>({
   const [showResult, setShowResult] = React.useState(false)
 
   const handleBlur = async () => {
-    const didUserHaveDiscount = await checkForDiscount(formValues[name as keyof object] as string)
-
-    if (!!didUserHaveDiscount.data) {
-      dispatch(setUserHaveDiscount(true))
-    } else {
-      dispatch(setUserHaveDiscount(false))
-    }
+    handleCheckDiscount(formValues[name as keyof object] as string)
   }
 
   return (
