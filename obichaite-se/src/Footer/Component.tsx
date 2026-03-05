@@ -84,7 +84,7 @@ export async function Footer() {
   return (
     <footer
       id="footer"
-      className="border-t border-brown pt-[40px] pb-[120px] xl:pb-[60px] xl:pt-10 relative flex flex-col brown_background_bubble"
+      className="border-t border-brown pt-[40px] pb-[120px] xl:pb-[60px] xl:pt-10 relative flex flex-col brown_background_bubble REF_FOOTER"
     >
       <div
         className="w-full content_wrapper pt-2 pb-8 md:py-10 

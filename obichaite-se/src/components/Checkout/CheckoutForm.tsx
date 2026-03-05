@@ -11,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import RadioSelect from '../Generic/RadioSelect'
 import { useCheckout } from '@/hooks/useCheckout'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
+import { priceToBgn } from '@/utils/calculatePriceFromLvToEuro'
 import { ArrowIcon, CheckBoxIcon } from '@/assets/icons'
 import ErrorMessageBox from '../Generic/ErrorMessage'
 import { makeOrder, MakeOrderInput } from '@/action/checkout'
@@ -181,14 +181,16 @@ const CheckoutForm = () => {
 
           // purchase trigger
           PURCHASE(
-            'BGN',
+            'EUR',
             String(calculateTotalPrice().toFixed(2)),
             response.orderNumber as string,
             products.map((product) => {
               return {
                 item_id: String(product?.id),
                 item_name: product?.title,
-                price: product.promoPrice ? product.promoPrice : product.price || 0,
+                price: product.promoPriceInEuro
+                  ? product.promoPriceInEuro
+                  : product.priceInEuro || 0,
                 quantity: product.orderQuantity,
               }
             }),
@@ -409,7 +411,7 @@ const CheckoutForm = () => {
                       pType="small"
                       textColor="text-white"
                     >
-                      {priceToEuro(totalPrice)}€ ({totalPrice.toFixed(2)} лв)
+                      {totalPrice}€ ({priceToBgn(totalPrice)} лв)
                     </GenericParagraph>
                   </div>
 

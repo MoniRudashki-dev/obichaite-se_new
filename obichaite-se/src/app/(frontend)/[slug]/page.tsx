@@ -129,6 +129,8 @@ export default async function Page({ params: paramsPromise }: Args) {
           heading: true,
           category: true,
           price: true,
+          priceInEuro: true,
+          promoPriceInEuro: true,
           bestSeller: true,
           promoPrice: true,
           havePriceRange: true,

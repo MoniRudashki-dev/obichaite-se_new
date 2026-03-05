@@ -32,13 +32,15 @@ const ProductCard = ({ product }: { product: Product }) => {
     havePriceRange,
     priceRange,
     price,
+    priceInEuro,
+    promoPriceInEuro,
   } = product
 
   const mediaToShow = mediaArray?.[0].file as Media
 
   const [isHover, setIsHover] = useState(false)
 
-  const priceSection = !!price ? (
+  const priceSection = !!priceInEuro ? (
     <div className="w-full md:max-w-[40%] flex flex-col px-1 rounded-4 bg-white rounded-[4px]">
       <GenericParagraph
         pType="large"
@@ -47,37 +49,53 @@ const ProductCard = ({ product }: { product: Product }) => {
         extraClass="text-center"
       >
         <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>
-          {priceToEuro(price)}
+          {priceInEuro.toFixed(2)}
         </span>
-        <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
-          {!!promoPrice && ` ${priceToEuro(promoPrice)}`}€
+        <span className={`${!!promoPriceInEuro && 'text-[16px] md:text-[20px]'}`}>
+          {!!promoPriceInEuro && ` ${promoPriceInEuro.toFixed(2)}`}€
         </span>
       </GenericParagraph>
       <div className="w-full h-[1px] bg-brown/80"></div>
-      <GenericParagraph
-        pType="large"
-        fontStyle="font-sansation font-[700]"
-        textColor="text-brown"
-        extraClass="text-center"
-      >
-        <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>{price.toFixed(2)}</span>
-        <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
-          {promoPrice && ` ${promoPrice.toFixed(2)}`}лв
-        </span>
-      </GenericParagraph>
+      {price && (
+        <GenericParagraph
+          pType="large"
+          fontStyle="font-sansation font-[700]"
+          textColor="text-brown"
+          extraClass="text-center"
+        >
+          <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>
+            {price.toFixed(2)}
+          </span>
+          <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
+            {promoPrice && ` ${promoPrice.toFixed(2)}`}лв
+          </span>
+        </GenericParagraph>
+      )}
     </div>
   ) : (
-    <div className="w-full max-w-[40%] flex flex-col px-1">
+    <button
+      className="w-full max-w-[40%] flex flex-col px-1"
+      onClick={() => {
+        const target = document.querySelector('.REF_FOOTER') as HTMLElement
+
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+          })
+        }
+      }}
+    >
       <GenericParagraph
         pType="large"
         fontStyle="font-sansation font-[700]"
         textColor="text-brown"
         extraClass="text-center"
       >
-        <span className={`${!!havePriceRange && 'text-[16px]'}`}>
+        Свържи
+        {/* <span className={`${!!havePriceRange && 'text-[16px]'}`}>
           {priceToEuro(Number(priceRange?.split('-')?.[0]))}-
           {priceToEuro(Number(priceRange?.split('-')?.[1]))}€
-        </span>
+        </span> */}
       </GenericParagraph>
       <div className="w-full h-[1px] bg-brown/80"></div>
       <GenericParagraph
@@ -86,17 +104,18 @@ const ProductCard = ({ product }: { product: Product }) => {
         textColor="text-brown"
         extraClass="text-center"
       >
-        <span className={`${!!havePriceRange && 'text-[16px]'}`}>
+        се с нас
+        {/* <span className={`${!!havePriceRange && 'text-[16px]'}`}>
           {Number(priceRange?.split('-')?.[0]).toFixed(2)}-
           {Number(priceRange?.split('-')?.[1]).toFixed(2)}лв
-        </span>
+        </span> */}
       </GenericParagraph>
-    </div>
+    </button>
   )
 
   return (
     <>
-      {!!promoPrice && (
+      {!!promoPriceInEuro && (
         <div className="w-[32px] h-[32px] md:w-[32px] md:h-[32px] absolute z-[3] top-0 left-0 md:translate-x-[20px] md:translate-y-[20px]">
           <DiscountIcon />
         </div>
@@ -214,10 +233,10 @@ const ProductCard = ({ product }: { product: Product }) => {
                       styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
                       click={() => {
                         dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
-                        const priceForProduct = product.promoPrice
-                          ? product.promoPrice
-                          : product.price || 0
-                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                        const priceForProduct = product.promoPriceInEuro
+                          ? product.promoPriceInEuro
+                          : product.priceInEuro || 0
+                        ADD_TO_CART('EUR', priceForProduct.toFixed(2).toString(), [
                           {
                             item_id: product?.id,
                             item_name: product?.title,
@@ -258,10 +277,10 @@ const ProductCard = ({ product }: { product: Product }) => {
                       styleClass="uppercase w-full !py-[4px] md:!py-[8px]"
                       click={() => {
                         dispatch(addProductToShoppingCart({ ...product, orderQuantity: 1 }))
-                        const priceForProduct = product.promoPrice
-                          ? product.promoPrice
-                          : product.price || 0
-                        ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                        const priceForProduct = product.promoPriceInEuro
+                          ? product.promoPriceInEuro
+                          : product.priceInEuro || 0
+                        ADD_TO_CART('EUR', priceForProduct.toFixed(2).toString(), [
                           {
                             item_id: product?.id,
                             item_name: product?.title,

@@ -11,7 +11,6 @@ import {
   removeOrderQuantity,
 } from '@/store/features/checkout'
 import { ArrowIcon, MinusIcon, PlusIcon } from '@/assets/icons'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
@@ -181,25 +180,49 @@ const SingleCardMain = ({ product }: { product: Product }) => {
               </div>
 
               <div>
-                <GenericParagraph
-                  fontStyle="font-sansation font-[700]"
-                  pType="large"
-                  textColor="text-bordo"
-                >
-                  <>
-                    {product?.promoPrice ? (
-                      <>
-                        {priceToEuro(product.promoPrice * orderQuantity)} € (
-                        {(product.promoPrice * orderQuantity).toFixed(2)} лв.)
-                      </>
-                    ) : (
-                      <>
-                        {priceToEuro(product.price! * orderQuantity)} € (
-                        {(product.price! * orderQuantity).toFixed(2)} лв.)
-                      </>
-                    )}
-                  </>
-                </GenericParagraph>
+                {product.priceInEuro ? (
+                  <GenericParagraph
+                    fontStyle="font-sansation font-[700]"
+                    pType="large"
+                    textColor="text-bordo"
+                  >
+                    <>
+                      {product?.promoPriceInEuro ? (
+                        <>
+                          {product.promoPriceInEuro * orderQuantity} €
+                          {product.promoPrice && (
+                            <>({(product.promoPrice * orderQuantity).toFixed(2)} лв.)</>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {product.priceInEuro! * orderQuantity} €
+                          {product.price && <>({(product.price * orderQuantity).toFixed(2)} лв.)</>}
+                        </>
+                      )}
+                    </>
+                  </GenericParagraph>
+                ) : (
+                  <button
+                    onClick={() => {
+                      const target = document.querySelector('.REF_FOOTER') as HTMLElement
+
+                      if (target) {
+                        target.scrollIntoView({
+                          behavior: 'smooth',
+                        })
+                      }
+                    }}
+                  >
+                    <GenericParagraph
+                      fontStyle="font-sansation font-[700]"
+                      pType="large"
+                      textColor="text-bordo"
+                    >
+                      Свържи се с нас
+                    </GenericParagraph>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -222,10 +245,10 @@ const SingleCardMain = ({ product }: { product: Product }) => {
                   title="Добави в Количка"
                   onClick={() => {
                     dispatch(addProductToShoppingCart({ ...product, orderQuantity: orderQuantity }))
-                    const priceForProduct = product.promoPrice
-                      ? product.promoPrice
-                      : product.price || 0
-                    ADD_TO_CART('BGN', priceForProduct.toFixed(2).toString(), [
+                    const priceForProduct = product.promoPriceInEuro
+                      ? product.promoPriceInEuro
+                      : product.priceInEuro || 0
+                    ADD_TO_CART('EUR', priceForProduct.toFixed(2).toString(), [
                       {
                         item_id: product?.id,
                         item_name: product?.title,

@@ -9,12 +9,12 @@ export function useCheckout() {
 
   const calculateTotalPrice = () => {
     return products.reduce((total, product) => {
-      if (!product.price) return total
-      if (product?.promoPrice) {
-        return total + product.promoPrice * product.orderQuantity
+      if (!product.priceInEuro) return total
+      if (product?.promoPriceInEuro) {
+        return total + product.promoPriceInEuro * product.orderQuantity
       }
 
-      return total + product.price * product.orderQuantity
+      return total + product.priceInEuro * product.orderQuantity
     }, 0)
   }
 

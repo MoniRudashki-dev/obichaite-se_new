@@ -58,11 +58,11 @@ export async function makeOrder(
       const quantity = item.orderQuantity > 0 ? item.orderQuantity : 1
 
       let unitPrice = 0
-      if (!!item.promoPrice || !!item.price) {
+      if (!!item.priceInEuro || !!item.promoPriceInEuro) {
         unitPrice =
-          typeof item.promoPrice === 'number' && item.promoPrice > 0
-            ? item.promoPrice
-            : item.price || 0
+          typeof item.promoPriceInEuro === 'number' && item.promoPriceInEuro > 0
+            ? item.promoPriceInEuro
+            : item.priceInEuro || 0
       }
 
       const lineTotal = unitPrice * quantity

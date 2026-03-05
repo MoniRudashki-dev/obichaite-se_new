@@ -12,12 +12,12 @@ import {
   setUserHaveDiscount,
 } from '@/store/features/checkout'
 import { useCheckout } from '@/hooks/useCheckout'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 import { Media } from '@/payload-types'
 import { removeFromCart } from '@/action/products/shoppingCart'
 import Link from 'next/link'
 import { INITIATE_CHECKOUT } from '@/services/anatilitics'
 import { useDiscount } from '@/hooks/useDiscount'
+import { priceToBgn } from '@/utils/calculatePriceFromLvToEuro'
 
 const ShoppingCardAside = () => {
   const dispatch = useAppDispatch()
@@ -42,8 +42,8 @@ const ShoppingCardAside = () => {
   const productsContent = products.map((product) => {
     const media = product?.mediaArray?.[0].file as Media
     const productPriceLength = product.promoPrice
-      ? product.promoPrice.toString().length
-      : product.price?.toString().length
+      ? product.promoPriceInEuro?.toString().length
+      : product.priceInEuro?.toString().length
 
     return (
       <li key={product.id} className="w-full p-3">
@@ -130,15 +130,19 @@ const ShoppingCardAside = () => {
                   extraClass={`text-[16px] ${!!productPriceLength && productPriceLength < 3 ? 'md:text-[20px]' : 'md:text-[18px]'} leading-[110%]`}
                 >
                   <>
-                    {product?.promoPrice ? (
+                    {product?.promoPriceInEuro ? (
                       <>
-                        {priceToEuro(product.promoPrice * product.orderQuantity)}€ (
-                        {(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)
+                        {product.promoPriceInEuro * product.orderQuantity}€
+                        {product.promoPrice && (
+                          <>({(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)</>
+                        )}
                       </>
                     ) : (
                       <>
-                        {priceToEuro(product.price! * product.orderQuantity)}€ (
-                        {(product.price! * product.orderQuantity).toFixed(2)} лв.)
+                        {product.priceInEuro! * product.orderQuantity}€
+                        {product.price && (
+                          <>({(product.price * product.orderQuantity).toFixed(2)} лв.)</>
+                        )}
                       </>
                     )}
                   </>
@@ -155,13 +159,13 @@ const ShoppingCardAside = () => {
 
   let totalPrice = (
     <>
-      {priceToEuro(calculateTotalPrice())}€ ({calculateTotalPrice().toFixed(2)} лв)
+      {calculateTotalPrice()}€ ({priceToBgn(calculateTotalPrice())} лв)
     </>
   )
   if (userHaveDiscount) {
     totalPrice = (
       <>
-        {priceToEuro(calculateTotalPrice() * 0.9)} € ({(calculateTotalPrice() * 0.9).toFixed(2)} лв)
+        {calculateTotalPrice() * 0.9} € ({priceToBgn(calculateTotalPrice() * 0.9)} лв)
       </>
     )
   }
@@ -245,7 +249,7 @@ const ShoppingCardAside = () => {
             onClick={() => {
               dispatch(setShoppingCardOpen(false))
               INITIATE_CHECKOUT(
-                'BGN',
+                'EUR',
                 userHaveDiscount
                   ? (calculateTotalPrice() * 0.9).toFixed(2)
                   : calculateTotalPrice().toFixed(2),
@@ -253,7 +257,9 @@ const ShoppingCardAside = () => {
                   return {
                     item_id: String(product?.id),
                     item_name: product?.title,
-                    price: product.promoPrice ? product.promoPrice : product.price || 0,
+                    price: product.promoPriceInEuro
+                      ? product.promoPriceInEuro
+                      : product.priceInEuro || 0,
                     quantity: product.orderQuantity,
                   }
                 }),
