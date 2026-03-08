@@ -20,8 +20,8 @@ import {
 import { revalidateDeleteProduct, revalidateProduct } from './hooks/revalidateProduct'
 import { ensureInquiryDefaults } from './hooks/ensureInquiryDefaults'
 import { getDefaultInquiryQuestions } from './hooks/inquiryDefaults'
-import { syncEuroPrice } from './hooks/syncEuroPrice'
-import { syncPublishedAt } from './hooks/syncPublishedAt'
+// import { syncEuroPrice } from './hooks/syncEuroPrice'
+// import { syncPublishedAt } from './hooks/syncPublishedAt'
 
 export const Product: CollectionConfig = {
   slug: 'product',

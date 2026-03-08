@@ -3,7 +3,6 @@
 import { Category, Media, Product } from '@/payload-types'
 import React, { useState } from 'react'
 import { GenericButton, GenericHeading, GenericImage, GenericParagraph } from '../Generic'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 import { BestSellerIcon, DiscountIcon, ShoppingCartIcon } from '@/assets/icons'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import { addProductToShoppingCart } from '@/store/features/checkout'
@@ -29,8 +28,6 @@ const ProductCard = ({ product }: { product: Product }) => {
     // shortDescription,
     bestSeller,
     promoPrice,
-    havePriceRange,
-    priceRange,
     price,
     priceInEuro,
     promoPriceInEuro,
