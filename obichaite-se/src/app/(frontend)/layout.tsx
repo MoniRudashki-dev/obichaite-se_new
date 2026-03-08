@@ -154,6 +154,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         },
       })
 
+  console.log('BUILD 8.03.2026')
+
   return (
     <StoreProvider>
       <html lang="bg" className={`${kolka.variable} ${sansation.variable}`}>
