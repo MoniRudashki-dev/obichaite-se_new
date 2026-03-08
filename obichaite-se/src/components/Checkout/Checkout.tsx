@@ -1,16 +1,22 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { GenericHeading } from '../Generic'
 import { useAppSelector } from '@/hooks/redux-hooks'
 import CheckoutProduct from './CheckoutProduct'
 
 const Checkout = () => {
+  const [isClient, setIsClient] = useState(false)
+
   const { products } = useAppSelector((state) => state.checkout)
 
   const productsContent = products.map((product) => {
     return <CheckoutProduct key={product.id} product={product} />
   })
+
+  useEffect(() => setIsClient(true), [])
+
+  if (!isClient) return null
 
   return (
     <div className="w-full flex flex-col gap-m">

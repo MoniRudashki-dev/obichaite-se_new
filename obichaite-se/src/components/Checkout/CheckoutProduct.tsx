@@ -10,7 +10,6 @@ import {
 } from '@/store/features/checkout'
 import React from 'react'
 import { GenericImage, GenericParagraph } from '../Generic'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
 
 const CheckoutProduct = ({ product }: { product: Product & { orderQuantity: number } }) => {
   const dispatch = useAppDispatch()
@@ -95,15 +94,19 @@ const CheckoutProduct = ({ product }: { product: Product & { orderQuantity: numb
                 textColor="text-bordo"
               >
                 <>
-                  {product?.promoPrice ? (
+                  {product?.promoPriceInEuro ? (
                     <>
-                      {priceToEuro(product.promoPrice * product.orderQuantity)}€ (
-                      {(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)
+                      {product.promoPriceInEuro * product.orderQuantity}€
+                      {product.promoPrice && (
+                        <>({(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)</>
+                      )}
                     </>
                   ) : (
                     <>
-                      {priceToEuro(product.price! * product.orderQuantity)}€ (
-                      {(product.price! * product.orderQuantity).toFixed(2)} лв.)
+                      {product.priceInEuro! * product.orderQuantity}€
+                      {product.price && (
+                        <>({(product.price * product.orderQuantity).toFixed(2)} лв.)</>
+                      )}
                     </>
                   )}
                 </>

@@ -109,6 +109,8 @@ export async function getCartProductsByUserId(userId: number) {
       heading: true,
       category: true,
       price: true,
+      priceInEuro: true,
+      promoPriceInEuro: true,
       bestSeller: true,
       promoPrice: true,
       havePriceRange: true,

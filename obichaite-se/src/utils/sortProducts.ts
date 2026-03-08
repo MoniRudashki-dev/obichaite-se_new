@@ -12,22 +12,22 @@ export const sortProducts = (products: Product[], sort: SortFilters) => {
       })
     case 'discount':
       return products.sort((a, b) => {
-        const currentA = a.promoPrice ? 1 : 0
-        const currentB = b.promoPrice ? 1 : 0
+        const currentA = a.promoPriceInEuro ? 1 : 0
+        const currentB = b.promoPriceInEuro ? 1 : 0
         return currentB - currentA
       })
     case 'new':
       return products.sort((a, b) => b.id - a.id)
     case 'price-asc':
       return products.sort((a, b) => {
-        const currentA = a.promoPrice ? a.promoPrice : a.price || 0
-        const currentB = b.promoPrice ? b.promoPrice : b.price || 0
+        const currentA = a.promoPriceInEuro ? a.promoPriceInEuro : a.priceInEuro || 0
+        const currentB = b.promoPriceInEuro ? b.promoPriceInEuro : b.priceInEuro || 0
         return currentA - currentB
       })
     case 'price-desc':
       return products.sort((a, b) => {
-        const currentA = a.promoPrice ? a.promoPrice : a.price || 0
-        const currentB = b.promoPrice ? b.promoPrice : b.price || 0
+        const currentA = a.promoPriceInEuro ? a.promoPriceInEuro : a.priceInEuro || 0
+        const currentB = b.promoPriceInEuro ? b.promoPriceInEuro : b.priceInEuro || 0
         return currentB - currentA
       })
     default:

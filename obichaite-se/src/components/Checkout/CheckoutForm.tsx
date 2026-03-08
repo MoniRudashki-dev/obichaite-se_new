@@ -11,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import RadioSelect from '../Generic/RadioSelect'
 import { useCheckout } from '@/hooks/useCheckout'
-import { priceToEuro } from '@/utils/calculatePriceFromLvToEuro'
+import { priceToBgn } from '@/utils/calculatePriceFromLvToEuro'
 import { ArrowIcon, CheckBoxIcon } from '@/assets/icons'
 import ErrorMessageBox from '../Generic/ErrorMessage'
 import { makeOrder, MakeOrderInput } from '@/action/checkout'
@@ -30,8 +30,11 @@ import { PaymentSection } from '@/Stripe/components'
 import EmailInputWithAction from './EmailInputWithActions'
 import { Order } from '@/payload-types'
 import { PURCHASE } from '@/services/anatilitics'
+import { GlobalLoader } from '../Loader'
 
 const CheckoutForm = () => {
+  const [isClient, setIsClient] = useState(false)
+
   const dispatch = useAppDispatch()
   const { products, needToMakeOrder, userHaveDiscount } = useAppSelector((state) => state.checkout)
   const userId = useAppSelector((state) => state.root.user?.id)
@@ -178,14 +181,16 @@ const CheckoutForm = () => {
 
           // purchase trigger
           PURCHASE(
-            'BGN',
+            'EUR',
             String(calculateTotalPrice().toFixed(2)),
             response.orderNumber as string,
             products.map((product) => {
               return {
                 item_id: String(product?.id),
                 item_name: product?.title,
-                price: product.promoPrice ? product.promoPrice : product.price || 0,
+                price: product.promoPriceInEuro
+                  ? product.promoPriceInEuro
+                  : product.priceInEuro || 0,
                 quantity: product.orderQuantity,
               }
             }),
@@ -204,6 +209,10 @@ const CheckoutForm = () => {
     })
     dispatch(setNeedToMakeOrder(false))
   }, [needToMakeOrder])
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   let paymentInfoText = 'Наложен платеж'
   if (formValues.paymentMethod === 'card') {
@@ -224,6 +233,15 @@ const CheckoutForm = () => {
           { label: 'Наложен платеж', value: 'cash' },
           { label: 'Плащане по банков път', value: 'needBankTransfer' },
         ]
+
+  //Add client guard and loader to avoid hydration error
+  if (!isClient) {
+    return (
+      <div className="fixed inset-0 z-[20] bg-brown min-h-screen">
+        <GlobalLoader color={'#FFFFFF'} />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -393,7 +411,7 @@ const CheckoutForm = () => {
                       pType="small"
                       textColor="text-white"
                     >
-                      {priceToEuro(totalPrice)}€ ({totalPrice.toFixed(2)} лв)
+                      {totalPrice}€ ({priceToBgn(totalPrice)} лв)
                     </GenericParagraph>
                   </div>
 
