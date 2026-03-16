@@ -12,14 +12,14 @@ if (!fs.existsSync(outDir)) {
 }
 
 const removeCommasAndNewlines = (val?: string | null): string => {
-  if (!val) return "";
+  if (!val) return ''
 
   return String(val)
-    .replace(/\r?\n|\r/g, " ") // replace newlines with space
-    .replace(/,/g, "")         // remove commas
-    .replace(/\s+/g, " ")      // collapse multiple spaces
-    .trim();
-};
+    .replace(/\r?\n|\r/g, ' ') // replace newlines with space
+    .replace(/,/g, '') // remove commas
+    .replace(/\s+/g, ' ') // collapse multiple spaces
+    .trim()
+}
 
 const exportProducts = async () => {
   const products = await payload.find({
@@ -32,7 +32,7 @@ const exportProducts = async () => {
   const mapped = products.docs.map((product) => {
     return {
       id: product.id,
-      title: removeCommasAndNewlines(product.title),
+      title: removeCommasAndNewlines(product.title).slice(0, 65), // Facebook recommends keeping titles under 65 characters for optimal display
       description: removeCommasAndNewlines(product.shortDescription.replaceAll(',', '')),
       availability: 'in stock',
       condition: 'new',
@@ -57,26 +57,22 @@ const exportProducts = async () => {
       video_url: '',
       video_tag: '',
       gtin: product?.sku || '',
-      product_tags1: "",
+      product_tags1: '',
       product_tags2: '',
-      style: ''
-
+      style: '',
     }
   })
   // console.log('mapped->', mapped)
 
   // Use keys from the first object as headers (order matters)
-  const headers = Object.keys(mapped[0]);
+  const headers = Object.keys(mapped[0])
 
-  // content lines 
-  const contentLines = mapped.map((product) =>
-    Object.values(product).join(",")
-  );
+  // content lines
+  const contentLines = mapped.map((product) => Object.values(product).join(','))
 
-  const csv = [headers.join(","), ...contentLines].join("\n");
+  const csv = [headers.join(','), ...contentLines].join('\n')
 
-
-  console.log("products =>", mapped.length)
+  console.log('products =>', mapped.length)
 
   // mapped.forEach((product) => {
   //   console.log(product.image_link)
@@ -86,7 +82,6 @@ const exportProducts = async () => {
 }
 
 await exportProducts()
-
 
 // Long description
 // # Required | A unique content ID for the item.Use the item's SKU if you can. Each content ID must appear only once in your catalog. To run dynamic ads this ID must exactly match the content ID for the same item in your Meta Pixel code. Character limit: 100,
