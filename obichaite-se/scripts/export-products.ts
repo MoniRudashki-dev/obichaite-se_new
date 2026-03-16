@@ -28,6 +28,8 @@ const exportProducts = async () => {
     limit: 1000,
   })
 
+  //TODO AV use euro price
+
   // map product fields
   const mapped = products.docs.map((product) => {
     return {

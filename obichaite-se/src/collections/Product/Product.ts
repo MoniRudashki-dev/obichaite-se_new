@@ -20,6 +20,8 @@ import {
 import { revalidateDeleteProduct, revalidateProduct } from './hooks/revalidateProduct'
 import { ensureInquiryDefaults } from './hooks/ensureInquiryDefaults'
 import { getDefaultInquiryQuestions } from './hooks/inquiryDefaults'
+// import { syncEuroPrice } from './hooks/syncEuroPrice'
+// import { syncPublishedAt } from './hooks/syncPublishedAt'
 
 export const Product: CollectionConfig = {
   slug: 'product',
@@ -281,6 +283,26 @@ export const Product: CollectionConfig = {
       },
     },
     {
+      name: 'priceInEuro',
+      type: 'number',
+      required: false, //TODO change to required
+      admin: {
+        position: 'sidebar',
+        condition: (data) => data.category !== 6,
+        description: 'EUR Price',
+      },
+    },
+    {
+      name: 'promoPriceInEuro',
+      type: 'number',
+      required: false, //TODO change to required
+      admin: {
+        position: 'sidebar',
+        condition: (data) => data.category !== 6,
+        description: 'Promo EUR price',
+      },
+    },
+    {
       name: 'bestSeller',
       type: 'checkbox',
       label: 'Най-продавани продукт',
@@ -333,6 +355,7 @@ export const Product: CollectionConfig = {
       type: 'date',
       admin: {
         position: 'sidebar',
+        readOnly: true,
       },
     },
     ...slugField(),
@@ -341,6 +364,7 @@ export const Product: CollectionConfig = {
     beforeValidate: [ensureInquiryDefaults],
     afterChange: [revalidateProduct],
     afterDelete: [revalidateDeleteProduct],
+    // beforeChange: [syncPublishedAt],
   },
   versions: {
     drafts: {

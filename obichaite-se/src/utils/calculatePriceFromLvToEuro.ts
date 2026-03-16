@@ -1,5 +1,11 @@
 export const priceToEuro = (price: number) => {
-  const base = 1.96
+  const base = 1.95583
 
   return (price / base).toFixed(2)
+}
+
+export const priceToBgn = (price: number) => {
+  const base = 1.95583
+
+  return (price * base).toFixed(2)
 }
