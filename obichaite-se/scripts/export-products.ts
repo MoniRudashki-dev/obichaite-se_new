@@ -26,6 +26,11 @@ const exportProducts = async () => {
     collection: 'product',
     depth: 3,
     limit: 1000,
+    where: {
+      publishedAt: {
+        not_equals: null,
+      },
+    },
   })
 
   //TODO AV use euro price
@@ -38,14 +43,14 @@ const exportProducts = async () => {
       description: removeCommasAndNewlines(product.shortDescription.replaceAll(',', '')),
       availability: 'in stock',
       condition: 'new',
-      price: !!product?.priceRange ? `${product.priceRange} BGN` : `${product.price} BGN`,
+      price: `${product.priceInEuro} EUR`,
       link: `https://www.obichaite-se.com/produkt/${product.slug}`,
       image_link: (product.mediaArray?.[0].file as Media)?.url,
       brand: 'obichaite-se',
       google_product_category: '',
       fb_product_category: '',
       quantity_to_sell_on_facebook: product.quantity,
-      sale_price: !!product.promoPrice ? `${product.promoPrice} BGN` : '',
+      sale_price: !!product.promoPriceInEuro ? `${product.promoPriceInEuro} EUR` : '',
       sale_price_effective_date: '',
       item_group_id: '',
       gender: '',
