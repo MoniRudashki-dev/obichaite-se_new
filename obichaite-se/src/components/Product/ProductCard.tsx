@@ -220,7 +220,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                   textColor="text-bordo"
                   extraClass="uppercase text-center"
                 >
-                  Изчерапана наличност
+                  Изчерпана наличност
                 </GenericParagraph>
               ) : (
                 <>
