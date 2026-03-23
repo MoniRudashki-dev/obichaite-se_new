@@ -247,7 +247,7 @@ export const Product: CollectionConfig = {
         description:
           'Ако това поле бъде активно, вместо цена ще показва бутон за запитване, който ще отваря формата за запитване.',
         condition: (data) => {
-          return data.category === 2
+          return data.category === 2 || data.category === 6
         },
       },
     },
