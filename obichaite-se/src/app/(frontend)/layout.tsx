@@ -153,6 +153,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           shortDescription: true,
           quantity: true,
           subCategory: true,
+          showInquiryForm: true,
         },
       })
 
