@@ -234,7 +234,7 @@ const SingleCardMain = ({ product }: { product: Product }) => {
                   textColor="text-bordo"
                   extraClass="uppercase"
                 >
-                  Изчерапана наличност
+                  Изчерпана наличност
                 </GenericParagraph>
               ) : (
                 <button
