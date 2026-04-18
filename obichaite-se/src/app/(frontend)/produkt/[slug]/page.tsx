@@ -1,3 +1,4 @@
+import { RenderLandingBlocks } from '@/blocks/RenderLandingBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import PageViewComponent from '@/components/PageViewComponent'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -198,6 +199,10 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
         <div className="w-full pt-[76px] md:pt-[164px] bg-pink/30">
           <SingleProduct product={product} />
         </div>
+
+        {!!product.landingBlocks?.length && (
+          <RenderLandingBlocks blocks={product.landingBlocks} />
+        )}
 
         {!!allPromotionsAndBestSellers.docs.length && (
           <PromotionsCardsGrid

@@ -258,6 +258,19 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Добавете блокове за ландинг страницата на продукта. Незадължително.
+   */
+  landingBlocks?:
+    | (
+        | LandingBlockHero
+        | LandingBlockBenefits
+        | LandingBlockHowItWork
+        | LandingGallery
+        | LandingBonuses
+        | LandingTestimonials
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -323,6 +336,176 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockHero".
+ */
+export interface LandingBlockHero {
+  /**
+   * Малък надпис над заглавието (напр. "Емоционални изненади на работното място")
+   */
+  badge?: string | null;
+  heading: string;
+  description: string;
+  primaryButton: {
+    label: string;
+    href: string;
+  };
+  secondaryButton: {
+    label: string;
+    href: string;
+  };
+  /**
+   * До 3 статистики, показвани под бутоните
+   */
+  stats?:
+    | {
+        /**
+         * Напр. "100%", "1 ден", "Без стрес"
+         */
+        value: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Редове в декоративната карта вдясно. Последният ред може да е с тъмен фон.
+   */
+  previewCardRows?:
+    | {
+        /**
+         * Напр. "Повод", "Какво включва", "Ефект"
+         */
+        label: string;
+        value: string;
+        /**
+         * Показва реда с тъмен (slate-900) фон и бял текст
+         */
+        highlighted?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingBlockHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockBenefits".
+ */
+export interface LandingBlockBenefits {
+  heading: string;
+  description: string;
+  /**
+   * Картите с ползи, показвани в решетка (препоръчително 3)
+   */
+  benefits?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingBlockBenefits';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockHowItWork".
+ */
+export interface LandingBlockHowItWork {
+  heading: string;
+  description: string;
+  /**
+   * Номерираните стъпки в лявата колона (наредбата определя номера)
+   */
+  steps?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Заглавието на дясната карта (напр. "Подходящо за:")
+   */
+  occasionsHeading: string;
+  /**
+   * Поводите, показвани в решетка вдясно
+   */
+  occasions?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingBlockHowItWork';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingGallery".
+ */
+export interface LandingGallery {
+  heading: string;
+  description: string;
+  /**
+   * Картите в галерията — всяка с изображение, заглавие и текст
+   */
+  items?:
+    | {
+        image: number | Media;
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingGallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBonuses".
+ */
+export interface LandingBonuses {
+  heading: string;
+  description: string;
+  /**
+   * Картите с бонуси, показвани в решетка (препоръчително 3)
+   */
+  bonuses?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingBonuses';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingTestimonials".
+ */
+export interface LandingTestimonials {
+  heading: string;
+  /**
+   * Клиентските отзиви, показвани в решетка
+   */
+  testimonials?:
+    | {
+        name: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'landingTestimonials';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1179,6 +1362,16 @@ export interface ProductSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  landingBlocks?:
+    | T
+    | {
+        landingBlockHero?: T | LandingBlockHeroSelect<T>;
+        landingBlockBenefits?: T | LandingBlockBenefitsSelect<T>;
+        landingBlockHowItWork?: T | LandingBlockHowItWorkSelect<T>;
+        landingGallery?: T | LandingGallerySelect<T>;
+        landingBonuses?: T | LandingBonusesSelect<T>;
+        landingTestimonials?: T | LandingTestimonialsSelect<T>;
+      };
   meta?:
     | T
     | {
@@ -1206,6 +1399,135 @@ export interface ProductSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockHero_select".
+ */
+export interface LandingBlockHeroSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  description?: T;
+  primaryButton?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  secondaryButton?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        description?: T;
+        id?: T;
+      };
+  previewCardRows?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        highlighted?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockBenefits_select".
+ */
+export interface LandingBlockBenefitsSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  benefits?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBlockHowItWork_select".
+ */
+export interface LandingBlockHowItWorkSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  steps?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  occasionsHeading?: T;
+  occasions?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingGallery_select".
+ */
+export interface LandingGallerySelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  items?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingBonuses_select".
+ */
+export interface LandingBonusesSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  bonuses?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LandingTestimonials_select".
+ */
+export interface LandingTestimonialsSelect<T extends boolean = true> {
+  heading?: T;
+  testimonials?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

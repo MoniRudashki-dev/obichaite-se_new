@@ -18,6 +18,12 @@ import {
   InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical'
 import { revalidateDeleteProduct, revalidateProduct } from './hooks/revalidateProduct'
+import { LandingBlockHero } from '@/blocks/LandingBlockHero/config'
+import { LandingBlockBenefits } from '@/blocks/LandingBlockBenefits/config'
+import { LandingBlockHowItWork } from '@/blocks/LandingBlockHowItWork/config'
+import { LandingGallery } from '@/blocks/LandingGallery/config'
+import { LandingBonuses } from '@/blocks/LandingBonuses/config'
+import { LandingTestimonials } from '@/blocks/LandingTestimonials/config'
 import { ensureInquiryDefaults } from './hooks/ensureInquiryDefaults'
 import { getDefaultInquiryQuestions } from './hooks/inquiryDefaults'
 // import { syncEuroPrice } from './hooks/syncEuroPrice'
@@ -175,6 +181,28 @@ export const Product: CollectionConfig = {
     {
       type: 'tabs',
       tabs: [
+        {
+          label: 'Блокове на ландинг страница',
+          fields: [
+            {
+              name: 'landingBlocks',
+              type: 'blocks',
+              label: 'Блокове',
+              required: false,
+              blocks: [
+                LandingBlockHero,
+                LandingBlockBenefits,
+                LandingBlockHowItWork,
+                LandingGallery,
+                LandingBonuses,
+                LandingTestimonials,
+              ],
+              admin: {
+                description: 'Добавете блокове за ландинг страницата на продукта. Незадължително.',
+              },
+            },
+          ],
+        },
         {
           name: 'meta',
           label: 'SEO',
