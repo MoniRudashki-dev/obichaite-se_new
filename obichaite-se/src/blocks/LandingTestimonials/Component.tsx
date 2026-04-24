@@ -1,3 +1,5 @@
+import GenericHeading from '@/components/Generic/GenericHeading'
+import GenericParagraph from '@/components/Generic/GenericParagraph'
 import { LandingTestimonials } from '@/payload-types'
 import React from 'react'
 
@@ -6,10 +8,17 @@ export const LandingTestimonialsComponent: React.FC<LandingTestimonials> = ({
   testimonials,
 }) => {
   return (
-    <section className="bg-rose-50 py-20">
+    <section className="bg-pink/10 py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{heading}</h2>
+          <GenericHeading
+            headingType="h2"
+            fontStyle="font-sansation font-[700]"
+            textColor="text-brown"
+            align="text-center"
+          >
+            {heading}
+          </GenericHeading>
         </div>
 
         {testimonials && testimonials.length > 0 && (
@@ -17,10 +26,24 @@ export const LandingTestimonialsComponent: React.FC<LandingTestimonials> = ({
             {testimonials.map((item, i) => (
               <div
                 key={item.id ?? i}
-                className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200"
+                className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brown/15"
               >
-                <p className="text-lg leading-8 text-slate-700">"{item.text}"</p>
-                <p className="mt-6 text-sm font-semibold text-slate-900">{item.name}</p>
+                <GenericParagraph
+                  pType="large"
+                  fontStyle="font-sansation font-[400] italic"
+                  textColor="text-brown"
+                  extraClass="leading-8"
+                >
+                  &ldquo;{item.text}&rdquo;
+                </GenericParagraph>
+                <GenericParagraph
+                  pType="small"
+                  fontStyle="font-sansation font-[700]"
+                  textColor="text-bordo"
+                  extraClass="mt-6"
+                >
+                  {item.name}
+                </GenericParagraph>
               </div>
             ))}
           </div>

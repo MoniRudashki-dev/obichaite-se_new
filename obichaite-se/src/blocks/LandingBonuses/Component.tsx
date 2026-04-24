@@ -1,3 +1,5 @@
+import GenericHeading from '@/components/Generic/GenericHeading'
+import GenericParagraph from '@/components/Generic/GenericParagraph'
 import { LandingBonuses } from '@/payload-types'
 import React from 'react'
 
@@ -7,11 +9,25 @@ export const LandingBonusesComponent: React.FC<LandingBonuses> = ({
   bonuses,
 }) => {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-pinkShade/30 py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{heading}</h2>
-          <p className="mt-4 text-lg text-slate-600">{description}</p>
+          <GenericHeading
+            headingType="h2"
+            fontStyle="font-sansation font-[700]"
+            textColor="text-brown"
+            align="text-center"
+          >
+            {heading}
+          </GenericHeading>
+          <GenericParagraph
+            pType="large"
+            fontStyle="font-sansation font-[400]"
+            textColor="text-brown"
+            extraClass="mt-4 text-center"
+          >
+            {description}
+          </GenericParagraph>
         </div>
 
         {bonuses && bonuses.length > 0 && (
@@ -19,10 +35,25 @@ export const LandingBonusesComponent: React.FC<LandingBonuses> = ({
             {bonuses.map((bonus, i) => (
               <div
                 key={bonus.id ?? i}
-                className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200"
+                className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brown/15"
               >
-                <h3 className="text-xl font-semibold">{bonus.title}</h3>
-                <p className="mt-3 leading-7 text-slate-600">{bonus.text}</p>
+                <GenericHeading
+                  headingType="h4"
+                  fontStyle="font-sansation font-[700]"
+                  textColor="text-bordo"
+                  customStyles={true}
+                  extraClass="text-[20px] md:text-[22px] leading-[120%]"
+                >
+                  {bonus.title}
+                </GenericHeading>
+                <GenericParagraph
+                  pType="regular"
+                  fontStyle="font-sansation font-[400]"
+                  textColor="text-brown"
+                  extraClass="mt-3 leading-7"
+                >
+                  {bonus.text}
+                </GenericParagraph>
               </div>
             ))}
           </div>

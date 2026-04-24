@@ -352,9 +352,12 @@ export interface LandingBlockHero {
     label: string;
     href: string;
   };
-  secondaryButton: {
-    label: string;
-    href: string;
+  /**
+   * Незадължителен. Оставете празно, ако не искате втори бутон.
+   */
+  secondaryButton?: {
+    label?: string | null;
+    href?: string | null;
   };
   /**
    * До 3 статистики, показвани под бутоните
