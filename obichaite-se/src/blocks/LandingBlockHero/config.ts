@@ -52,18 +52,21 @@ export const LandingBlockHero: Block = {
       name: 'secondaryButton',
       type: 'group',
       label: 'Вторичен бутон',
+      admin: {
+        description: 'Незадължителен. Оставете празно, ако не искате втори бутон.',
+      },
       fields: [
         {
           name: 'label',
           type: 'text',
           label: 'Текст',
-          required: true,
+          required: false,
         },
         {
           name: 'href',
           type: 'text',
           label: 'Линк',
-          required: true,
+          required: false,
         },
       ],
     },

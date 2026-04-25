@@ -1,3 +1,5 @@
+import GenericHeading from '@/components/Generic/GenericHeading'
+import GenericParagraph from '@/components/Generic/GenericParagraph'
 import { LandingBlockBenefits } from '@/payload-types'
 import React from 'react'
 
@@ -9,8 +11,22 @@ export const LandingBlockBenefitsComponent: React.FC<LandingBlockBenefits> = ({
   return (
     <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
       <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{heading}</h2>
-        <p className="mt-4 text-lg text-slate-600">{description}</p>
+        <GenericHeading
+          headingType="h2"
+          fontStyle="font-sansation font-[700]"
+          textColor="text-brown"
+          align="text-center"
+        >
+          {heading}
+        </GenericHeading>
+        <GenericParagraph
+          pType="large"
+          fontStyle="font-sansation font-[400]"
+          textColor="text-brown"
+          extraClass="mt-4 text-center"
+        >
+          {description}
+        </GenericParagraph>
       </div>
 
       {benefits && benefits.length > 0 && (
@@ -18,10 +34,25 @@ export const LandingBlockBenefitsComponent: React.FC<LandingBlockBenefits> = ({
           {benefits.map((item, i) => (
             <div
               key={item.id ?? i}
-              className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+              className="rounded-3xl border border-brown/15 bg-white p-8 shadow-sm"
             >
-              <h3 className="text-xl font-semibold">{item.title}</h3>
-              <p className="mt-3 leading-7 text-slate-600">{item.text}</p>
+              <GenericHeading
+                headingType="h4"
+                fontStyle="font-sansation font-[700]"
+                textColor="text-bordo"
+                customStyles={true}
+                extraClass="text-[20px] md:text-[22px] leading-[120%]"
+              >
+                {item.title}
+              </GenericHeading>
+              <GenericParagraph
+                pType="regular"
+                fontStyle="font-sansation font-[400]"
+                textColor="text-brown"
+                extraClass="mt-3 leading-7"
+              >
+                {item.text}
+              </GenericParagraph>
             </div>
           ))}
         </div>
