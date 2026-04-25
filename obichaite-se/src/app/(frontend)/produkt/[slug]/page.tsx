@@ -189,7 +189,7 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
   }
 
   const isLandingMode =
-    Boolean(product.showInquiryForm) && (product.landingBlocks?.length ?? 0) > 1
+    Boolean(product.showInquiryForm) && (product.landingBlocks?.length ?? 0) >= 2
 
   return (
     <>
