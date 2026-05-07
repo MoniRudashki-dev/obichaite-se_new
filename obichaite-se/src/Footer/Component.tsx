@@ -164,7 +164,10 @@ export async function Footer() {
           &copy;{new Date().getFullYear()} Всички права запазени.
         </p>
         <div className="w-full bg-white/20 h-[1px] md:hidden my-2"></div>
-        <div className="font-sansation font-[400] text-[16px] leading-[120%] text-white flex items-center gap-2">
+        <Link
+          href={`tel:+359877757765`}
+          className="font-sansation font-[400] text-[16px] leading-[120%] text-white flex items-center gap-2"
+        >
           <p>Генерирано от </p>
           <div className="flex justify-center items-center">
             <svg
@@ -200,7 +203,7 @@ export async function Footer() {
               </defs>
             </svg>
           </div>{' '}
-        </div>
+        </Link>
       </div>
     </footer>
   )
