@@ -177,7 +177,7 @@ export async function sendProductInquiryEmailAction(
   }
 
   const payload = await getPayload({ config: configPromise })
-  const to = process.env.INQUIRY_EMAIL_TO || process.env.ADMIN_EMAIL
+  const to = process.env.ADMIN_EMAIL
 
   if (!to) {
     return { ok: false, error: 'Липсва получател за запитвания (INQUIRY_EMAIL_TO / ADMIN_EMAIL).' }
@@ -253,8 +253,7 @@ export async function sendProductInquiryEmailAction(
   const safeAdditionalInfo = escapeHtml(additionalInfo || '-')
 
   await payload.sendEmail({
-    to,
-    replyTo: email,
+    to: to,
     subject: `Ново запитване за ${productTitleForSubject}`,
     html: buildInquiryEmailHtml({
       safeProductTitle,
