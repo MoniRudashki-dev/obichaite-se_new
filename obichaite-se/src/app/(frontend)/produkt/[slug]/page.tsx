@@ -101,6 +101,8 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
       shortDescription: true,
       quantity: true,
       subCategory: true,
+
+      showInquiryForm: true,
     },
   })
 
@@ -140,6 +142,9 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
       shortDescription: true,
       quantity: true,
       subCategory: true,
+      showInquiryForm: true,
+      priceInEuro: true,
+      promoPriceInEuro: true,
     },
   })
 

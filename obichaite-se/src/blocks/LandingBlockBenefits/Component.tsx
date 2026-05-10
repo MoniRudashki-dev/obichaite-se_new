@@ -34,7 +34,7 @@ export const LandingBlockBenefitsComponent: React.FC<LandingBlockBenefits> = ({
           {benefits.map((item, i) => (
             <div
               key={item.id ?? i}
-              className="rounded-3xl border border-brown/15 bg-white p-8 shadow-sm"
+              className="rounded-3xl border border-brown/15 bg-white p-4 md:p-8 shadow-sm"
             >
               <GenericHeading
                 headingType="h4"

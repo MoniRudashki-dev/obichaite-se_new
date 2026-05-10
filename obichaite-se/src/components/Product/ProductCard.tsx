@@ -158,13 +158,17 @@ const ProductCard = ({ product }: { product: Product }) => {
             </Link>
           </div>
 
-          <div className="w-full flex flex-col  md:flex-row gap-[6px] mt-[6px] md:mt-[unset] md:gap-[unset] md:justify-between md:items-center md:h-[110px] relative z-[2]">
-            <div className="w-full md:max-w-[66%]">
+          <div
+            className="w-full flex flex-col  md:flex-row gap-[6px] mt-[6px] md:mt-[unset] 
+          md:gap-[unset] md:justify-between md:items-center md:h-[110px] relative z-[2]"
+          >
+            <div className={`w-full ${!product.showInquiryForm && 'md:max-w-[66%]'}`}>
               <GenericHeading
                 headingType="h5"
                 fontStyle="font-sansation font-[700] italic"
                 textColor="text-brown"
-                extraClass="line-clamp-3 text-center md:text-left text-[14px] md:text-[18px] leading-[100%] min-h-[42px] md:min-h-[unset] md:leading-[110%] break-words"
+                extraClass={`line-clamp-3 text-center ${!product.showInquiryForm && 'md:text-left'} 
+                text-[14px] md:text-[18px] leading-[100%] min-h-[42px] md:min-h-[unset] md:leading-[110%] break-words`}
                 customStyles={true}
               >
                 <h3>{title}</h3>
@@ -195,7 +199,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                   fontStyle="font-sansation font-[700]"
                   pType="extraSmall"
                   textColor="text-white"
-                  extraClass="uppercase"
+                  extraClass="uppercase !text-[8px] !md:text-xs"
                 >
                   Безплатно и без ангажимент
                 </GenericParagraph>

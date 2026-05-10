@@ -118,6 +118,7 @@ export async function getCartProductsByUserId(userId: number) {
       priceRange: true,
       shortDescription: true,
       subCategory: true,
+      showInquiryForm: true,
     },
     depth: 1,
   })
