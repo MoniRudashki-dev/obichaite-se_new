@@ -1,3 +1,4 @@
+import { getBoxnowCitiesAction } from '@/BoxNow/action'
 import { CheckoutSuggestions } from '@/components/Checkout'
 import Checkout from '@/components/Checkout/Checkout'
 import CheckoutForm from '@/components/Checkout/CheckoutForm'
@@ -5,12 +6,16 @@ import { GenericImage } from '@/components/Generic'
 import { Metadata } from 'next'
 import React from 'react'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Завършване на поръчката | Обичайте се',
   description: 'Страница за завършване на поръчката',
 }
 
-const CheckoutPage = () => {
+const CheckoutPage = async () => {
+  const boxNowCities = await getBoxnowCitiesAction()
+
   return (
     <section className="w-full relative py-10 md:py-20 flex mt-[52px] md:mt-[140px] flex-col gap-10">
       <GenericImage
