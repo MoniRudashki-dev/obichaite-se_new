@@ -31,6 +31,7 @@ import EmailInputWithAction from './EmailInputWithActions'
 import { Order } from '@/payload-types'
 import { PURCHASE } from '@/services/anatilitics'
 import { GlobalLoader } from '../Loader'
+import RadioSelectCouriers from '../Generic/RadioSelectCouriers'
 
 const CheckoutForm = () => {
   const [isClient, setIsClient] = useState(false)
@@ -312,10 +313,11 @@ const CheckoutForm = () => {
                 </div>
 
                 <div className="w-full">
-                  <RadioSelect
+                  <RadioSelectCouriers
                     options={[
                       { label: 'Speedy', value: 'speedy-dpd' },
                       { label: 'Econt', value: 'econt' },
+                      { label: 'BoxNow', value: 'boxnow' },
                     ]}
                     label="Куриер"
                     formValues={formValues}
