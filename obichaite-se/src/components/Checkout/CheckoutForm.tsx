@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useTransition } from 'react'
+import React, { useCallback, useEffect, useState, useTransition } from 'react'
 import {
   GenericHeading,
   GenericParagraph,
@@ -32,8 +32,22 @@ import { Order } from '@/payload-types'
 import { PURCHASE } from '@/services/anatilitics'
 import { GlobalLoader } from '../Loader'
 import RadioSelectCouriers from '../Generic/RadioSelectCouriers'
+import { BoxNowWrapper } from '@/BoxNow/components'
+import { BoxnowLocker } from '@/BoxNow/types'
 
-const CheckoutForm = () => {
+export type CheckoutFormValues = {
+  name: string
+  phone: string
+  email: string
+  courier: 'speedy-dpd' | 'econt' | 'boxnow'
+  deliveryKind: 'office' | 'address' | 'automat'
+  deliveryTown: string
+  deliveryOffice: string
+  paymentMethod: 'cash' | 'card' | 'needBankTransfer'
+  message: string
+}
+
+const CheckoutForm = ({ boxNowCities }: { boxNowCities: BoxnowLocker[] }) => {
   const [isClient, setIsClient] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -50,17 +64,7 @@ const CheckoutForm = () => {
   const [acceptPrivacy, setAcceptPrivacy] = useState(false)
   const [acceptNextContacts, setAcceptNextContacts] = useState(false)
 
-  const checkoutValuesInitialState: {
-    name: string
-    phone: string
-    email: string
-    courier: 'speedy-dpd' | 'econt'
-    deliveryKind: 'office' | 'address'
-    deliveryTown: string
-    deliveryOffice: string
-    paymentMethod: 'cash' | 'card' | 'needBankTransfer'
-    message: string
-  } = {
+  const checkoutValuesInitialState: CheckoutFormValues = {
     name: user?.firstName ? `${user.firstName} ${user.lastName}` : '',
     email: user?.email ?? '',
     phone: user?.phoneNumber ?? '',
@@ -83,6 +87,8 @@ const CheckoutForm = () => {
   })
 
   const remain = Number(calculateRemainSum().toFixed(2))
+
+  console.log(formValues, 'formValues')
 
   const submitHandler = async () => {
     setError('')
@@ -235,6 +241,16 @@ const CheckoutForm = () => {
           { label: 'Плащане по банков път', value: 'needBankTransfer' },
         ]
 
+  const handleCityChange = useCallback((city: BoxnowLocker) => {
+    setFormValues((prev) => ({
+      ...prev,
+      deliveryTown: city.name,
+      deliveryOffice: city.name,
+    }))
+  }, [])
+
+  const handleOfficeChange = () => {}
+
   //Add client guard and loader to avoid hydration error
   if (!isClient) {
     return (
@@ -332,6 +348,7 @@ const CheckoutForm = () => {
                     options={[
                       { label: 'Офис', value: 'office' },
                       { label: 'Адрес', value: 'address' },
+                      { label: 'Автомат', value: 'automat' },
                     ]}
                     label="Вид Доставка"
                     formValues={formValues}
@@ -341,33 +358,66 @@ const CheckoutForm = () => {
                   />
                 </div>
 
+                {formValues.courier === 'boxnow' && (
+                  <div className="w-full py-3 md:px-4 md:py-3 bg-white">
+                    <GenericParagraph
+                      fontStyle="font-sansation font-[400]"
+                      textColor="text-brown"
+                      extraClass="text-center mb-3"
+                    >
+                      Изберете BoxNow Автомат
+                    </GenericParagraph>
+                    <BoxNowWrapper
+                      activeInnerShipping={formValues.courier}
+                      currentShippingCity={
+                        { name: formValues.deliveryTown, id: 'chosen-city' } as BoxnowLocker
+                      }
+                      handleCityChange={handleCityChange}
+                      handleOfficeChange={handleOfficeChange}
+                      office={null}
+                      boxNowCities={boxNowCities}
+                    />
+                  </div>
+                )}
+
                 <div className="w-full flex flex-col gap-m">
-                  <TextInput
-                    name="deliveryTown"
-                    label="Град/Село"
-                    formValues={formValues}
-                    setFormValues={setFormValues}
-                    extraClass="w-full"
-                    placeholder="София..."
-                    required={true}
-                    error={errors.deliveryTown}
-                    autoFocus={false}
-                  />
-                  <TextInput
-                    name="deliveryOffice"
-                    label={formValues.deliveryKind === 'office' ? '"Офис (име/код)"' : 'Адрес'}
-                    formValues={formValues}
-                    setFormValues={setFormValues}
-                    extraClass="w-full"
-                    placeholder={
-                      formValues.deliveryKind === 'office'
-                        ? '"Централен офис.../931522..."'
-                        : 'Град София, ЖК Младост бл. 331...'
+                  <div className={formValues.deliveryKind === 'automat' ? 'hidden' : ''}>
+                    <TextInput
+                      name="deliveryTown"
+                      label="Град/Село"
+                      formValues={formValues}
+                      setFormValues={setFormValues}
+                      extraClass="w-full"
+                      placeholder="София..."
+                      required={true}
+                      error={errors.deliveryTown}
+                      autoFocus={false}
+                    />
+                  </div>
+
+                  <div
+                    className={
+                      formValues.deliveryKind === 'automat'
+                        ? 'opacity-50 pointer-events-none cursor-not-allowed'
+                        : ''
                     }
-                    required={true}
-                    error={errors.deliveryOffice}
-                    autoFocus={false}
-                  />
+                  >
+                    <TextInput
+                      name="deliveryOffice"
+                      label={formValues.deliveryKind === 'office' ? '"Офис (име/код)"' : 'Адрес'}
+                      formValues={formValues}
+                      setFormValues={setFormValues}
+                      extraClass="w-full"
+                      placeholder={
+                        formValues.deliveryKind === 'office'
+                          ? '"Централен офис.../931522..."'
+                          : 'Град София, ЖК Младост бл. 331...'
+                      }
+                      required={true}
+                      error={errors.deliveryOffice}
+                      autoFocus={false}
+                    />
+                  </div>
                 </div>
 
                 <div className="w-full">
@@ -395,7 +445,7 @@ const CheckoutForm = () => {
                       <span className="uppercase">Доставката е безплатна!</span>
                     ) : (
                       <>
-                        Добави артикули за още {calculateRemainSum().toFixed(2)} лева и доставката
+                        Добави артикули за още {calculateRemainSum().toFixed(2)} euro и доставката
                         ще е безплатна
                       </>
                     )}
@@ -413,7 +463,7 @@ const CheckoutForm = () => {
                       pType="small"
                       textColor="text-white"
                     >
-                      {totalPrice}€ ({priceToBgn(totalPrice)} лв)
+                      {totalPrice.toFixed(2)}€ ({priceToBgn(totalPrice)} лв)
                     </GenericParagraph>
                   </div>
 

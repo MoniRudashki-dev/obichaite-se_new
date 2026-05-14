@@ -3,6 +3,9 @@
 import React from 'react'
 import GenericImage from './GenericImage'
 import GenericParagraph from './GenericParagraph'
+import { CheckoutFormValues } from '../Checkout/CheckoutForm'
+import { useAppDispatch } from '@/hooks/redux-hooks'
+import { setCourier } from '@/store/features/checkout'
 
 export type SelectProps<T> = {
   options: { label: string; value: string }[]
@@ -21,6 +24,7 @@ const RadioSelectCouriers = <T,>({
   name,
   required,
 }: SelectProps<T>) => {
+  const dispatch = useAppDispatch()
   const isFirstSelected = formValues[name as keyof object] === options[0].value
   const isSecondSelected = formValues[name as keyof object] === options[1].value
   const isBoxNowSelected = formValues[name as keyof object] === options[2].value
@@ -29,7 +33,9 @@ const RadioSelectCouriers = <T,>({
     setFormValues((prev) => ({
       ...prev,
       [name]: value,
+      deliveryKind: value === 'boxnow' ? 'automat' : 'office',
     }))
+    dispatch(setCourier(value as 'boxnow' | 'econt' | 'speedy'))
   }
 
   return (
@@ -79,7 +85,7 @@ const RadioSelectCouriers = <T,>({
           <div className="absolute z-[2] bottom-[0px] left-0 right-0">
             <GenericParagraph
               fontStyle="font-kolka font-[400]"
-              textColor={isBoxNowSelected ? 'text-white' : 'text-brown'}
+              textColor={'text-brown'}
               pType="small"
               extraClass="text-center max-w-[90%] mx-auto"
             >

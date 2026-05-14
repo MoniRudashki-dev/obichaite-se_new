@@ -26,13 +26,17 @@ export default function PaymentSection({ items }: PaymentSectionProps) {
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+  const courier = useAppSelector((state) => state.checkout.courier)
+  const boxNowShipmentPrice = useAppSelector((state) => state.checkout.boxNowShipmentPrice)
+  const possibleToAddShipmentPrice: null | number =
+    courier === 'boxnow' && !!boxNowShipmentPrice ? boxNowShipmentPrice : null
 
   useEffect(() => {
     const discount = userHaveDiscount ? 0.9 : 1
 
     startTransition(async () => {
       try {
-        const result = await createPaymentIntentAction(items, discount)
+        const result = await createPaymentIntentAction(items, discount, possibleToAddShipmentPrice)
 
         if (!result.clientSecret) {
           setError('Грешка при създаване на плащането. Моля, опитайте отново по-късно.')
@@ -44,7 +48,7 @@ export default function PaymentSection({ items }: PaymentSectionProps) {
         setError(err instanceof Error ? err.message : 'Грешка при създаване на плащането.')
       }
     })
-  }, [items, userHaveDiscount])
+  }, [items, userHaveDiscount, courier])
 
   if (error) {
     return <div>Грешка: {error}</div>

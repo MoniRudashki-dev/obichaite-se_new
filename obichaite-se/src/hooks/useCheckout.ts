@@ -6,20 +6,30 @@ import { Product } from '@/payload-types'
 
 export function useCheckout() {
   const products = useAppSelector((state) => state.checkout.products)
+  const boxNowShippingPrice = useAppSelector((state) => state.checkout.boxNowShipmentPrice)
+  const courier = useAppSelector((state) => state.checkout.courier)
 
   const calculateTotalPrice = () => {
-    return products.reduce((total, product) => {
+    const totalWithoutShipmentPrice = products.reduce((total, product) => {
       if (!product.priceInEuro) return total
       if (product?.promoPriceInEuro) {
-        return total + product.promoPriceInEuro * product.orderQuantity
+        const base = total + product.promoPriceInEuro * product.orderQuantity
+
+        return base
       }
 
       return total + product.priceInEuro * product.orderQuantity
     }, 0)
+    const needToAddShipmentPrice =
+      courier === 'boxnow' && !!boxNowShippingPrice && totalWithoutShipmentPrice < 50
+
+    return needToAddShipmentPrice
+      ? totalWithoutShipmentPrice + boxNowShippingPrice
+      : totalWithoutShipmentPrice
   }
 
   const calculateRemainSum = () => {
-    const BASE_SUM = 100
+    const BASE_SUM = 50
 
     const differences = BASE_SUM - calculateTotalPrice()
 

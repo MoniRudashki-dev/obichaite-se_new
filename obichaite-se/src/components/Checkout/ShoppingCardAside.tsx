@@ -209,7 +209,7 @@ const ShoppingCardAside = () => {
             <span className="uppercase">Доставката е безплатна!</span>
           ) : (
             <>
-              Добави артикули за още {calculateRemainSum().toFixed(2)} лева и доставката ще е
+              Добави артикули за още {calculateRemainSum().toFixed(2)} euro и доставката ще е
               безплатна
             </>
           )}

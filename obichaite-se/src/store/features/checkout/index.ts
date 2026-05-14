@@ -9,6 +9,8 @@ export interface CheckoutInitialState {
   tryToMakePayment: boolean
   needToMakeOrder: boolean
   userHaveDiscount: boolean
+  boxNowShipmentPrice: number
+  courier: 'econt' | 'speedy' | 'boxnow'
 }
 
 const checkoutInitialState: CheckoutInitialState = {
@@ -17,6 +19,8 @@ const checkoutInitialState: CheckoutInitialState = {
   tryToMakePayment: false,
   needToMakeOrder: false,
   userHaveDiscount: false,
+  boxNowShipmentPrice: 0,
+  courier: 'econt',
 }
 
 export const checkoutSlice = createSlice({
@@ -67,6 +71,12 @@ export const checkoutSlice = createSlice({
     setUserHaveDiscount: (state, { payload }: PayloadAction<boolean>) => {
       state.userHaveDiscount = payload
     },
+    setBoxNowShipmentPrice: (state, { payload }: PayloadAction<number>) => {
+      state.boxNowShipmentPrice = payload
+    },
+    setCourier: (state, { payload }: PayloadAction<'econt' | 'speedy' | 'boxnow'>) => {
+      state.courier = payload
+    },
   },
 })
 
@@ -81,6 +91,8 @@ export const {
   setTryToMakePayment,
   setNeedToMakeOrder,
   setUserHaveDiscount,
+  setBoxNowShipmentPrice,
+  setCourier,
 } = checkoutSlice.actions
 
 export default checkoutSlice.reducer

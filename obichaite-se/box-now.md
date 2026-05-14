@@ -5,10 +5,10 @@
 - ENV's - [done]
 - transfer the folder from GNL - [done]
 - prepare fetch the box now items for dropdown in server in checkout page - [done]
-- add container to checkout page (add image, text and delivery price), if box now is showed, hide fields connected to other delivery
-- add container with box now shipment choice and update state management
-- if user pay with card add box now price to the payment process
-- prepare body of order with box now setup
+- add container to checkout page (add image, text and delivery price), if box now is showed, hide fields connected to other delivery - [done]
+- add container with box now shipment choice and update state management - [done]
+- if user pay with card add box now price to the payment process - [done]
+- prepare body of order with box now setup - [done]
 
 //ANATOLI
 

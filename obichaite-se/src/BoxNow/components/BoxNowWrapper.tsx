@@ -1,12 +1,11 @@
 'use client'
 
 import React from 'react'
-import { InnerShippingProps } from '@/components/Checkout/ShippingForm'
 import { BoxnowLocker } from '../types'
 import BoxNowOfficeDropdown from './BoxNowOffice'
 
 type BoxNowWrapperProps = {
-  activeInnerShipping: InnerShippingProps
+  activeInnerShipping: 'boxnow'
   currentShippingCity: BoxnowLocker | null
   office: BoxnowLocker | null
   handleCityChange: (city: BoxnowLocker) => void
