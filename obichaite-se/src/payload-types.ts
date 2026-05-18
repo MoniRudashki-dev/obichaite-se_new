@@ -109,12 +109,14 @@ export interface Config {
     footer: Footer;
     banner: Banner;
     promotion: Promotion;
+    'box-now': BoxNow;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     banner: BannerSelect<false> | BannerSelect<true>;
     promotion: PromotionSelect<false> | PromotionSelect<true>;
+    'box-now': BoxNowSelect<false> | BoxNowSelect<true>;
   };
   locale: null;
   user: User & {
@@ -788,7 +790,15 @@ export interface Order {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  deliveryMethod?: ('econt' | 'speedy-dpd') | null;
+  deliveryMethod?: ('econt' | 'speedy-dpd' | 'boxnow') | null;
+  /**
+   * ID на избрания Box Now автомат от клиента.
+   */
+  boxNowOfficeId?: string | null;
+  /**
+   * Цена на доставка при поръчка
+   */
+  shippingPrice?: number | null;
   shippingAddress?: {
     line1?: string | null;
     city?: string | null;
@@ -1579,6 +1589,8 @@ export interface OrderSelect<T extends boolean = true> {
   customerEmail?: T;
   customerPhone?: T;
   deliveryMethod?: T;
+  boxNowOfficeId?: T;
+  shippingPrice?: T;
   shippingAddress?:
     | T
     | {
@@ -2012,6 +2024,21 @@ export interface Promotion {
   createdAt?: string | null;
 }
 /**
+ * Настройки за доставка чрез Box Now. Цената се прилага към всяка поръчка с избран куриер Box Now.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "box-now".
+ */
+export interface BoxNow {
+  id: number;
+  /**
+   * Цената на доставка чрез Box Now в евро.
+   */
+  shippingPrice: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -2141,6 +2168,16 @@ export interface PromotionSelect<T extends boolean = true> {
         id?: T;
       };
   isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "box-now_select".
+ */
+export interface BoxNowSelect<T extends boolean = true> {
+  shippingPrice?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

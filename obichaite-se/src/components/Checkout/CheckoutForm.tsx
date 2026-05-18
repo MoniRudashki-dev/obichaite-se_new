@@ -47,7 +47,13 @@ export type CheckoutFormValues = {
   message: string
 }
 
-const CheckoutForm = ({ boxNowCities }: { boxNowCities: BoxnowLocker[] }) => {
+const CheckoutForm = ({
+  boxNowCities,
+  boxNowShipmentPrice,
+}: {
+  boxNowCities: BoxnowLocker[]
+  boxNowShipmentPrice: number
+}) => {
   const [isClient, setIsClient] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -340,6 +346,7 @@ const CheckoutForm = ({ boxNowCities }: { boxNowCities: BoxnowLocker[] }) => {
                     setFormValues={setFormValues}
                     name="courier"
                     required={true}
+                    boxNowShipmentPrice={boxNowShipmentPrice}
                   />
                 </div>
 

@@ -14,6 +14,7 @@ export type SelectProps<T> = {
   setFormValues: React.Dispatch<React.SetStateAction<T>>
   name: string
   required?: boolean
+  boxNowShipmentPrice: number
 }
 
 const RadioSelectCouriers = <T,>({
@@ -23,6 +24,7 @@ const RadioSelectCouriers = <T,>({
   setFormValues,
   name,
   required,
+  boxNowShipmentPrice,
 }: SelectProps<T>) => {
   const dispatch = useAppDispatch()
   const isFirstSelected = formValues[name as keyof object] === options[0].value
@@ -89,7 +91,7 @@ const RadioSelectCouriers = <T,>({
               pType="small"
               extraClass="text-center max-w-[90%] mx-auto"
             >
-              Изберете Box Now и доставката ще е на стойност от 1.56 euro. TODO
+              Изберете Box Now и доставката ще е на стойност от {boxNowShipmentPrice.toFixed(2)} euro.
             </GenericParagraph>
           </div>
         </button>

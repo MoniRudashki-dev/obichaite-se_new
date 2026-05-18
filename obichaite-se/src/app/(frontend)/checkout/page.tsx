@@ -4,6 +4,8 @@ import Checkout from '@/components/Checkout/Checkout'
 import CheckoutForm from '@/components/Checkout/CheckoutForm'
 import { GenericImage } from '@/components/Generic'
 import SetBoxNowShipmentPriceSetter from '@/components/StateManagers/SetBoxNowShippmentPrice'
+import { getCachedGlobal } from '@/utils/getGlobals'
+import type { BoxNow } from '@/payload-types'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 
 const CheckoutPage = async () => {
   const boxNowCities = await getBoxnowCitiesAction()
-  const boxNowShipmentPrice = 1.56 // TODO AV make global in admin for box now
+  const boxNowGlobal = (await getCachedGlobal('box-now', 0)()) as BoxNow
+  const boxNowShipmentPrice = boxNowGlobal.shippingPrice
   return (
     <section className="w-full relative py-10 md:py-20 flex mt-[52px] md:mt-[140px] flex-col gap-10">
       <GenericImage
@@ -35,7 +38,7 @@ const CheckoutPage = async () => {
         </div>
 
         <div className="flex-1 px-4">
-          <CheckoutForm boxNowCities={boxNowCities} />
+          <CheckoutForm boxNowCities={boxNowCities} boxNowShipmentPrice={boxNowShipmentPrice} />
         </div>
       </div>
 

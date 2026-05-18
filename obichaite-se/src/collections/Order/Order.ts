@@ -176,7 +176,27 @@ export const Order: CollectionConfig = {
               options: [
                 { label: 'Еконт', value: 'econt' },
                 { label: 'Спиди', value: 'speedy-dpd' },
+                { label: 'Box Now', value: 'boxnow' },
               ],
+            },
+            {
+              name: 'boxNowOfficeId',
+              type: 'text',
+              label: 'Box Now автомат (ID)',
+              admin: {
+                description: 'ID на избрания Box Now автомат от клиента.',
+                condition: (data) => data?.deliveryMethod === 'boxnow',
+              },
+            },
+            {
+              name: 'shippingPrice',
+              type: 'number',
+              label: 'Цена за доставка (EUR)',
+              min: 0,
+              admin: {
+                description: 'Цена на доставка при поръчка',
+                readOnly: true,
+              },
             },
             {
               name: 'shippingAddress',

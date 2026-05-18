@@ -220,7 +220,7 @@ const HeaderClient = ({ headerData }: { headerData: DataFromGlobalSlug<'header'>
                   textColor="text-bordo"
                   extraClass="tracking-tighter"
                 >
-                  {calculateTotalPrice().toFixed(2)} BGN
+                  {calculateTotalPrice().toFixed(2)} EUR
                 </GenericParagraph>
               </div>
               <button
