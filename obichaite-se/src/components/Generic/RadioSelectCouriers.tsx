@@ -1,11 +1,10 @@
 'use client'
 
+import { useAppDispatch } from '@/hooks/redux-hooks'
+import { setCourier } from '@/store/features/checkout'
 import React from 'react'
 import GenericImage from './GenericImage'
 import GenericParagraph from './GenericParagraph'
-import { CheckoutFormValues } from '../Checkout/CheckoutForm'
-import { useAppDispatch } from '@/hooks/redux-hooks'
-import { setCourier } from '@/store/features/checkout'
 
 export type SelectProps<T> = {
   options: { label: string; value: string }[]
@@ -91,7 +90,11 @@ const RadioSelectCouriers = <T,>({
               pType="small"
               extraClass="text-center max-w-[90%] mx-auto"
             >
-              Изберете Box Now и доставката ще е на стойност от {boxNowShipmentPrice.toFixed(2)} euro.
+              <span className={`${isBoxNowSelected ? 'text-white' : 'text-brown'} md:text-brown`}>
+                {boxNowShipmentPrice === 0
+                  ? 'Изберете Box Now и доставката ще е безплатна (до 30.06.2026).'
+                  : `Изберете Box Now и доставката ще е на стойност от ${boxNowShipmentPrice.toFixed(2)} euro.`}
+              </span>
             </GenericParagraph>
           </div>
         </button>

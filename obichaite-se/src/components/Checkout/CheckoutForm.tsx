@@ -461,8 +461,14 @@ const CheckoutForm = ({
                       <span className="uppercase">Доставката е безплатна!</span>
                     ) : (
                       <>
-                        Добави артикули за още {calculateRemainSum().toFixed(2)} euro и доставката
-                        ще е безплатна
+                        {boxNowShipmentPrice === 0 && formValues.courier === 'boxnow' ? (
+                          'Безплатна доставка'
+                        ) : (
+                          <>
+                            {`Добави артикули за още ${calculateRemainSum().toFixed(2)} euro и доставката
+                        ще е безплатна`}
+                          </>
+                        )}
                       </>
                     )}
                   </GenericParagraph>
