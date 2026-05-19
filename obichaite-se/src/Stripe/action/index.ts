@@ -22,11 +22,13 @@ function calculateTotalAmount(
     return 0
   }
 
+  const itemsSubtotalBeforeDiscount = total
+
   if (discount > 0) {
     total *= discount
   }
 
-  if(total < 50 && possibleToAddShipmentPrice) {
+  if (itemsSubtotalBeforeDiscount < 50 && possibleToAddShipmentPrice) {
     total += possibleToAddShipmentPrice
   }
 

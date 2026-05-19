@@ -13,7 +13,7 @@ export type MakeOrderInput = {
   customerEmail: string
   customerPhone: string
 
-  deliveryMethod: 'econt' | 'speedy-dpd'
+  deliveryMethod: 'econt' | 'speedy-dpd' | 'boxnow'
   shippingAddress: {
     line1: string
     city: string
@@ -21,6 +21,8 @@ export type MakeOrderInput = {
   }
   paymentStatus: 'paid' | 'unpaid' | 'refunded'
   clientNotes?: string
+  boxNowOfficeId?: string
+  shippingPrice?: number
 }
 
 export async function makeOrder(
@@ -41,6 +43,8 @@ export async function makeOrder(
     shippingAddress,
     clientNotes,
     paymentStatus = 'unpaid',
+    boxNowOfficeId,
+    shippingPrice,
   } = input
 
   if (!items || items.length === 0) {
@@ -82,7 +86,7 @@ export async function makeOrder(
       .toString()
       .padStart(4, '0')}`
 
-    const itsFreeShipping = total >= 100
+    const itsFreeShipping = total >= 50
 
     const payloadBody: {
       collection: 'order'
@@ -102,7 +106,7 @@ export async function makeOrder(
         customerName: string
         customerEmail: string
         customerPhone: string
-        deliveryMethod: 'econt' | 'speedy-dpd'
+        deliveryMethod: 'econt' | 'speedy-dpd' | 'boxnow'
         shippingAddress: {
           line1: string
           city: string
@@ -111,6 +115,8 @@ export async function makeOrder(
         clientNotes: string | undefined
         user?: number
         freeShipping?: boolean
+        boxNowOfficeId?: string
+        shippingPrice?: number
       }
       overrideAccess: true
     } = {
@@ -138,6 +144,14 @@ export async function makeOrder(
       payloadBody.data.user = userId
     }
 
+    if (deliveryMethod === 'boxnow') {
+      if (boxNowOfficeId) payloadBody.data.boxNowOfficeId = boxNowOfficeId
+      if (shippingPrice && shippingPrice > 0) {
+        payloadBody.data.shippingPrice = shippingPrice
+        payloadBody.data.total += shippingPrice
+      }
+    }
+
     const order = await payload.create(payloadBody)
 
     return {
@@ -146,7 +160,7 @@ export async function makeOrder(
       orderNumber: orderNumber,
     }
   } catch (error) {
-    console.log(error)
+    console.error('[makeOrder] failed to create order:', error)
     return { ok: false, orderId: null, orderNumber: null }
   }
 }
@@ -170,7 +184,7 @@ export async function checkForDiscount(email: string): Promise<{ data: boolean }
 
     return { data: true }
   } catch (error) {
-    console.log(error)
+    console.error('[checkForDiscount] failed:', error)
     return { data: false }
   }
 }
@@ -210,7 +224,7 @@ export async function getSuggestions(products: Product[]): Promise<{ data: Produ
 
     return { data: result.docs }
   } catch (error) {
-    console.log(error)
+    console.error('[getSuggestions] failed:', error)
     return { data: [] }
   }
 }

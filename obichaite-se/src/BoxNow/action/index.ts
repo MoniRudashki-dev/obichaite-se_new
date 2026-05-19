@@ -41,7 +41,6 @@ async function getBoxnowAccessToken(): Promise<string> {
     token_type: string
     expires_in: number
   }
-
   return json.access_token
 }
 
@@ -68,25 +67,18 @@ export async function callBoxnow<T>(path: string, init?: RequestInit): Promise<T
   return res.json() as Promise<T>
 }
 
-// Тук може да се наложи да смениш 'destinations' с точния path от BoxNow документацията
 const getBoxnowLockersCached = unstable_cache(
   async (): Promise<BoxnowLocker[]> => {
-    try {
-      const raw = await callBoxnow<BoxnowDestinationRaw[]>('destinations')
-
-      const resources: BoxnowDestinationRaw[] =
-        'data' in raw ? (raw.data as BoxnowDestinationRaw[]) : []
-
-      return resources.map(
-        (d): BoxnowLocker => ({
-          id: d.id,
-          name: d.name,
-        }),
-      )
-    } catch (error) {
-      console.log(error)
-      return []
+    const { data: destinations } = await callBoxnow<{ data: BoxnowDestinationRaw[] }>(
+      'destinations',
+    )
+    if (!destinations || destinations.length === 0) {
+      throw new Error('BoxNow returned no destinations')
     }
+    return destinations.map((destination) => ({
+      id: destination.id,
+      name: destination.name,
+    }))
   },
   ['boxnow-lockers'],
   {
@@ -95,14 +87,11 @@ const getBoxnowLockersCached = unstable_cache(
 )
 
 export async function getBoxnowCitiesAction(): Promise<BoxnowLocker[]> {
-  const lockers = await getBoxnowLockersCached()
-
-  const unique = lockers.map((locker) => {
-    return {
-      id: locker.id,
-      name: locker.name,
-    }
-  })
-
-  return unique.sort((a, b) => a.name.localeCompare(b.name, 'bg'))
+  try {
+    const lockers = await getBoxnowLockersCached()
+    return [...lockers].sort((lockerA, lockerB) => lockerA.name.localeCompare(lockerB.name, 'bg'))
+  } catch (error) {
+    console.error('[BoxNow] failed to load lockers:', error)
+    return []
+  }
 }

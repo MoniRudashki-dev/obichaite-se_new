@@ -43,6 +43,7 @@ export type CheckoutFormValues = {
   deliveryKind: 'office' | 'address' | 'automat'
   deliveryTown: string
   deliveryOffice: string
+  boxNowOfficeId: string
   paymentMethod: 'cash' | 'card' | 'needBankTransfer'
   message: string
 }
@@ -60,8 +61,9 @@ const CheckoutForm = ({
   const { products, needToMakeOrder, userHaveDiscount } = useAppSelector((state) => state.checkout)
   const userId = useAppSelector((state) => state.root.user?.id)
   const user = useAppSelector((state) => state.root.user)
-  const { calculateTotalPrice, calculateRemainSum } = useCheckout()
-  const totalPrice = userHaveDiscount ? calculateTotalPrice() * 0.9 : calculateTotalPrice()
+  const { calculateTotalPrice, calculateItemsSubtotal, calculateRemainSum } = useCheckout()
+  const discountMultiplier = userHaveDiscount ? 0.9 : 1
+  const totalPrice = calculateTotalPrice(discountMultiplier)
   const [pending, startTransition] = useTransition()
   const [isSuccess, setIsSuccess] = useState(false)
   const [orderNumber, setOrderNumber] = useState('')
@@ -78,6 +80,7 @@ const CheckoutForm = ({
     deliveryKind: 'office',
     deliveryTown: '',
     deliveryOffice: '',
+    boxNowOfficeId: '',
     paymentMethod: 'cash',
     message: '',
   }
@@ -93,8 +96,6 @@ const CheckoutForm = ({
   })
 
   const remain = Number(calculateRemainSum().toFixed(2))
-
-  console.log(formValues, 'formValues')
 
   const submitHandler = async () => {
     setError('')
@@ -143,6 +144,9 @@ const CheckoutForm = ({
       correctPaymentStatus = 'needBankTransfer'
     }
 
+    const shouldChargeShipping =
+      formValues.courier === 'boxnow' && !!boxNowShipmentPrice && calculateItemsSubtotal() < 50
+
     const requestBody: MakeOrderInput = {
       items: products,
       customerName: formValues.name,
@@ -156,6 +160,10 @@ const CheckoutForm = ({
       },
       paymentStatus: correctPaymentStatus as 'paid' | 'unpaid' | 'refunded',
       clientNotes: formValues.message,
+      ...(formValues.courier === 'boxnow' && {
+        boxNowOfficeId: formValues.boxNowOfficeId,
+        ...(shouldChargeShipping && { shippingPrice: boxNowShipmentPrice }),
+      }),
     }
 
     startTransition(async () => {
@@ -176,7 +184,7 @@ const CheckoutForm = ({
                 quantity: item.orderQuantity,
               }
             }),
-            total: Number(calculateTotalPrice().toFixed(2)),
+            total: Number(calculateTotalPrice(discountMultiplier).toFixed(2)),
           })
           sendConfirmedOrderEmail({
             orderId: response.orderId,
@@ -186,7 +194,7 @@ const CheckoutForm = ({
                 quantity: item.orderQuantity,
               }
             }),
-            total: Number(calculateTotalPrice().toFixed(2)),
+            total: Number(calculateTotalPrice(discountMultiplier).toFixed(2)),
             userName: formValues.name as string,
             userEmail: formValues.email as string,
             orderNumber: response.orderNumber as string,
@@ -195,7 +203,7 @@ const CheckoutForm = ({
           // purchase trigger
           PURCHASE(
             'EUR',
-            String(calculateTotalPrice().toFixed(2)),
+            String(calculateTotalPrice(discountMultiplier).toFixed(2)),
             response.orderNumber as string,
             products.map((product) => {
               return {
@@ -252,6 +260,7 @@ const CheckoutForm = ({
       ...prev,
       deliveryTown: city.name,
       deliveryOffice: city.name,
+      boxNowOfficeId: city.id,
     }))
   }, [])
 

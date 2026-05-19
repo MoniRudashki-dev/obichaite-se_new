@@ -156,19 +156,14 @@ const ShoppingCardAside = () => {
   })
 
   const remain = Number(calculateRemainSum().toFixed(2))
+  const discountMultiplier = userHaveDiscount ? 0.9 : 1
+  const totalPriceValue = calculateTotalPrice(discountMultiplier)
 
-  let totalPrice = (
+  const totalPrice = (
     <>
-      {calculateTotalPrice()}€ ({priceToBgn(calculateTotalPrice())} лв)
+      {totalPriceValue.toFixed(2)}€ ({priceToBgn(totalPriceValue)} лв)
     </>
   )
-  if (userHaveDiscount) {
-    totalPrice = (
-      <>
-        {calculateTotalPrice() * 0.9} € ({priceToBgn(calculateTotalPrice() * 0.9)} лв)
-      </>
-    )
-  }
 
   return (
     <aside
@@ -250,9 +245,7 @@ const ShoppingCardAside = () => {
               dispatch(setShoppingCardOpen(false))
               INITIATE_CHECKOUT(
                 'EUR',
-                userHaveDiscount
-                  ? (calculateTotalPrice() * 0.9).toFixed(2)
-                  : calculateTotalPrice().toFixed(2),
+                totalPriceValue.toFixed(2),
                 products.map((product) => {
                   return {
                     item_id: String(product?.id),
