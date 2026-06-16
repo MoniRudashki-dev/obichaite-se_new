@@ -12,6 +12,7 @@ import { CategoriesSection } from '@/components/Categories'
 import { Category, Product, Review } from '@/payload-types'
 import { PromotionsCardsGrid } from '@/components/Product'
 import BenefitsSection from '@/components/Custom/BenefitsSection'
+import PromoBanner from '@/components/Custom/PromoBanner'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import ReviewSection from '@/components/Reviews/ReviewSection'
 import RepresentationSection from '@/components/Custom/RepresentationSection'
@@ -235,6 +236,8 @@ export default async function Page({ params: paramsPromise }: Args) {
 
         {draft && <LivePreviewListener />}
         {!page.regulatoryPage && <HeroCommon {...hero} />}
+
+        {!!itIsHome && <PromoBanner />}
 
         {!!itIsHome && <CategoriesSection categories={categories.docs as Category[]} />}
 
