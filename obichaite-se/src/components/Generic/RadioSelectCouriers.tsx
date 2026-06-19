@@ -31,12 +31,17 @@ const RadioSelectCouriers = <T,>({
   const isBoxNowSelected = formValues[name as keyof object] === options[2].value
 
   const onSelectHandler = (value: string) => {
+    if (formValues[name as keyof object] === value) return
+
     setFormValues((prev) => ({
       ...prev,
       [name]: value,
       deliveryKind: value === 'boxnow' ? 'automat' : 'office',
+      deliveryTown: '',
+      deliveryOffice: '',
+      boxNowOfficeId: '',
     }))
-    dispatch(setCourier(value as 'boxnow' | 'econt' | 'speedy'))
+    dispatch(setCourier(value === 'speedy-dpd' ? 'speedy' : (value as 'boxnow' | 'econt')))
   }
 
   return (
@@ -46,30 +51,10 @@ const RadioSelectCouriers = <T,>({
         {required && <span className="text-primaryBlue"> *</span>}
       </label>
 
-      <div className="flex flex-col">
-        <div className="w-full flex">
-          <button
-            className={`flex-1 border-[1px] border-brown/80 rounded-tl-[8px] rounded-bl-[8px] h-[50px] text-brown
-          ${isFirstSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
-        `}
-            type="button"
-            onClick={() => onSelectHandler(options[0].value)}
-          >
-            {options[0].label}
-          </button>
-          <button
-            className={`flex-1 border-[1px] border-brown/80 rounded-tr-[8px] rounded-br-[8px] h-[50px] text-brown
-          ${isSecondSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
-        `}
-            type="button"
-            onClick={() => onSelectHandler(options[1].value)}
-          >
-            {options[1].label}
-          </button>
-        </div>
+      <div className="flex flex-col md:flex-row gap-4">
         <button
-          className={`w-full relative h-[140px] border-[1px] border-brown/80 rounded-[8px] overflow-hidden ${
-            isBoxNowSelected ? 'bg-brown text-white' : 'bg-white'
+          className={`w-full relative h-[180px] border-[1px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
+            isBoxNowSelected ? 'border-[8px]' : 'border-[1px]'
           }`}
           type="button"
           onClick={() => onSelectHandler('boxnow')}
@@ -92,11 +77,44 @@ const RadioSelectCouriers = <T,>({
             >
               <span className={`${isBoxNowSelected ? 'text-white' : 'text-brown'} md:text-brown`}>
                 {boxNowShipmentPrice === 0
-                  ? 'Изберете Box Now и доставката ще е безплатна (до 30.06.2026).'
-                  : `Изберете Box Now и доставката ще е на стойност от ${boxNowShipmentPrice.toFixed(2)} euro.`}
+                  ? 'Безплатна доставка (до 30.06.2026).'
+                  : `доставката -> ${boxNowShipmentPrice.toFixed(2)} euro.`}
               </span>
             </GenericParagraph>
           </div>
+        </button>
+        <button
+          className={`w-full relative h-[180px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
+            isFirstSelected ? 'border-[8px]' : 'border-[1px]'
+          }`}
+          type="button"
+          onClick={() => onSelectHandler('speedy-dpd')}
+        >
+          <GenericImage
+            src="/static/speedy.png"
+            alt="speedy"
+            wrapperClassName="w-full h-full absolute top-0 left-0 z-[0]"
+            imageClassName="w-full h-full object-contain"
+            fill={true}
+            sizes="100vw"
+          />
+        </button>
+
+        <button
+          className={`w-full relative h-[180px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
+            isSecondSelected ? 'border-[8px]' : 'border-[1px]'
+          }`}
+          type="button"
+          onClick={() => onSelectHandler('econt')}
+        >
+          <GenericImage
+            src="/static/econt.png"
+            alt="econt"
+            wrapperClassName="w-full h-full absolute top-0 left-0 z-[0]"
+            imageClassName="w-full h-full object-contain"
+            fill={true}
+            sizes="100vw"
+          />
         </button>
       </div>
     </div>

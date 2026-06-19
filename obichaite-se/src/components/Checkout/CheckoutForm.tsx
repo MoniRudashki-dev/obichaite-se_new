@@ -34,6 +34,10 @@ import { GlobalLoader } from '../Loader'
 import RadioSelectCouriers from '../Generic/RadioSelectCouriers'
 import { BoxNowWrapper } from '@/BoxNow/components'
 import { BoxnowLocker } from '@/BoxNow/types'
+import { SpeedyOffice, SpeedySite } from '@/Speedy/types'
+import { SpeedyWrapper } from '@/Speedy/components'
+import { EcontWrapper } from '@/Econt/components'
+import { EcontCity, EcontOffice } from '@/Econt/types'
 
 export type CheckoutFormValues = {
   name: string
@@ -51,9 +55,16 @@ export type CheckoutFormValues = {
 const CheckoutForm = ({
   boxNowCities,
   boxNowShipmentPrice,
+  econtCities,
+  speedySites,
 }: {
   boxNowCities: BoxnowLocker[]
   boxNowShipmentPrice: number
+  econtCities: {
+    id: number
+    name: string
+  }[]
+  speedySites: SpeedySite[]
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -255,7 +266,17 @@ const CheckoutForm = ({
           { label: 'Плащане по банков път', value: 'needBankTransfer' },
         ]
 
-  const handleCityChange = useCallback((city: BoxnowLocker) => {
+  const currentBoxNowCity = formValues.boxNowOfficeId
+    ? ({ id: formValues.boxNowOfficeId, name: formValues.deliveryTown } as BoxnowLocker)
+    : null
+  const currentShippingCity =
+    speedySites.find((site) => site.name === formValues.deliveryTown) ?? null
+  const currentEcontShippingCity =
+    econtCities.find((city) => city.name === formValues.deliveryTown) ?? null
+  const chosenOffice: SpeedyOffice | null = null
+  const chosenEcontOffice: EcontOffice | null = null
+
+  const handleBoxNowCityChange = useCallback((city: BoxnowLocker) => {
     setFormValues((prev) => ({
       ...prev,
       deliveryTown: city.name,
@@ -264,7 +285,84 @@ const CheckoutForm = ({
     }))
   }, [])
 
-  const handleOfficeChange = () => {}
+  const handleBoxNowOfficeChange = useCallback((office: BoxnowLocker) => {
+    setFormValues((prev) => ({
+      ...prev,
+      deliveryTown: office.name,
+      deliveryOffice: office.name,
+      boxNowOfficeId: office.id,
+    }))
+  }, [])
+
+  const handleCityChange = useCallback(
+    (city: SpeedySite) => {
+      const selectedSite = speedySites.find((site) => site.id === city.id) ?? city
+
+      setFormValues((prev) => ({
+        ...prev,
+        deliveryTown: selectedSite.name,
+        deliveryOffice: prev.deliveryKind === 'office' ? selectedSite.name : prev.deliveryOffice,
+        boxNowOfficeId: '',
+      }))
+    },
+    [speedySites],
+  )
+
+  const handleOfficeChange = useCallback(
+    (office: SpeedyOffice) => {
+      setFormValues((prev) => ({
+        ...prev,
+        deliveryTown:
+          speedySites.find((site) => site.id === office.siteId)?.name ?? prev.deliveryTown,
+        deliveryOffice: office.name,
+        boxNowOfficeId: '',
+      }))
+    },
+    [speedySites],
+  )
+
+  const handleAddressChange = useCallback((address: string) => {
+    setFormValues((prev) => ({
+      ...prev,
+      deliveryOffice: address,
+      boxNowOfficeId: '',
+    }))
+  }, [])
+
+  const handleEcontCityChange = useCallback(
+    (city: EcontCity) => {
+      const selectedCity = econtCities.find((econtCity) => econtCity.id === city.id) ?? city
+
+      setFormValues((prev) => ({
+        ...prev,
+        deliveryTown: selectedCity.name,
+        deliveryOffice: prev.deliveryKind === 'office' ? selectedCity.name : prev.deliveryOffice,
+        boxNowOfficeId: '',
+      }))
+    },
+    [econtCities],
+  )
+
+  const handleEcontOfficeChange = useCallback(
+    (office: EcontOffice) => {
+      setFormValues((prev) => ({
+        ...prev,
+        deliveryTown:
+          econtCities.find((city) => city.id === office.cityId)?.name ?? prev.deliveryTown,
+        deliveryOffice: office.name,
+        boxNowOfficeId: '',
+      }))
+    },
+    [econtCities],
+  )
+
+  const handleEcontAddressChange = useCallback((address: string) => {
+    setFormValues((prev) => ({
+      ...prev,
+      deliveryOffice: address,
+      boxNowOfficeId: '',
+    }))
+  }, [])
 
   //Add client guard and loader to avoid hydration error
   if (!isClient) {
@@ -385,19 +483,65 @@ const CheckoutForm = ({
                     </GenericParagraph>
                     <BoxNowWrapper
                       activeInnerShipping={formValues.courier}
-                      currentShippingCity={
-                        { name: formValues.deliveryTown, id: 'chosen-city' } as BoxnowLocker
-                      }
-                      handleCityChange={handleCityChange}
-                      handleOfficeChange={handleOfficeChange}
+                      currentShippingCity={currentBoxNowCity}
+                      handleCityChange={handleBoxNowCityChange}
+                      handleOfficeChange={handleBoxNowOfficeChange}
                       office={null}
                       boxNowCities={boxNowCities}
                     />
                   </div>
                 )}
 
+                {formValues.courier === 'speedy-dpd' && (
+                  <div className="w-full py-3 md:px-4 md:py-3 bg-white">
+                    <GenericParagraph
+                      fontStyle="font-sansation font-[400]"
+                      textColor="text-brown"
+                      extraClass="text-center mb-3"
+                    >
+                      Speedy
+                    </GenericParagraph>
+                    <SpeedyWrapper
+                      activeInnerShipping={
+                        formValues.deliveryKind === 'office' ? 'speedy-office' : 'speedy-address'
+                      }
+                      address={formValues.deliveryOffice}
+                      currentShippingCity={currentShippingCity}
+                      handleAddressChange={handleAddressChange}
+                      handleCityChange={handleCityChange}
+                      handleOfficeChange={handleOfficeChange}
+                      office={chosenOffice}
+                      speedySites={speedySites}
+                    />
+                  </div>
+                )}
+
+                {formValues.courier === 'econt' && (
+                  <div className="w-full py-3 md:px-4 md:py-3 bg-white">
+                    <GenericParagraph
+                      fontStyle="font-sansation font-[400]"
+                      textColor="text-brown"
+                      extraClass="text-center mb-3"
+                    >
+                      Econt
+                    </GenericParagraph>
+                    <EcontWrapper
+                      activeInnerShipping={
+                        formValues.deliveryKind === 'office' ? 'econt-office' : 'econt-address'
+                      }
+                      address={formValues.deliveryOffice}
+                      currentShippingCity={currentEcontShippingCity}
+                      handleAddressChange={handleEcontAddressChange}
+                      handleCityChange={handleEcontCityChange}
+                      handleOfficeChange={handleEcontOfficeChange}
+                      office={chosenEcontOffice}
+                      econtCities={econtCities}
+                    />
+                  </div>
+                )}
+
                 <div className="w-full flex flex-col gap-m">
-                  <div className={formValues.deliveryKind === 'automat' ? 'hidden' : ''}>
+                  <div className="hidden">
                     <TextInput
                       name="deliveryTown"
                       label="Град/Село"
@@ -411,13 +555,7 @@ const CheckoutForm = ({
                     />
                   </div>
 
-                  <div
-                    className={
-                      formValues.deliveryKind === 'automat'
-                        ? 'opacity-50 pointer-events-none cursor-not-allowed'
-                        : ''
-                    }
-                  >
+                  <div className={`hidden`}>
                     <TextInput
                       name="deliveryOffice"
                       label={formValues.deliveryKind === 'office' ? '"Офис (име/код)"' : 'Адрес'}
