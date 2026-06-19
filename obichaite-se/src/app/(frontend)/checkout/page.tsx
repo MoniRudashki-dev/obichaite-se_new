@@ -8,6 +8,8 @@ import { getCachedGlobal } from '@/utils/getGlobals'
 import type { BoxNow } from '@/payload-types'
 import { Metadata } from 'next'
 import React from 'react'
+import econtCities from '../../../Econt/json/econt-cities.json'
+import speedySites from '../../../Speedy/json/speedy-cities.json'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,7 +40,12 @@ const CheckoutPage = async () => {
         </div>
 
         <div className="flex-1 px-4">
-          <CheckoutForm boxNowCities={boxNowCities} boxNowShipmentPrice={boxNowShipmentPrice} />
+          <CheckoutForm
+            boxNowCities={boxNowCities}
+            boxNowShipmentPrice={boxNowShipmentPrice}
+            econtCities={econtCities}
+            speedySites={speedySites}
+          />
         </div>
       </div>
 
