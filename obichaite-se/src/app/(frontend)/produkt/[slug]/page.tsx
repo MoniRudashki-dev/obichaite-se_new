@@ -4,14 +4,13 @@ import GenericParagraph from '@/components/Generic/GenericParagraph'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import PageViewComponent from '@/components/PageViewComponent'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
-import { PromotionsCardsGrid } from '@/components/Product'
+import { ProductPromotionsClient, ProductRelatedClient } from '@/components/Product'
 import ProductInquiryForm from '@/components/Product/ProductInquiryForm'
 import SingleProduct from '@/components/Product/SingleProduct'
 import ReviewForm from '@/components/Reviews/ReviewForm'
 import ReviewSection from '@/components/Reviews/ReviewSection'
-import { Category, Product, Review } from '@/payload-types'
+import type { Review } from '@/payload-types'
 import { generateMeta } from '@/utils/generateMeta'
-import shuffle from '@/utils/seedShuffle'
 import configPromise from '@payload-config'
 import { Metadata } from 'next'
 import { draftMode } from 'next/headers'
@@ -59,101 +58,9 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
   const product = await queryProductBySlug({ slug })
   if (!product) return <PayloadRedirects url={url} />
 
-  //first in one query needs to get all best sellers and promotion in product category
   const payload = await getPayload({ config: configPromise })
-  const allPromotionsAndBestSellers = await payload.find({
-    collection: 'product',
-    draft: false,
-    limit: 2000,
-    overrideAccess: false,
-    pagination: false,
-    where: {
-      and: [
-        {
-          category: {
-            equals: (product.category as Category).id,
-          },
-        },
-        {
-          _status: {
-            equals: 'published',
-          },
-        },
-        {
-          or: [{ bestSeller: { equals: true } }, { promoPrice: { exists: true } }],
-        },
-      ],
-    },
-    select: {
-      title: true,
-      slug: true,
-      description: true,
-      heading: true,
-      category: true,
-      price: true,
-      priceInEuro: true,
-      promoPriceInEuro: true,
-      bestSeller: true,
-      promoPrice: true,
-      havePriceRange: true,
-      mediaArray: true,
-      priceRange: true,
-      shortDescription: true,
-      quantity: true,
-      subCategory: true,
-
-      showInquiryForm: true,
-    },
-  })
-
-  //related
-  const allRelatedProducts = await payload.find({
-    collection: 'product',
-    draft: false,
-    limit: 2000,
-    overrideAccess: false,
-    pagination: false,
-    where: {
-      and: [
-        {
-          category: {
-            equals: (product?.category as Category)?.id || 7,
-          },
-        },
-        {
-          _status: {
-            equals: 'published',
-          },
-        },
-      ],
-    },
-    select: {
-      title: true,
-      slug: true,
-      description: true,
-      heading: true,
-      category: true,
-      price: true,
-      bestSeller: true,
-      promoPrice: true,
-      havePriceRange: true,
-      mediaArray: true,
-      priceRange: true,
-      shortDescription: true,
-      quantity: true,
-      subCategory: true,
-      showInquiryForm: true,
-      priceInEuro: true,
-      promoPriceInEuro: true,
-    },
-  })
-
-  let allRelatedToRender = allRelatedProducts.docs
-  if (allRelatedToRender.length > 6) {
-    const shuffled = shuffle(allRelatedProducts.docs as Product[])
-
-    allRelatedToRender = shuffled.slice(0, 6)
-  }
+  const productCategoryId =
+    typeof product.category === 'number' ? product.category : product.category.id
 
   let reviews: Review[] = []
 
@@ -258,19 +165,9 @@ export default async function ProductSinglePage({ params: paramsPromise }: Args)
               <RenderLandingBlocks blocks={product.landingBlocks} />
             )}
 
-            {!!allPromotionsAndBestSellers.docs.length && (
-              <PromotionsCardsGrid
-                products={allPromotionsAndBestSellers.docs as Product[]}
-                heading="Промоции и Най-продавани"
-              />
-            )}
+            <ProductPromotionsClient categoryId={productCategoryId} />
 
-            {!!allRelatedToRender.length && (
-              <PromotionsCardsGrid
-                products={allRelatedToRender as Product[]}
-                heading="Свързани продукти"
-              />
-            )}
+            <ProductRelatedClient categoryId={productCategoryId || 7} />
 
             {!!reviews?.length && <ReviewSection reviews={reviews} />}
 

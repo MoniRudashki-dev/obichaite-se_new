@@ -1,4 +1,6 @@
 export { default as PromotionsCardsGrid } from './PromotionsCardsGrid'
+export { default as ProductPromotionsClient } from './ProductPromotionsClient'
+export { default as ProductRelatedClient } from './ProductRelatedClient'
 export { default as ProductCard } from './ProductCard'
 export { default as SingleProduct } from './SingleProduct'
 export { default as ProductPreview } from './ProductPreview'

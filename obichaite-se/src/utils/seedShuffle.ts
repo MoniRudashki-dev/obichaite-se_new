@@ -1,4 +1,4 @@
-import { Product } from '@/payload-types'
+import type { Product } from '@/payload-types'
 
 function shuffle(array: Product[]) {
   // return array
