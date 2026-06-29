@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type ExtendedProduct = Product & { orderQuantity: number }
 
+export type DeliveryKind = 'office' | 'address' | 'automat'
+
 export interface CheckoutInitialState {
   shoppingCardOpen: boolean
   products: ExtendedProduct[]
@@ -10,7 +12,12 @@ export interface CheckoutInitialState {
   needToMakeOrder: boolean
   userHaveDiscount: boolean
   boxNowShipmentPrice: number
+  econtOfficePrice: number
+  econtAddressPrice: number
+  speedyOfficePrice: number
+  speedyAddressPrice: number
   courier: 'econt' | 'speedy' | 'boxnow'
+  deliveryKind: DeliveryKind
 }
 
 const checkoutInitialState: CheckoutInitialState = {
@@ -20,7 +27,12 @@ const checkoutInitialState: CheckoutInitialState = {
   needToMakeOrder: false,
   userHaveDiscount: false,
   boxNowShipmentPrice: 0,
-  courier: 'econt',
+  econtOfficePrice: 0,
+  econtAddressPrice: 0,
+  speedyOfficePrice: 0,
+  speedyAddressPrice: 0,
+  courier: 'boxnow',
+  deliveryKind: 'automat',
 }
 
 export const checkoutSlice = createSlice({
@@ -74,11 +86,45 @@ export const checkoutSlice = createSlice({
     setBoxNowShipmentPrice: (state, { payload }: PayloadAction<number>) => {
       state.boxNowShipmentPrice = payload
     },
+    setEcontPrices: (
+      state,
+      { payload }: PayloadAction<{ office: number; address: number }>,
+    ) => {
+      state.econtOfficePrice = payload.office
+      state.econtAddressPrice = payload.address
+    },
+    setSpeedyPrices: (
+      state,
+      { payload }: PayloadAction<{ office: number; address: number }>,
+    ) => {
+      state.speedyOfficePrice = payload.office
+      state.speedyAddressPrice = payload.address
+    },
     setCourier: (state, { payload }: PayloadAction<'econt' | 'speedy' | 'boxnow'>) => {
       state.courier = payload
     },
+    setDeliveryKind: (state, { payload }: PayloadAction<DeliveryKind>) => {
+      state.deliveryKind = payload
+    },
   },
 })
+
+/**
+ * Returns the active shipping price for the currently selected courier and
+ * delivery kind. The free-shipping threshold is applied elsewhere.
+ */
+export const selectShipmentPrice = (checkout: CheckoutInitialState): number => {
+  const { courier, deliveryKind } = checkout
+
+  if (courier === 'boxnow') return checkout.boxNowShipmentPrice
+  if (courier === 'econt') {
+    return deliveryKind === 'address' ? checkout.econtAddressPrice : checkout.econtOfficePrice
+  }
+  if (courier === 'speedy') {
+    return deliveryKind === 'address' ? checkout.speedyAddressPrice : checkout.speedyOfficePrice
+  }
+  return 0
+}
 
 export const {
   setShoppingCardOpen,
@@ -92,7 +138,10 @@ export const {
   setNeedToMakeOrder,
   setUserHaveDiscount,
   setBoxNowShipmentPrice,
+  setEcontPrices,
+  setSpeedyPrices,
   setCourier,
+  setDeliveryKind,
 } = checkoutSlice.actions
 
 export default checkoutSlice.reducer

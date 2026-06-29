@@ -144,12 +144,13 @@ export async function makeOrder(
       payloadBody.data.user = userId
     }
 
-    if (deliveryMethod === 'boxnow') {
-      if (boxNowOfficeId) payloadBody.data.boxNowOfficeId = boxNowOfficeId
-      if (shippingPrice && shippingPrice > 0) {
-        payloadBody.data.shippingPrice = shippingPrice
-        payloadBody.data.total += shippingPrice
-      }
+    if (deliveryMethod === 'boxnow' && boxNowOfficeId) {
+      payloadBody.data.boxNowOfficeId = boxNowOfficeId
+    }
+
+    if (shippingPrice && shippingPrice > 0) {
+      payloadBody.data.shippingPrice = shippingPrice
+      payloadBody.data.total += shippingPrice
     }
 
     const order = await payload.create(payloadBody)

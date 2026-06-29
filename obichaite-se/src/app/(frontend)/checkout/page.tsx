@@ -4,8 +4,9 @@ import Checkout from '@/components/Checkout/Checkout'
 import CheckoutForm from '@/components/Checkout/CheckoutForm'
 import { GenericImage } from '@/components/Generic'
 import SetBoxNowShipmentPriceSetter from '@/components/StateManagers/SetBoxNowShippmentPrice'
+import SetCourierShippingPrices from '@/components/StateManagers/SetCourierShippingPrices'
 import { getCachedGlobal } from '@/utils/getGlobals'
-import type { BoxNow } from '@/payload-types'
+import type { BoxNow, Econt, Speedy } from '@/payload-types'
 import { Metadata } from 'next'
 import React from 'react'
 import econtCities from '../../../Econt/json/econt-cities.json'
@@ -22,6 +23,9 @@ const CheckoutPage = async () => {
   const boxNowCities = await getBoxnowCitiesAction()
   const boxNowGlobal = (await getCachedGlobal('box-now', 0)()) as BoxNow
   const boxNowShipmentPrice = boxNowGlobal.shippingPrice
+
+  const econtGlobal = (await getCachedGlobal('econt', 0)()) as Econt
+  const speedyGlobal = (await getCachedGlobal('speedy', 0)()) as Speedy
   return (
     <section className="w-full relative py-10 md:py-20 flex mt-[52px] md:mt-[140px] flex-col gap-10">
       <GenericImage
@@ -43,6 +47,10 @@ const CheckoutPage = async () => {
           <CheckoutForm
             boxNowCities={boxNowCities}
             boxNowShipmentPrice={boxNowShipmentPrice}
+            econtOfficePrice={econtGlobal.officeShippingPrice}
+            econtAddressPrice={econtGlobal.addressShippingPrice}
+            speedyOfficePrice={speedyGlobal.officeShippingPrice}
+            speedyAddressPrice={speedyGlobal.addressShippingPrice}
             econtCities={econtCities}
             speedySites={speedySites}
           />
@@ -54,6 +62,12 @@ const CheckoutPage = async () => {
       </div>
 
       <SetBoxNowShipmentPriceSetter price={boxNowShipmentPrice} />
+      <SetCourierShippingPrices
+        econtOfficePrice={econtGlobal.officeShippingPrice}
+        econtAddressPrice={econtGlobal.addressShippingPrice}
+        speedyOfficePrice={speedyGlobal.officeShippingPrice}
+        speedyAddressPrice={speedyGlobal.addressShippingPrice}
+      />
     </section>
   )
 }

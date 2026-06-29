@@ -110,6 +110,8 @@ export interface Config {
     banner: Banner;
     promotion: Promotion;
     'box-now': BoxNow;
+    econt: Econt;
+    speedy: Speedy;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
@@ -117,6 +119,8 @@ export interface Config {
     banner: BannerSelect<false> | BannerSelect<true>;
     promotion: PromotionSelect<false> | PromotionSelect<true>;
     'box-now': BoxNowSelect<false> | BoxNowSelect<true>;
+    econt: EcontSelect<false> | EcontSelect<true>;
+    speedy: SpeedySelect<false> | SpeedySelect<true>;
   };
   locale: null;
   user: User & {
@@ -2039,6 +2043,44 @@ export interface BoxNow {
   createdAt?: string | null;
 }
 /**
+ * Настройки за доставка чрез Econt. Цената се прилага според избрания вид доставка (офис или адрес).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "econt".
+ */
+export interface Econt {
+  id: number;
+  /**
+   * Цената на доставка до офис на Econt в евро.
+   */
+  officeShippingPrice: number;
+  /**
+   * Цената на доставка до адрес чрез Econt в евро.
+   */
+  addressShippingPrice: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Настройки за доставка чрез Speedy. Цената се прилага според избрания вид доставка (офис или адрес).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "speedy".
+ */
+export interface Speedy {
+  id: number;
+  /**
+   * Цената на доставка до офис на Speedy в евро.
+   */
+  officeShippingPrice: number;
+  /**
+   * Цената на доставка до адрес чрез Speedy в евро.
+   */
+  addressShippingPrice: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -2178,6 +2220,28 @@ export interface PromotionSelect<T extends boolean = true> {
  */
 export interface BoxNowSelect<T extends boolean = true> {
   shippingPrice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "econt_select".
+ */
+export interface EcontSelect<T extends boolean = true> {
+  officeShippingPrice?: T;
+  addressShippingPrice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "speedy_select".
+ */
+export interface SpeedySelect<T extends boolean = true> {
+  officeShippingPrice?: T;
+  addressShippingPrice?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

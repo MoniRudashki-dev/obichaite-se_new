@@ -23,6 +23,8 @@ import { Banner } from './Banner/config'
 import { Promotion } from './Promotion/config'
 import { Reviews } from './collections/Reviews/config'
 import { BoxNow } from './BoxNow/config'
+import { Econt } from './Econt/config'
+import { Speedy } from './Speedy/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -61,7 +63,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Category, Product, SubCategory, Order, Reviews],
-  globals: [Header, Footer, Banner, Promotion, BoxNow],
+  globals: [Header, Footer, Banner, Promotion, BoxNow, Econt, Speedy],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   cors: [getServerSideURL()].filter(Boolean),
@@ -72,7 +74,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    push: false,
+    push: true,
   }),
   sharp,
   plugins: [payloadCloudPlugin(), ...plugins],

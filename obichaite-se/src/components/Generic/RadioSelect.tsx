@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { CheckoutFormValues } from '../Checkout/CheckoutForm'
 
 export type SelectProps<T> = {
   options: { label: string; value: string }[]
@@ -20,12 +19,6 @@ const RadioSelect = <T,>({
   name,
   required,
 }: SelectProps<T>) => {
-  const isFirstSelected = formValues[name as keyof object] === options[0].value
-  const isSecondSelected = formValues[name as keyof object] === options[1].value
-  const isThirdSelected = formValues[name as keyof object] === options[2].value
-
-  const isBoxNowSelectedAsCourier = (formValues as CheckoutFormValues).courier === 'boxnow'
-
   const onSelectHandler = (value: string) => {
     setFormValues((prev) => ({
       ...prev,
@@ -41,36 +34,26 @@ const RadioSelect = <T,>({
       </label>
 
       <div className="w-full flex">
-        <button
-          className={`flex-1 border-[1px] border-brown/80 rounded-tl-[8px] rounded-bl-[8px] h-[50px] text-brown
-          ${isFirstSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
-        `}
-          type="button"
-          onClick={() => onSelectHandler(options[0].value)}
-          disabled={isBoxNowSelectedAsCourier}
-        >
-          {options[0].label}
-        </button>
-        <button
-          className={`flex-1 border-[1px] border-brown/80 h-[50px] text-brown
-          ${isSecondSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
-        `}
-          type="button"
-          onClick={() => onSelectHandler(options[1].value)}
-          disabled={isBoxNowSelectedAsCourier}
-        >
-          {options[1].label}
-        </button>
-        <button
-          className={`flex-1 border-[1px] border-brown/80 h-[50px] rounded-tr-[8px] rounded-br-[8px] text-brown
-          ${isThirdSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
-        `}
-          type="button"
-          onClick={() => onSelectHandler(options[2].value)}
-          disabled={true}
-        >
-          {options[2].label}
-        </button>
+        {options.map((option, index) => {
+          const isSelected = formValues[name as keyof object] === option.value
+          const isFirst = index === 0
+          const isLast = index === options.length - 1
+
+          return (
+            <button
+              key={option.value}
+              className={`flex-1 border-[1px] border-brown/80 h-[50px] text-brown
+              ${isFirst ? 'rounded-tl-[8px] rounded-bl-[8px]' : ''}
+              ${isLast ? 'rounded-tr-[8px] rounded-br-[8px]' : ''}
+              ${isSelected ? 'bg-brown text-white' : ''} hover:opacity-80 hover:shadow-sm transition-color duration-300 ease-in-out
+            `}
+              type="button"
+              onClick={() => onSelectHandler(option.value)}
+            >
+              {option.label}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

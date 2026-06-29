@@ -19,6 +19,8 @@ import Link from 'next/link'
 import { setNotification } from '@/store/features/notifications'
 import {
   clearProducts,
+  setCourier,
+  setDeliveryKind,
   setNeedToMakeOrder,
   setTryToMakePayment,
   setUserHaveDiscount,
@@ -55,11 +57,19 @@ export type CheckoutFormValues = {
 const CheckoutForm = ({
   boxNowCities,
   boxNowShipmentPrice,
+  econtOfficePrice,
+  econtAddressPrice,
+  speedyOfficePrice,
+  speedyAddressPrice,
   econtCities,
   speedySites,
 }: {
   boxNowCities: BoxnowLocker[]
   boxNowShipmentPrice: number
+  econtOfficePrice: number
+  econtAddressPrice: number
+  speedyOfficePrice: number
+  speedyAddressPrice: number
   econtCities: {
     id: number
     name: string
@@ -108,6 +118,38 @@ const CheckoutForm = ({
 
   const remain = Number(calculateRemainSum().toFixed(2))
 
+  const getCurrentShipmentPrice = () => {
+    if (formValues.courier === 'boxnow') return boxNowShipmentPrice
+    if (formValues.courier === 'econt') {
+      return formValues.deliveryKind === 'address' ? econtAddressPrice : econtOfficePrice
+    }
+    if (formValues.courier === 'speedy-dpd') {
+      return formValues.deliveryKind === 'address' ? speedyAddressPrice : speedyOfficePrice
+    }
+    return 0
+  }
+
+  const currentShipmentPrice = getCurrentShipmentPrice()
+
+  const deliveryKindOptions =
+    formValues.courier === 'boxnow'
+      ? [{ label: 'Автомат', value: 'automat' }]
+      : [
+          { label: 'Офис', value: 'office' },
+          { label: 'Адрес', value: 'address' },
+        ]
+
+  // Keep the Redux checkout slice in sync with the local form so price
+  // calculations in useCheckout/PaymentSection reflect the current selection.
+  useEffect(() => {
+    const reduxCourier = formValues.courier === 'speedy-dpd' ? 'speedy' : formValues.courier
+    dispatch(setCourier(reduxCourier as 'econt' | 'speedy' | 'boxnow'))
+  }, [formValues.courier, dispatch])
+
+  useEffect(() => {
+    dispatch(setDeliveryKind(formValues.deliveryKind))
+  }, [formValues.deliveryKind, dispatch])
+
   const submitHandler = async () => {
     setError('')
 
@@ -155,8 +197,7 @@ const CheckoutForm = ({
       correctPaymentStatus = 'needBankTransfer'
     }
 
-    const shouldChargeShipping =
-      formValues.courier === 'boxnow' && !!boxNowShipmentPrice && calculateItemsSubtotal() < 50
+    const shouldChargeShipping = !!currentShipmentPrice && calculateItemsSubtotal() < 50
 
     const requestBody: MakeOrderInput = {
       items: products,
@@ -173,8 +214,8 @@ const CheckoutForm = ({
       clientNotes: formValues.message,
       ...(formValues.courier === 'boxnow' && {
         boxNowOfficeId: formValues.boxNowOfficeId,
-        ...(shouldChargeShipping && { shippingPrice: boxNowShipmentPrice }),
       }),
+      ...(shouldChargeShipping && { shippingPrice: currentShipmentPrice }),
     }
 
     startTransition(async () => {
@@ -459,11 +500,7 @@ const CheckoutForm = ({
 
                 <div className="w-full">
                   <RadioSelect
-                    options={[
-                      { label: 'Офис', value: 'office' },
-                      { label: 'Адрес', value: 'address' },
-                      { label: 'Автомат', value: 'automat' },
-                    ]}
+                    options={deliveryKindOptions}
                     label="Вид Доставка"
                     formValues={formValues}
                     setFormValues={setFormValues}
@@ -599,7 +636,7 @@ const CheckoutForm = ({
                       <span className="uppercase">Доставката е безплатна!</span>
                     ) : (
                       <>
-                        {boxNowShipmentPrice === 0 && formValues.courier === 'boxnow' ? (
+                        {currentShipmentPrice === 0 ? (
                           'Безплатна доставка'
                         ) : (
                           <>

@@ -1,13 +1,12 @@
 'use client'
 
-import { ExtendedProduct } from '@/store/features/checkout'
+import { ExtendedProduct, selectShipmentPrice } from '@/store/features/checkout'
 import { useAppSelector } from './redux-hooks'
 import { Product } from '@/payload-types'
 
 export function useCheckout() {
   const products = useAppSelector((state) => state.checkout.products)
-  const boxNowShippingPrice = useAppSelector((state) => state.checkout.boxNowShipmentPrice)
-  const courier = useAppSelector((state) => state.checkout.courier)
+  const shipmentPrice = useAppSelector((state) => selectShipmentPrice(state.checkout))
 
   const calculateItemsSubtotal = () => {
     return products.reduce((total, product) => {
@@ -22,11 +21,10 @@ export function useCheckout() {
   const calculateTotalPrice = (discountMultiplier: number = 1) => {
     const itemsSubtotal = calculateItemsSubtotal()
     const discountedItemsSubtotal = itemsSubtotal * discountMultiplier
-    const needToAddShipmentPrice =
-      courier === 'boxnow' && !!boxNowShippingPrice && itemsSubtotal < 50
+    const needToAddShipmentPrice = !!shipmentPrice && itemsSubtotal < 50
 
     return needToAddShipmentPrice
-      ? discountedItemsSubtotal + boxNowShippingPrice
+      ? discountedItemsSubtotal + shipmentPrice
       : discountedItemsSubtotal
   }
 

@@ -1,7 +1,5 @@
 'use client'
 
-import { useAppDispatch } from '@/hooks/redux-hooks'
-import { setCourier } from '@/store/features/checkout'
 import React from 'react'
 import GenericImage from './GenericImage'
 import GenericParagraph from './GenericParagraph'
@@ -25,7 +23,6 @@ const RadioSelectCouriers = <T,>({
   required,
   boxNowShipmentPrice,
 }: SelectProps<T>) => {
-  const dispatch = useAppDispatch()
   const isFirstSelected = formValues[name as keyof object] === options[0].value
   const isSecondSelected = formValues[name as keyof object] === options[1].value
   const isBoxNowSelected = formValues[name as keyof object] === options[2].value
@@ -41,7 +38,6 @@ const RadioSelectCouriers = <T,>({
       deliveryOffice: '',
       boxNowOfficeId: '',
     }))
-    dispatch(setCourier(value === 'speedy-dpd' ? 'speedy' : (value as 'boxnow' | 'econt')))
   }
 
   return (
