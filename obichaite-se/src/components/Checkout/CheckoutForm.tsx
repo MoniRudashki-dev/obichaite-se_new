@@ -131,6 +131,10 @@ const CheckoutForm = ({
 
   const currentShipmentPrice = getCurrentShipmentPrice()
 
+  // Delivery is free once the items subtotal reaches the free-shipping threshold.
+  const isFreeShipping = calculateItemsSubtotal() >= 50
+  const displayShipmentPrice = isFreeShipping ? 0 : currentShipmentPrice
+
   const deliveryKindOptions =
     formValues.courier === 'boxnow'
       ? [{ label: 'Автомат', value: 'automat' }]
@@ -164,11 +168,11 @@ const CheckoutForm = ({
     const deliveryOfficeError =
       formValues.deliveryOffice.length < 3 ? 'Полето трябва да е коректно попълнено' : ''
 
-    if (!acceptTerms || !acceptPrivacy) {
-      setError('Трябва да се съгласите с задължителните условия, за потвърждаване на поръчката')
-    }
+    const hasFieldError =
+      !!nameError || !!phoneError || !!emailError || !!deliveryTownError || !!deliveryOfficeError
+    const termsMissing = !acceptTerms || !acceptPrivacy
 
-    if (nameError || phoneError || emailError || deliveryTownError || deliveryOfficeError) {
+    if (hasFieldError || termsMissing) {
       setErrors({
         name: nameError,
         email: emailError,
@@ -176,6 +180,21 @@ const CheckoutForm = ({
         deliveryTown: deliveryTownError,
         deliveryOffice: deliveryOfficeError,
       })
+
+      // The deliveryTown/deliveryOffice inputs are hidden (location comes from the
+      // courier widgets), so surface their errors — and the terms requirement — in
+      // the shared error box below the submit button.
+      const messages: string[] = []
+      if (deliveryTownError || deliveryOfficeError) {
+        messages.push('Моля, изберете населено място и офис/адрес за доставка.')
+      }
+      if (termsMissing) {
+        messages.push(
+          'Трябва да се съгласите с задължителните условия, за потвърждаване на поръчката.',
+        )
+      }
+      if (messages.length) setError(messages.join(' '))
+
       return
     }
 
@@ -494,7 +513,6 @@ const CheckoutForm = ({
                     setFormValues={setFormValues}
                     name="courier"
                     required={true}
-                    boxNowShipmentPrice={boxNowShipmentPrice}
                   />
                 </div>
 
@@ -507,6 +525,17 @@ const CheckoutForm = ({
                     name="deliveryKind"
                     required={true}
                   />
+
+                  <GenericParagraph
+                    fontStyle="font-kolka font-[500]"
+                    textColor="text-brown"
+                    pType="small"
+                    extraClass="text-center mt-2"
+                  >
+                    {displayShipmentPrice === 0
+                      ? 'Безплатна доставка'
+                      : `Цена за доставка: ${displayShipmentPrice.toFixed(2)} €`}
+                  </GenericParagraph>
                 </div>
 
                 {formValues.courier === 'boxnow' && (

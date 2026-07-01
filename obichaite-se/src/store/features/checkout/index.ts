@@ -47,6 +47,10 @@ export const checkoutSlice = createSlice({
     },
     clearProducts: (state) => {
       state.products = []
+      // Reset the selected delivery option so an emptied cart doesn't keep a
+      // previously chosen courier's price in the total (e.g. header after checkout).
+      state.courier = checkoutInitialState.courier
+      state.deliveryKind = checkoutInitialState.deliveryKind
     },
     addProductToShoppingCart: (state, { payload }: PayloadAction<ExtendedProduct>) => {
       if (state.products.find((product) => product.id === payload.id)) {

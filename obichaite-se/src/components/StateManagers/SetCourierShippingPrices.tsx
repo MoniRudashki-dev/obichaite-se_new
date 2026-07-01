@@ -1,15 +1,17 @@
 'use client'
 
 import { useAppDispatch } from '@/hooks/redux-hooks'
-import { setEcontPrices, setSpeedyPrices } from '@/store/features/checkout'
+import { setBoxNowShipmentPrice, setEcontPrices, setSpeedyPrices } from '@/store/features/checkout'
 import { useEffect } from 'react'
 
 export const SetCourierShippingPrices = ({
+  boxNowPrice,
   econtOfficePrice,
   econtAddressPrice,
   speedyOfficePrice,
   speedyAddressPrice,
 }: {
+  boxNowPrice: number
   econtOfficePrice: number
   econtAddressPrice: number
   speedyOfficePrice: number
@@ -18,9 +20,17 @@ export const SetCourierShippingPrices = ({
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    dispatch(setBoxNowShipmentPrice(boxNowPrice))
     dispatch(setEcontPrices({ office: econtOfficePrice, address: econtAddressPrice }))
     dispatch(setSpeedyPrices({ office: speedyOfficePrice, address: speedyAddressPrice }))
-  }, [econtOfficePrice, econtAddressPrice, speedyOfficePrice, speedyAddressPrice, dispatch])
+  }, [
+    boxNowPrice,
+    econtOfficePrice,
+    econtAddressPrice,
+    speedyOfficePrice,
+    speedyAddressPrice,
+    dispatch,
+  ])
 
   return null
 }

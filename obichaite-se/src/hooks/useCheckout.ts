@@ -21,7 +21,8 @@ export function useCheckout() {
   const calculateTotalPrice = (discountMultiplier: number = 1) => {
     const itemsSubtotal = calculateItemsSubtotal()
     const discountedItemsSubtotal = itemsSubtotal * discountMultiplier
-    const needToAddShipmentPrice = !!shipmentPrice && itemsSubtotal < 50
+    // Don't add delivery to an empty cart (e.g. header total after a completed order).
+    const needToAddShipmentPrice = products.length > 0 && !!shipmentPrice && itemsSubtotal < 50
 
     return needToAddShipmentPrice
       ? discountedItemsSubtotal + shipmentPrice

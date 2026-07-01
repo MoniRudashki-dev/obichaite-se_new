@@ -3,7 +3,6 @@ import { CheckoutSuggestions } from '@/components/Checkout'
 import Checkout from '@/components/Checkout/Checkout'
 import CheckoutForm from '@/components/Checkout/CheckoutForm'
 import { GenericImage } from '@/components/Generic'
-import SetBoxNowShipmentPriceSetter from '@/components/StateManagers/SetBoxNowShippmentPrice'
 import SetCourierShippingPrices from '@/components/StateManagers/SetCourierShippingPrices'
 import { getCachedGlobal } from '@/utils/getGlobals'
 import type { BoxNow, Econt, Speedy } from '@/payload-types'
@@ -38,7 +37,7 @@ const CheckoutPage = async () => {
         fetchPriority="high"
       />
 
-      <div className="md:px-6 w-full content_wrapper white_background_bubble py-6 md:py-10 relative z-[1] rounded-[24px] flex flex-col-reverse md:flex-row">
+      <div className="md:px-6 w-full content_wrapper white_background_bubble py-6 md:py-10 relative z-[1] rounded-[24px] flex flex-col-reverse lg:flex-row">
         <div className="flex-1 md:px-4">
           <Checkout />
         </div>
@@ -61,8 +60,8 @@ const CheckoutPage = async () => {
         <CheckoutSuggestions />
       </div>
 
-      <SetBoxNowShipmentPriceSetter price={boxNowShipmentPrice} />
       <SetCourierShippingPrices
+        boxNowPrice={boxNowShipmentPrice}
         econtOfficePrice={econtGlobal.officeShippingPrice}
         econtAddressPrice={econtGlobal.addressShippingPrice}
         speedyOfficePrice={speedyGlobal.officeShippingPrice}

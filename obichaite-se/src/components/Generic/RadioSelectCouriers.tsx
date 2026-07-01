@@ -2,7 +2,6 @@
 
 import React from 'react'
 import GenericImage from './GenericImage'
-import GenericParagraph from './GenericParagraph'
 
 export type SelectProps<T> = {
   options: { label: string; value: string }[]
@@ -11,7 +10,6 @@ export type SelectProps<T> = {
   setFormValues: React.Dispatch<React.SetStateAction<T>>
   name: string
   required?: boolean
-  boxNowShipmentPrice: number
 }
 
 const RadioSelectCouriers = <T,>({
@@ -21,7 +19,6 @@ const RadioSelectCouriers = <T,>({
   setFormValues,
   name,
   required,
-  boxNowShipmentPrice,
 }: SelectProps<T>) => {
   const isFirstSelected = formValues[name as keyof object] === options[0].value
   const isSecondSelected = formValues[name as keyof object] === options[1].value
@@ -47,10 +44,10 @@ const RadioSelectCouriers = <T,>({
         {required && <span className="text-primaryBlue"> *</span>}
       </label>
 
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col midxl:flex-row gap-4">
         <button
-          className={`w-full relative h-[180px] border-[1px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
-            isBoxNowSelected ? 'border-[8px]' : 'border-[1px]'
+          className={`w-full relative h-[100px] border-[8px] bg-white rounded-[8px] overflow-hidden ${
+            isBoxNowSelected ? 'border-brown/80' : 'border-transparent'
           }`}
           type="button"
           onClick={() => onSelectHandler('boxnow')}
@@ -63,25 +60,10 @@ const RadioSelectCouriers = <T,>({
             fill={true}
             sizes="100vw"
           />
-
-          <div className="absolute z-[2] bottom-[0px] left-0 right-0">
-            <GenericParagraph
-              fontStyle="font-kolka font-[400]"
-              textColor={'text-brown'}
-              pType="small"
-              extraClass="text-center max-w-[90%] mx-auto"
-            >
-              <span className={`${isBoxNowSelected ? 'text-white' : 'text-brown'} md:text-brown`}>
-                {boxNowShipmentPrice === 0
-                  ? 'Безплатна доставка (до 30.06.2026).'
-                  : `доставката -> ${boxNowShipmentPrice.toFixed(2)} euro.`}
-              </span>
-            </GenericParagraph>
-          </div>
         </button>
         <button
-          className={`w-full relative h-[180px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
-            isFirstSelected ? 'border-[8px]' : 'border-[1px]'
+          className={`w-full relative h-[100px] border-[8px] bg-white rounded-[8px] overflow-hidden ${
+            isFirstSelected ? 'border-brown/80' : 'border-transparent'
           }`}
           type="button"
           onClick={() => onSelectHandler('speedy-dpd')}
@@ -97,8 +79,8 @@ const RadioSelectCouriers = <T,>({
         </button>
 
         <button
-          className={`w-full relative h-[180px] bg-white border-brown/80 rounded-[8px] overflow-hidden ${
-            isSecondSelected ? 'border-[8px]' : 'border-[1px]'
+          className={`w-full relative h-[100px] border-[8px] bg-white rounded-[8px] overflow-hidden ${
+            isSecondSelected ? 'border-brown/80' : 'border-transparent'
           }`}
           type="button"
           onClick={() => onSelectHandler('econt')}
