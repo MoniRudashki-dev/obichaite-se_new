@@ -4,6 +4,7 @@ import { anyone } from '@/access/anyone'
 import { setOrderNumber } from './hooks/setOrderNumber'
 import { revalidateOrdersAfterChange, revalidateOrdersAfterDelete } from './hooks/revalidateOrder'
 import { afterChangeOrderStatus } from './hooks/afterChangeOrderStatus'
+import { syncKlaviyoPlacedOrder } from './hooks/syncKlaviyoPlacedOrder'
 
 export const Order: CollectionConfig = {
   slug: 'order',
@@ -50,6 +51,16 @@ export const Order: CollectionConfig = {
       admin: {
         position: 'sidebar',
         readOnly: true,
+      },
+    },
+    {
+      name: 'klaviyoPlacedOrderSentAt',
+      type: 'date',
+      label: 'Klaviyo Placed Order изпратен на',
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Автоматичен маркер за идемпотентност — попълва се, когато Placed Order е изпратен към Klaviyo.',
       },
     },
     {
@@ -224,7 +235,12 @@ export const Order: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [setOrderNumber, revalidateOrdersAfterChange, afterChangeOrderStatus],
+    afterChange: [
+      setOrderNumber,
+      revalidateOrdersAfterChange,
+      afterChangeOrderStatus,
+      syncKlaviyoPlacedOrder,
+    ],
     afterDelete: [revalidateOrdersAfterDelete],
   },
   versions: {

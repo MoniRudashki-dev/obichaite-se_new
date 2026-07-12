@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useState, useTransition } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import {
   GenericHeading,
   GenericParagraph,
@@ -32,6 +32,8 @@ import { PaymentSection } from '@/Stripe/components'
 import EmailInputWithAction from './EmailInputWithActions'
 import { Order } from '@/payload-types'
 import { PURCHASE } from '@/services/anatilitics'
+import { trackStartedCheckout } from '@/Klaviyo/client/klaviyo-events'
+import { subscribeToNewsletterAction } from '@/Klaviyo/actions/newsletter'
 import { GlobalLoader } from '../Loader'
 import RadioSelectCouriers from '../Generic/RadioSelectCouriers'
 import { BoxNowWrapper } from '@/BoxNow/components'
@@ -88,6 +90,11 @@ const CheckoutForm = ({
   const [pending, startTransition] = useTransition()
   const [isSuccess, setIsSuccess] = useState(false)
   const [orderNumber, setOrderNumber] = useState('')
+
+  // Tracks the email + cart signature for which Klaviyo "Started Checkout" has
+  // already fired, so re-renders / keystrokes don't spam the event, while a real
+  // cart change still refires with an up-to-date snapshot.
+  const startedCheckoutSignatureRef = useRef<string | null>(null)
 
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [acceptPrivacy, setAcceptPrivacy] = useState(false)
@@ -153,6 +160,34 @@ const CheckoutForm = ({
   useEffect(() => {
     dispatch(setDeliveryKind(formValues.deliveryKind))
   }, [formValues.deliveryKind, dispatch])
+
+  // Klaviyo "Started Checkout": fire once the email is valid and the cart is
+  // non-empty (needed for Abandoned Checkout flows). Guarded so it fires once
+  // per distinct email. No-op unless the integration is enabled.
+  useEffect(() => {
+    const email = formValues.email.trim().toLowerCase()
+    const emailValid = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)
+
+    if (!emailValid || products.length === 0) return
+
+    // Refire when the email OR the cart (items/quantities) materially changes.
+    const cartSignature = products.map((p) => `${p.id}:${p.orderQuantity}`).join(',')
+    const signature = `${email}|${cartSignature}`
+    if (startedCheckoutSignatureRef.current === signature) return
+    startedCheckoutSignatureRef.current = signature
+
+    const [firstName, ...rest] = formValues.name.trim().split(/\s+/)
+    trackStartedCheckout(
+      {
+        email,
+        phoneNumber: formValues.phone || undefined,
+        firstName: firstName || undefined,
+        lastName: rest.length ? rest.join(' ') : undefined,
+      },
+      products,
+      { checkoutUrl: typeof window !== 'undefined' ? window.location.href : undefined },
+    )
+  }, [formValues.email, formValues.name, formValues.phone, products])
 
   const submitHandler = async () => {
     setError('')
@@ -287,6 +322,17 @@ const CheckoutForm = ({
               }
             }),
           )
+
+          // Klaviyo newsletter subscription — only with explicit marketing
+          // consent from the optional checkout checkbox. Best-effort.
+          if (acceptNextContacts) {
+            subscribeToNewsletterAction({
+              email: formValues.email,
+              fullName: formValues.name,
+              phone: formValues.phone,
+              source: 'checkout',
+            }).catch(() => {})
+          }
         }
         dispatch(clearProducts())
         dispatch(setUserHaveDiscount(false))

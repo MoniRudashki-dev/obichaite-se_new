@@ -20,7 +20,9 @@
     "seed:products": "payload run scripts/products.ts",
     "manual:sitemap": "next-sitemap --config next-sitemap.config.cjs",
     "export:products": "payload run scripts/export-products.ts",
-    "price:euro": "payload run scripts/price-to-euro.ts"
+    "price:euro": "payload run scripts/price-to-euro.ts",
+    "klaviyo:sync-catalog": "payload run scripts/klaviyo-sync-catalog.ts",
+    "klaviyo:retry-placed-orders": "payload run scripts/klaviyo-retry-placed-orders.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.60.0",

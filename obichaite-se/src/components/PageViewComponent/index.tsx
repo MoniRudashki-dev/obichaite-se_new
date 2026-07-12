@@ -1,6 +1,7 @@
 'use client'
 import { Product } from '@/payload-types'
 import { VIEW_CONTENT } from '@/services/anatilitics'
+import { trackViewedProduct } from '@/Klaviyo/client/klaviyo-events'
 import React, { useEffect } from 'react'
 
 const PageViewComponent = (product: Product) => {
@@ -17,6 +18,9 @@ const PageViewComponent = (product: Product) => {
         },
       ],
     )
+
+    // Klaviyo "Viewed Product" (no-op unless the integration is enabled).
+    trackViewedProduct(product)
   }, [product])
   return <></>
 }

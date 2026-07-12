@@ -25,6 +25,7 @@ import { LandingGallery } from '@/blocks/LandingGallery/config'
 import { LandingBonuses } from '@/blocks/LandingBonuses/config'
 import { LandingTestimonials } from '@/blocks/LandingTestimonials/config'
 import { ensureInquiryDefaults } from './hooks/ensureInquiryDefaults'
+import { syncKlaviyoCatalogItem } from './hooks/syncKlaviyoCatalogItem'
 import { getDefaultInquiryQuestions } from './hooks/inquiryDefaults'
 // import { syncEuroPrice } from './hooks/syncEuroPrice'
 // import { syncPublishedAt } from './hooks/syncPublishedAt'
@@ -390,7 +391,7 @@ export const Product: CollectionConfig = {
   ],
   hooks: {
     beforeValidate: [ensureInquiryDefaults],
-    afterChange: [revalidateProduct],
+    afterChange: [revalidateProduct, syncKlaviyoCatalogItem],
     afterDelete: [revalidateDeleteProduct],
     // beforeChange: [syncPublishedAt],
   },

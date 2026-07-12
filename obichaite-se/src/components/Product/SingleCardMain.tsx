@@ -15,6 +15,7 @@ import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
 import { ADD_TO_CART } from '@/services/anatilitics'
+import { trackAddedToCart } from '@/Klaviyo/client/klaviyo-events'
 import { ProductInquiryFormModal } from './ProductInquiryFormModal'
 
 const SingleCardMain = ({ product }: { product: Product }) => {
@@ -256,6 +257,15 @@ const SingleCardMain = ({ product }: { product: Product }) => {
                         quantity: 1,
                       },
                     ])
+                    // Klaviyo "Added to Cart" with a snapshot of the resulting cart.
+                    const updatedCart = existsInCart
+                      ? shoppingCartProducts.map((item) =>
+                          item.id === product.id
+                            ? { ...item, orderQuantity: item.orderQuantity + orderQuantity }
+                            : item,
+                        )
+                      : [...shoppingCartProducts, { ...product, orderQuantity }]
+                    trackAddedToCart(product, updatedCart, orderQuantity)
                     dispatch(
                       setNotification({
                         showNotification: true,

@@ -21,6 +21,7 @@ import SetCurrentUser from '@/components/StateManagers/SetCurrentUser'
 import CustomConsent from '@/components/Custom/CustomConsent'
 import BannerComponent from '@/Banner/Component'
 import PromotionComponent from '@/Promotion/Component'
+import { KlaviyoScript } from '@/Klaviyo/client/KlaviyoScript'
 
 const SITE_NAME = 'Обичайте се'
 
@@ -220,6 +221,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             <PromotionComponent />
 
             <CustomConsent />
+
+            <KlaviyoScript />
           </main>
         </body>
       </html>

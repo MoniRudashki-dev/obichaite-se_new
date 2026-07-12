@@ -779,6 +779,10 @@ export interface Order {
   orderDate?: string | null;
   freeShipping?: boolean | null;
   orderNumber?: string | null;
+  /**
+   * Автоматичен маркер за идемпотентност — попълва се, когато Placed Order е изпратен към Klaviyo.
+   */
+  klaviyoPlacedOrderSentAt?: string | null;
   status?: ('pending' | 'processing' | 'shipped' | 'delivered' | 'returned' | 'cancelled') | null;
   paymentStatus?: ('unpaid' | 'paid' | 'refunded' | 'needBankTransfer') | null;
   items: {
@@ -1575,6 +1579,7 @@ export interface OrderSelect<T extends boolean = true> {
   orderDate?: T;
   freeShipping?: T;
   orderNumber?: T;
+  klaviyoPlacedOrderSentAt?: T;
   status?: T;
   paymentStatus?: T;
   items?:

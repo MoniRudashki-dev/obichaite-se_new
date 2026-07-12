@@ -11,6 +11,7 @@ import { setNotification } from '@/store/features/notifications'
 import { addToCart } from '@/action/products/shoppingCart'
 import { useCheckout } from '@/hooks/useCheckout'
 import { ADD_TO_CART } from '@/services/anatilitics'
+import { trackAddedToCart } from '@/Klaviyo/client/klaviyo-events'
 import { ProductInquiryFormModal } from './ProductInquiryFormModal'
 
 const ProductCard = ({ product }: { product: Product }) => {
@@ -245,6 +246,15 @@ const ProductCard = ({ product }: { product: Product }) => {
                             quantity: 1,
                           },
                         ])
+                        // Klaviyo "Added to Cart" with a snapshot of the resulting cart.
+                        const updatedCart = productExistsInCart
+                          ? shoppingCartProducts.map((item) =>
+                              item.id === product.id
+                                ? { ...item, orderQuantity: item.orderQuantity + 1 }
+                                : item,
+                            )
+                          : [...shoppingCartProducts, { ...product, orderQuantity: 1 }]
+                        trackAddedToCart(product, updatedCart, 1)
                         dispatch(
                           setNotification({
                             showNotification: true,
@@ -289,6 +299,15 @@ const ProductCard = ({ product }: { product: Product }) => {
                             quantity: 1,
                           },
                         ])
+                        // Klaviyo "Added to Cart" with a snapshot of the resulting cart.
+                        const updatedCart = productExistsInCart
+                          ? shoppingCartProducts.map((item) =>
+                              item.id === product.id
+                                ? { ...item, orderQuantity: item.orderQuantity + 1 }
+                                : item,
+                            )
+                          : [...shoppingCartProducts, { ...product, orderQuantity: 1 }]
+                        trackAddedToCart(product, updatedCart, 1)
 
                         dispatch(
                           setNotification({
