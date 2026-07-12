@@ -53,7 +53,7 @@ Manual action:
 
 ---
 
-## 2. API Keys
+## 2. API Keys [DONE]
 
 Go to:
 
@@ -61,7 +61,7 @@ Go to:
 Klaviyo → Account name → Settings → API keys
 ```
 
-### 2.1 Public API Key / Site ID
+### 2.1 Public API Key / Site ID [DONE]
 
 Copy the **Public API Key**, also called **Site ID**.
 

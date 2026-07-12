@@ -20,11 +20,11 @@
 
 ## 1. Klaviyo акаунт и достъп  → отговорник: клиент/админ
 
-- [ ] Достъп до **бойния Klaviyo акаунт на клиента** (роля Owner/Admin/Manager). Да НЕ се прави временен дублиран акаунт.
-- [ ] Създаден **Private API Key** ("Website Production Integration") с scopes: Profiles, Events, Catalogs, Lists (Read/Write) + Metrics (Read).
-- [ ] Копиран **Public API Key / Site ID**.
-- [ ] Създаден/избран **Newsletter list** → взет неговият **List ID**.
-- [ ] Public key allowlist (ако акаунтът го ползва): production + staging + `http://localhost:3000`.
+- [x] Достъп до **бойния Klaviyo акаунт на клиента** (роля Owner/Admin/Manager). Да НЕ се прави временен дублиран акаунт.
+- [x] Създаден **Private API Key** ("Website Production Integration") с scopes: Profiles, Events, Catalogs, Lists (Read/Write) + Metrics (Read).
+- [x] Копиран **Public API Key / Site ID**.
+- [x] Създаден/избран **Newsletter list** → взет неговият **List ID**.
+- [ ] Public key allowlist (ако акаунтът го ползва): production + staging + `http://localhost:3000`. ??? това нещо не става
 
 Детайли: виж `klaviyo-manual-setup.md`.
 
@@ -34,9 +34,9 @@
 
 Попълване в **staging** и **production** (виж `.env.example`):
 
-- [ ] `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY`
-- [ ] `KLAVIYO_PRIVATE_API_KEY` (само server, не се commit-ва)
-- [ ] `KLAVIYO_NEWSLETTER_LIST_ID`
+- [x] `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY`
+- [x] `KLAVIYO_PRIVATE_API_KEY` (само server, не се commit-ва)
+- [x] `KLAVIYO_NEWSLETTER_LIST_ID`
 - [ ] `KLAVIYO_ENABLED=true`, `NEXT_PUBLIC_KLAVIYO_ENABLED=true`
 - [ ] `KLAVIYO_ENVIRONMENT` / `NEXT_PUBLIC_KLAVIYO_ENVIRONMENT` = `staging` за тестовата среда, `production` за бойната
 - [ ] `KLAVIYO_CATALOG_SYNC_SECRET` (или ще ползва `CRON_SECRET`)
