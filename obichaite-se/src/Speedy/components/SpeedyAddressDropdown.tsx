@@ -1,70 +1,67 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useDeferredValue, useMemo, useState } from 'react'
 import { GenericParagraph } from '@/components/Generic'
 import { ArrowIcon, SearchLogo } from '@/assets/icons'
 import { SpeedySite } from '../types'
 import { InfiniteScrollContainer } from '@/Econt/components'
+import { buildSettlementIndex, searchSettlements, type Settlement } from '@/utils/settlementSearch'
+
+const PAGE_SIZE = 50
 
 const SpeedyAddressDropdown = ({
-  cities,
+  settlements,
   setter,
   city,
   address,
   setAdrress,
 }: {
-  cities: SpeedySite[]
+  settlements: Settlement[]
   setter: (city: SpeedySite) => void
-  city: SpeedySite
+  city: SpeedySite | null
   address: string
   setAdrress: (adress: string) => void
 }) => {
   const [activeDropdown, setActiveDropdown] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [searchResults, setSearchResults] = useState<
-    {
-      id: number
-      name: string
-    }[]
-  >(() => {
-    const citiesNameExtracted = cities.map((city) => {
-      return {
-        id: city.id,
-        name: city.name?.split(' ')[0],
-      }
-    })
-
-    const setOfCities = Array.from(
-      new Map(citiesNameExtracted.map((item) => [item.name, item])).values(),
-    )
-
-    return setOfCities
-  })
   const [slice, setSlice] = useState(0)
+
+  // Транслитерацията на ~5000 имена става веднъж, не на всеки натиснат клавиш.
+  const index = useMemo(() => buildSettlementIndex(settlements), [settlements])
+
+  // Подредбата остава отзивчива при бързо писане върху дълъг списък.
+  const deferredSearchValue = useDeferredValue(searchValue)
+  const searchResults = useMemo(
+    () => searchSettlements(index, deferredSearchValue),
+    [index, deferredSearchValue],
+  )
+
   const setSliceHandler = useCallback(() => {
     setSlice((prev) => prev + 1)
   }, [])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
-    setSearchResults(
-      cities.filter((city) => city.name.toLowerCase().includes(e.target.value.toLowerCase())),
-    )
+    // Нова заявка → обратно към първата страница.
+    setSlice(0)
   }
 
-  const resultsContent = searchResults.map((city, index) => {
+  // Първо режем, после мапваме към JSX — иначе се създават хиляди елементи на клавиш.
+  const visibleResults = searchResults.slice(0, (slice + 1) * PAGE_SIZE)
+
+  const resultsContent = visibleResults.map((settlement) => {
     return (
-      <li key={`city-${city.id}-${index}`}>
+      <li key={`settlement-${settlement.id}-${settlement.label}`}>
         <button
           className="w-full flex px-2 text-center py-2 border-[1px] border-black/50"
           onClick={() => {
-            setter({ id: city.id, name: city.name })
+            setter({ id: settlement.id, name: settlement.label })
             setActiveDropdown(false)
           }}
           type="button"
         >
           <GenericParagraph textColor="text-brown" extraClass="w-full text-left">
-            {city.name}
+            {settlement.label}
           </GenericParagraph>
         </button>
       </li>
@@ -85,7 +82,7 @@ const SpeedyAddressDropdown = ({
             type="button"
           >
             <GenericParagraph textColor="text-brown">
-              {!!city ? city.name : '<Изберете град>'}
+              {!!city ? city.name : '<Изберете населено място>'}
             </GenericParagraph>
 
             <div
@@ -105,7 +102,7 @@ const SpeedyAddressDropdown = ({
               </div>
               <input
                 type="text"
-                placeholder="Напишете град/офис и изберете"
+                placeholder="Напишете населено място"
                 className="w-full border-[1px] border-black/50
                 bg-white text-bordo placeholder:text-bordo/50 py-2 px-2 placeholder:text-[12px] md:placeholder:text-[14px]"
                 value={searchValue}
@@ -113,10 +110,19 @@ const SpeedyAddressDropdown = ({
               />
             </li>
 
-            <InfiniteScrollContainer
-              items={resultsContent.slice(0, (slice + 1) * 50)}
-              setSliceHandler={setSliceHandler}
-            />
+            {resultsContent.length > 0 ? (
+              <InfiniteScrollContainer
+                items={resultsContent}
+                setSliceHandler={setSliceHandler}
+                resetKey={deferredSearchValue}
+              />
+            ) : (
+              <li className="w-full px-2 py-3">
+                <GenericParagraph textColor="text-brown" extraClass="w-full text-left">
+                  Няма намерено населено място
+                </GenericParagraph>
+              </li>
+            )}
           </ul>
         )}
       </div>
@@ -128,8 +134,8 @@ const SpeedyAddressDropdown = ({
               placeholder={'<Въведете адрес>'}
               value={address}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAdrress(e.target.value)}
-              className={`w-full rounded-[12px] 
-                        focus:outline focus:outline-1 focus:outline-black p-3 font-georgia font-[400] !text-black outline-none 
+              className={`w-full rounded-[12px]
+                        focus:outline focus:outline-1 focus:outline-black p-3 font-georgia font-[400] !text-black outline-none
                       placeholder:text-black/80
                       `}
               rows={6}

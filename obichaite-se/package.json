@@ -21,6 +21,7 @@
     "manual:sitemap": "next-sitemap --config next-sitemap.config.cjs",
     "export:products": "payload run scripts/export-products.ts",
     "price:euro": "payload run scripts/price-to-euro.ts",
+    "econt:settlements": "payload run scripts/econt-settlements.ts",
     "klaviyo:sync-catalog": "payload run scripts/klaviyo-sync-catalog.ts",
     "klaviyo:retry-placed-orders": "payload run scripts/klaviyo-retry-placed-orders.ts"
   },

@@ -10,23 +10,12 @@ import {
   EcontOfficesResponseRaw,
 } from '../types'
 import { unstable_cache } from 'next/cache'
+import { callEcont } from '../utils/econtClient'
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
 const ECONT_CITIES_JSON_PATH = path.join(process.cwd(), 'econt-cities.json')
-
-const { ECONT_BASE_URL, ECONT_USERNAME, ECONT_PASSWORD } = process.env
-
-if (!ECONT_BASE_URL || !ECONT_USERNAME || !ECONT_PASSWORD) {
-  throw new Error('Missing Econt env variables')
-}
-
-function buildEcontUrl(path: string) {
-  const base = ECONT_BASE_URL!.replace(/\/$/, '')
-  const cleanPath = path.replace(/^\//, '')
-  return `${base}/${cleanPath}`
-}
 
 async function persistEcontCities(cities: any) {
   try {
@@ -34,29 +23,6 @@ async function persistEcontCities(cities: any) {
   } catch (error) {
     console.error('Failed to write Econt cities JSON:', error)
   }
-}
-
-async function callEcont<T>(path: string, body: unknown): Promise<T> {
-  const url = buildEcontUrl(path)
-
-  const auth = Buffer.from(`${ECONT_USERNAME}:${ECONT_PASSWORD}`).toString('base64')
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${auth}`,
-    },
-    body: JSON.stringify(body ?? {}),
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(`Econt error ${res.status}: ${text}`)
-  }
-
-  return res.json() as Promise<T>
 }
 
 export async function getEcontCitiesRawAction(

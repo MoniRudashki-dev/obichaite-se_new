@@ -42,6 +42,7 @@ import { SpeedyOffice, SpeedySite } from '@/Speedy/types'
 import { SpeedyWrapper } from '@/Speedy/components'
 import { EcontWrapper } from '@/Econt/components'
 import { EcontCity, EcontOffice } from '@/Econt/types'
+import type { Settlement } from '@/utils/settlementSearch'
 
 export type CheckoutFormValues = {
   name: string
@@ -65,6 +66,8 @@ const CheckoutForm = ({
   speedyAddressPrice,
   econtCities,
   speedySites,
+  econtSettlements,
+  speedySettlements,
 }: {
   boxNowCities: BoxnowLocker[]
   boxNowShipmentPrice: number
@@ -77,6 +80,9 @@ const CheckoutForm = ({
     name: string
   }[]
   speedySites: SpeedySite[]
+  /** Само населени места — ползват се при доставка до адрес, вместо офис списъците. */
+  econtSettlements: Settlement[]
+  speedySettlements: Settlement[]
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -95,6 +101,10 @@ const CheckoutForm = ({
   // already fired, so re-renders / keystrokes don't spam the event, while a real
   // cart change still refires with an up-to-date snapshot.
   const startedCheckoutSignatureRef = useRef<string | null>(null)
+
+  // Предишният вид доставка, за да изчистваме избраната локация само при реална
+  // смяна, а не на първия рендер.
+  const previousDeliveryKindRef = useRef<CheckoutFormValues['deliveryKind'] | null>(null)
 
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [acceptPrivacy, setAcceptPrivacy] = useState(false)
@@ -160,6 +170,24 @@ const CheckoutForm = ({
   useEffect(() => {
     dispatch(setDeliveryKind(formValues.deliveryKind))
   }, [formValues.deliveryKind, dispatch])
+
+  // Смяната Офис ↔ Адрес минава през споделения RadioSelect, който сетва само
+  // своето поле. Без това изчистване името на избрания офис остава в адресния
+  // режим, където списъкът вече съдържа само населени места.
+  useEffect(() => {
+    const previousKind = previousDeliveryKindRef.current
+    previousDeliveryKindRef.current = formValues.deliveryKind
+
+    // Пропускаме първия рендер — иначе бихме изтрили и избора при връщане назад.
+    if (previousKind === null || previousKind === formValues.deliveryKind) return
+
+    setFormValues((prev) => ({
+      ...prev,
+      deliveryTown: '',
+      deliveryOffice: '',
+      boxNowOfficeId: '',
+    }))
+  }, [formValues.deliveryKind])
 
   // Klaviyo "Started Checkout": fire once the email is valid and the cart is
   // non-empty (needed for Abandoned Checkout flows). Guarded so it fires once
@@ -375,10 +403,25 @@ const CheckoutForm = ({
   const currentBoxNowCity = formValues.boxNowOfficeId
     ? ({ id: formValues.boxNowOfficeId, name: formValues.deliveryTown } as BoxnowLocker)
     : null
-  const currentShippingCity =
-    speedySites.find((site) => site.name === formValues.deliveryTown) ?? null
-  const currentEcontShippingCity =
-    econtCities.find((city) => city.name === formValues.deliveryTown) ?? null
+  // При доставка до адрес избраното идва от списъка с населени места, а не от
+  // офис списъка — търсенето трябва да е в същия източник, иначе бутонът остава
+  // на "<Изберете населено място>" след избор.
+  const isAddressDelivery = formValues.deliveryKind === 'address'
+
+  const findSelectedSettlement = (settlements: Settlement[]) => {
+    const selected = settlements.find(
+      (settlement) => settlement.label === formValues.deliveryTown,
+    )
+    return selected ? { id: selected.id, name: selected.label } : null
+  }
+
+  const currentShippingCity = isAddressDelivery
+    ? findSelectedSettlement(speedySettlements)
+    : (speedySites.find((site) => site.name === formValues.deliveryTown) ?? null)
+
+  const currentEcontShippingCity = isAddressDelivery
+    ? findSelectedSettlement(econtSettlements)
+    : (econtCities.find((city) => city.name === formValues.deliveryTown) ?? null)
   const chosenOffice: SpeedyOffice | null = null
   const chosenEcontOffice: EcontOffice | null = null
 
@@ -402,14 +445,21 @@ const CheckoutForm = ({
 
   const handleCityChange = useCallback(
     (city: SpeedySite) => {
-      const selectedSite = speedySites.find((site) => site.id === city.id) ?? city
+      setFormValues((prev) => {
+        // При адрес dropdown-ът подава запис от списъка с населени места — id-тата
+        // там не са от офис списъка, затова не търсим в него.
+        const selectedSite =
+          prev.deliveryKind === 'office'
+            ? (speedySites.find((site) => site.id === city.id) ?? city)
+            : city
 
-      setFormValues((prev) => ({
-        ...prev,
-        deliveryTown: selectedSite.name,
-        deliveryOffice: prev.deliveryKind === 'office' ? selectedSite.name : prev.deliveryOffice,
-        boxNowOfficeId: '',
-      }))
+        return {
+          ...prev,
+          deliveryTown: selectedSite.name,
+          deliveryOffice: prev.deliveryKind === 'office' ? selectedSite.name : prev.deliveryOffice,
+          boxNowOfficeId: '',
+        }
+      })
     },
     [speedySites],
   )
@@ -437,14 +487,21 @@ const CheckoutForm = ({
 
   const handleEcontCityChange = useCallback(
     (city: EcontCity) => {
-      const selectedCity = econtCities.find((econtCity) => econtCity.id === city.id) ?? city
+      setFormValues((prev) => {
+        // Виж бележката в handleCityChange — при адрес id-тата идват от
+        // econt-settlements.json, не от econt-cities.json.
+        const selectedCity =
+          prev.deliveryKind === 'office'
+            ? (econtCities.find((econtCity) => econtCity.id === city.id) ?? city)
+            : city
 
-      setFormValues((prev) => ({
-        ...prev,
-        deliveryTown: selectedCity.name,
-        deliveryOffice: prev.deliveryKind === 'office' ? selectedCity.name : prev.deliveryOffice,
-        boxNowOfficeId: '',
-      }))
+        return {
+          ...prev,
+          deliveryTown: selectedCity.name,
+          deliveryOffice: prev.deliveryKind === 'office' ? selectedCity.name : prev.deliveryOffice,
+          boxNowOfficeId: '',
+        }
+      })
     },
     [econtCities],
   )
@@ -624,6 +681,7 @@ const CheckoutForm = ({
                       handleOfficeChange={handleOfficeChange}
                       office={chosenOffice}
                       speedySites={speedySites}
+                      speedySettlements={speedySettlements}
                     />
                   </div>
                 )}
@@ -648,6 +706,7 @@ const CheckoutForm = ({
                       handleOfficeChange={handleEcontOfficeChange}
                       office={chosenEcontOffice}
                       econtCities={econtCities}
+                      econtSettlements={econtSettlements}
                     />
                   </div>
                 )}

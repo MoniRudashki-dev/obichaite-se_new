@@ -4,6 +4,7 @@ import React from 'react'
 import { EcontCity, EcontOffice } from '../types'
 import { EcontOfficeDropdown } from '.'
 import EcontAddressDropdown from './EcontAddressDropdown'
+import type { Settlement } from '@/utils/settlementSearch'
 
 type EcontWrapperProps = {
   activeInnerShipping: 'econt-office' | 'econt-address'
@@ -17,6 +18,8 @@ type EcontWrapperProps = {
     id: number
     name: string
   }[]
+  /** Само населени места — за доставка до адрес, без офиси и еконтомати. */
+  econtSettlements: Settlement[]
 }
 
 const EcontWrapper = ({
@@ -26,6 +29,7 @@ const EcontWrapper = ({
   handleCityChange,
   handleAddressChange,
   econtCities,
+  econtSettlements,
 }: EcontWrapperProps) => {
   return (
     <>
@@ -37,9 +41,9 @@ const EcontWrapper = ({
         />
       ) : (
         <EcontAddressDropdown
-          cities={econtCities}
+          settlements={econtSettlements}
           setter={handleCityChange}
-          city={currentShippingCity as EcontCity}
+          city={currentShippingCity}
           address={address}
           setAdrress={handleAddressChange}
         />

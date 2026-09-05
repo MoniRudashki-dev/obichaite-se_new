@@ -42,6 +42,15 @@ export interface EcontCity {
   name: string
 }
 
+/**
+ * Каквото `getEcontCitiesAction` реално връща — истински населени места с истински
+ * city id, за разлика от `econt-cities.json`, който е плосък списък от офиси.
+ */
+export interface EcontSettlementRaw extends EcontCity {
+  postCode: string | null
+  regionName: string | null
+}
+
 export interface EcontOffice {
   id: number
   code: string

@@ -4,6 +4,7 @@ import React from 'react'
 import { SpeedyOffice, SpeedySite } from '../types'
 import SpeedyOfficeDropdown from './SpeedyOfficeDropdown'
 import SpeedyAddressDropdown from './SpeedyAddressDropdown'
+import type { Settlement } from '@/utils/settlementSearch'
 
 type SpeedyWrapperProps = {
   activeInnerShipping: 'speedy-office' | 'speedy-address'
@@ -14,6 +15,8 @@ type SpeedyWrapperProps = {
   handleOfficeChange: (office: SpeedyOffice) => void
   handleAddressChange: (address: string) => void
   speedySites: SpeedySite[]
+  /** Само населени места — за доставка до адрес, без офиси и автомати. */
+  speedySettlements: Settlement[]
 }
 
 const SpeedyWrapper = ({
@@ -23,6 +26,7 @@ const SpeedyWrapper = ({
   handleCityChange,
   handleAddressChange,
   speedySites,
+  speedySettlements,
 }: SpeedyWrapperProps) => {
   return (
     <>
@@ -34,9 +38,9 @@ const SpeedyWrapper = ({
         />
       ) : (
         <SpeedyAddressDropdown
-          cities={speedySites}
+          settlements={speedySettlements}
           setter={handleCityChange}
-          city={currentShippingCity as SpeedySite}
+          city={currentShippingCity}
           address={address}
           setAdrress={handleAddressChange}
         />
