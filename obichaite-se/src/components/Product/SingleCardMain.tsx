@@ -189,17 +189,9 @@ const SingleCardMain = ({ product }: { product: Product }) => {
                   >
                     <>
                       {product?.promoPriceInEuro ? (
-                        <>
-                          {product.promoPriceInEuro * orderQuantity} €
-                          {product.promoPrice && (
-                            <>({(product.promoPrice * orderQuantity).toFixed(2)} лв.)</>
-                          )}
-                        </>
+                        <>{(product.promoPriceInEuro * orderQuantity).toFixed(2)} €</>
                       ) : (
-                        <>
-                          {product.priceInEuro! * orderQuantity} €
-                          {product.price && <>({(product.price * orderQuantity).toFixed(2)} лв.)</>}
-                        </>
+                        <>{(product.priceInEuro! * orderQuantity).toFixed(2)} €</>
                       )}
                     </>
                   </GenericParagraph>

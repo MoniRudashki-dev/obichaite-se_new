@@ -29,7 +29,6 @@ const ProductCard = ({ product }: { product: Product }) => {
     // shortDescription,
     bestSeller,
     promoPrice,
-    price,
     priceInEuro,
     promoPriceInEuro,
   } = product
@@ -53,22 +52,6 @@ const ProductCard = ({ product }: { product: Product }) => {
           {!!promoPriceInEuro && ` ${promoPriceInEuro.toFixed(2)}`}€
         </span>
       </GenericParagraph>
-      <div className="w-full h-[1px] bg-brown/80"></div>
-      {price && (
-        <GenericParagraph
-          pType="large"
-          fontStyle="font-sansation font-[700]"
-          textColor="text-brown"
-          extraClass="text-center"
-        >
-          <span className={`${!!promoPrice && 'line-through text-[14px]'}`}>
-            {price.toFixed(2)}
-          </span>
-          <span className={`${!!promoPrice && 'text-[16px] md:text-[20px]'}`}>
-            {promoPrice && ` ${promoPrice.toFixed(2)}`}лв
-          </span>
-        </GenericParagraph>
-      )}
     </div>
   ) : (
     <button
@@ -103,10 +86,6 @@ const ProductCard = ({ product }: { product: Product }) => {
         extraClass="text-center"
       >
         се с нас
-        {/* <span className={`${!!havePriceRange && 'text-[16px]'}`}>
-          {Number(priceRange?.split('-')?.[0]).toFixed(2)}-
-          {Number(priceRange?.split('-')?.[1]).toFixed(2)}лв
-        </span> */}
       </GenericParagraph>
     </button>
   )

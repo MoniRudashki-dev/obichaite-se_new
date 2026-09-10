@@ -11,7 +11,6 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks'
 import RadioSelect from '../Generic/RadioSelect'
 import { useCheckout } from '@/hooks/useCheckout'
-import { priceToBgn } from '@/utils/calculatePriceFromLvToEuro'
 import { ArrowIcon, CheckBoxIcon } from '@/assets/icons'
 import ErrorMessageBox from '../Generic/ErrorMessage'
 import { makeOrder, MakeOrderInput } from '@/action/checkout'
@@ -794,7 +793,7 @@ const CheckoutForm = ({
                       pType="small"
                       textColor="text-white"
                     >
-                      {totalPrice.toFixed(2)}€ ({priceToBgn(totalPrice)} лв)
+                      {totalPrice.toFixed(2)}€
                     </GenericParagraph>
                   </div>
 

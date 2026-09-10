@@ -17,7 +17,6 @@ import { removeFromCart } from '@/action/products/shoppingCart'
 import Link from 'next/link'
 import { INITIATE_CHECKOUT } from '@/services/anatilitics'
 import { useDiscount } from '@/hooks/useDiscount'
-import { priceToBgn } from '@/utils/calculatePriceFromLvToEuro'
 
 const ShoppingCardAside = () => {
   const dispatch = useAppDispatch()
@@ -131,19 +130,9 @@ const ShoppingCardAside = () => {
                 >
                   <>
                     {product?.promoPriceInEuro ? (
-                      <>
-                        {(product.promoPriceInEuro * product.orderQuantity).toFixed(2)}€
-                        {product.promoPrice && (
-                          <>({(product.promoPrice * product.orderQuantity).toFixed(2)} лв.)</>
-                        )}
-                      </>
+                      <>{(product.promoPriceInEuro * product.orderQuantity).toFixed(2)}€</>
                     ) : (
-                      <>
-                        {(product.priceInEuro! * product.orderQuantity).toFixed(2)}€
-                        {product.price && (
-                          <>({(product.price * product.orderQuantity).toFixed(2)} лв.)</>
-                        )}
-                      </>
+                      <>{(product.priceInEuro! * product.orderQuantity).toFixed(2)}€</>
                     )}
                   </>
                 </GenericParagraph>
@@ -161,7 +150,7 @@ const ShoppingCardAside = () => {
 
   const totalPrice = (
     <>
-      {totalPriceValue.toFixed(2)}€ ({priceToBgn(totalPriceValue)} лв)
+      {totalPriceValue.toFixed(2)}€
     </>
   )
 
