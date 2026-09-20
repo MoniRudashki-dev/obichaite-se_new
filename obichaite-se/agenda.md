@@ -109,6 +109,13 @@ _migration scripts_
 
 - bg-english texts
 
+[pending] Speedy id collision - `speedy-cities.json` смесва office id и site id в едно `id` поле
+  -> 45 застъпващи се id-та, напр. id 134 = офис "СОФИЯ - СЛАТИНА (Ж.К.), ДО ПАЗАРА" и село "ИЗГРЕВ (БЛАГОЕВГРАД)"
+  -> симптомът е оправен (CheckoutForm `handleCityChange` вече не търси по id), UI-ът не ползва id-та
+  -> за истински fix: да се регенерира JSON-а с `type` (office/automat/settlement) + отделно `siteId`
+  -> `handleOfficeChange` (CheckoutForm) търси `office.siteId` в списък с office id-та - счупен, но dead code (SpeedyWrapper не го подава); да се изтрие или довърши
+  -> блокира всяка бъдеща стъпка град -> офис, или пращане на office id към Speedy API
+
 **BEFORE HANDOVER**
 [done] да се отключи stripe в продуктион и да се тества
 [done] да се създаде vercel na клиент

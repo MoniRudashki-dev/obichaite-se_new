@@ -444,23 +444,19 @@ const CheckoutForm = ({
 
   const handleCityChange = useCallback(
     (city: SpeedySite) => {
-      setFormValues((prev) => {
-        // При адрес dropdown-ът подава запис от списъка с населени места — id-тата
-        // там не са от офис списъка, затова не търсим в него.
-        const selectedSite =
-          prev.deliveryKind === 'office'
-            ? (speedySites.find((site) => site.id === city.id) ?? city)
-            : city
-
-        return {
-          ...prev,
-          deliveryTown: selectedSite.name,
-          deliveryOffice: prev.deliveryKind === 'office' ? selectedSite.name : prev.deliveryOffice,
-          boxNowOfficeId: '',
-        }
-      })
+      // Записът идва директно от списъка, който dropdown-ът рендира (офиси или
+      // населени места), затова го ползваме както е. Не търсим по id в speedySites:
+      // там офис id-тата и site id-тата са в едно поле и 45 от тях се застъпват —
+      // напр. id 134 е и офис "СОФИЯ - СЛАТИНА (Ж.К.), ДО ПАЗАРА", и населено
+      // място "ИЗГРЕВ (БЛАГОЕВГРАД)", което подменяше избора на потребителя.
+      setFormValues((prev) => ({
+        ...prev,
+        deliveryTown: city.name,
+        deliveryOffice: prev.deliveryKind === 'office' ? city.name : prev.deliveryOffice,
+        boxNowOfficeId: '',
+      }))
     },
-    [speedySites],
+    [],
   )
 
   const handleOfficeChange = useCallback(
